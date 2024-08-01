@@ -1,0 +1,97 @@
+ {{>adminSidebar}}
+ {{>adminNavbar}}
+<div class="col-sm-12 col-xl-12">
+    <div class="bg-light rounded h-100 p-4 m-4">
+        <h6 class="mb-4">Upload Product</h6>
+        {{!-- action="/admin/addProduct" method="POST" --}}
+        <form id="addProductForm" enctype="multipart/form-data" method="post"> 
+            <div class="mb-3">
+                <label for="productName" class="form-label">Product Name</label>
+                <input type="text" class="form-control" id="productName" name="name" required>
+            </div>
+            <div class="mb-3">
+                <label for="productImages" class="form-label">Product Images</label>
+                <input type="file" class="form-control" id="productImages" name="images" multiple accept="image/*" required>
+                <div class="form-text">You can upload 10 images only(Max size: 5MB each, Formats: jpg, jpeg, png, gif).</div>
+            </div>
+            <div class="mb-3">
+                <label for="productBrand" class="form-label">Brand</label>
+                <input type="text" class="form-control" id="productBrand" name="brand" required>
+            </div>
+            <div class="mb-3">
+                <label for="productPrice" class="form-label">Price</label>
+                <input type="text" class="form-control" id="productPrice" name="price" required>
+            </div>
+            <div class="mb-3">
+                <label for="productCategory" class="form-label">Category</label>
+                <select class="form-control" id="productCategory" name="category" required>
+                    <option value="">Select Category</option>
+                    <option value="New arrival">New arrival</option>
+                    <option value="popular">popular</option>
+                    <option value="premium">premium</option>
+                    <option value="mens">mens</option>
+                    <option value="womens">womens</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="productDescription" class="form-label">Description</label>
+                <input type="text" class="form-control" id="productDescription" name="description" value="Step into comfort and style with our versatile and durable shoes, crafted for every occasion.">
+            </div>
+            <div class="mb-3">
+                <label for="productStock" class="form-label">Stock Available</label>
+                <input type="text" class="form-control" id="productStock" name="stockAvailable" value="">
+            </div>
+            <button type="submit" class="btn btn-primary">Upload Product</button>
+            <a href="/admin/product" class="btn btn-primary ms-2">Back to products</a>
+        </form>
+    </div>
+</div>
+
+  {{>adminFooter}}
+
+</div>
+<!-- Content End -->
+  
+
+<script>
+    document.getElementById("addProductForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+        const formData = new FormData(this)
+
+        try {
+             const response = await fetch("/admin/addProduct", {
+              method: "POST",
+              body: formData
+            })
+
+            const result = await response.json()
+
+            if (result.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: result.message
+                }).then(() => {
+          // Reset the form after successful submission
+          document.getElementById('addProductForm').reset();
+        })
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: result.message
+                });
+            }
+
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'An unexpected error occurred'
+            });
+        }
+    })
+
+</script>

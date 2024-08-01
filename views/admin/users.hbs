@@ -1,0 +1,261 @@
+ {{>adminSidebar}}
+ {{>adminNavbar}}
+<div class="container-fluid pt-4 px-4">
+  <div class="bg-light text-center rounded p-4">
+    {{!-- search area start --}}
+    <div class="bg-light text-center rounded pb-4">
+      <div class="row align-items-center justify-content-between ">
+
+        <div class="col-md-8">
+          <input class="form-control rounded-3 bg-transparent " type="search" value="" id="searchInput" placeholder="Search" />
+        </div>
+        <div class="col-auto">
+          <div class="row ">
+
+          <div class="col">
+          <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle m-2" type="button" id="filterStatusButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Status
+            </button>
+            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="filterStatusButton">
+              <a class="dropdown-item filter-option" data-filter-type="status" data-filter-value="true" >Blocked</a>
+              <a class="dropdown-item filter-option" data-filter-type="status" data-filter-value="false" >Unblocked</a>
+            </div>
+          </div>
+          </div>
+          <div class="col">
+          <a href="/admin/allUsers" class="btn btn-primary m-2">clearfilters</a>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{!--  search area end --}}
+    <div class="table-responsive">
+      <table class="table text-start align-middle table-bordered table-hover mb-0">
+        <thead>
+          <tr class="text-dark">
+            <th scope="col"><input class="form-check-input" type="checkbox"></th>
+            <th scope="col">Users</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Address</th>
+            <th scope="col">Status</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+ <tbody id="usersTableBody">
+  {{#each users}}
+  <tr>
+    <td><input class="form-check-input" type="checkbox"></td>
+    <td>{{this.name}}</td>
+    <td>{{this.email}}</td>
+    <td>{{this.phone}}</td>
+    <td>1234 Elm Street,hert junction Anytown, USA</td>
+    <td>
+      <button class="btn btn-sm {{#if this.isBlocked}}btn-danger{{else}}btn-success{{/if}} toggle-status" data-user-id="{{this._id}}">
+        {{#if this.isBlocked}}Unblock{{else}}Block{{/if}}
+      </button>  
+    </td>
+    <td>
+      <button class="btn btn-sm btn-primary delete-user" data-user-id="{{this._id}}"><i class="fa fa-trash"></i></button>
+    </td>
+  </tr>
+  {{/each}}
+ </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{{> adminFooter}}
+
+</div>
+<!-- Content End -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+  const usersTableBody = document.getElementById("usersTableBody");
+
+  usersTableBody.addEventListener("click", async (e) => {
+    e.preventDefault();
+    if (e.target.classList.contains("toggle-status")) {
+      const userId = e.target.dataset.userId;
+      const currentStatus = e.target.textContent.trim() === "Unblock";
+
+      try {
+        const response = await fetch(`/admin/userStatus?id=${userId}`, {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ isBlocked: !currentStatus })
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          e.target.classList.toggle('btn-danger', !currentStatus);
+          e.target.classList.toggle('btn-success', currentStatus);
+          e.target.textContent = currentStatus ? 'Block' : 'Unblock';
+        } else {
+          console.error('Error toggling user status:', data.error);
+        }
+      } catch (error) {
+        console.error('Error toggling user status:', error);
+      }
+    } else if (e.target.classList.contains("delete-user") || e.target.closest(".delete-user")) {
+      const deleteBtn = e.target.classList.contains("delete-user") ? e.target : e.target.closest(".delete-user");
+      const userId = deleteBtn.dataset.userId;
+
+      const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+        reverseButtons: true
+      });
+
+      if(result.isConfirmed){      
+      try {
+        const response = await fetch(`/admin/deleteUser?id=${userId}`, {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        const data = await response.json();
+
+        if (data.success) {
+          deleteBtn.closest('tr').remove();
+            Swal.fire('Deleted!', 'User has been deleted.', 'success');
+        } else {
+          console.error('Error deleting user:', data.error);
+            Swal.fire('Error!', 'Failed to delete user.', 'error');
+        }
+      } catch (error) {
+        console.error('Error deleting user:', error);
+          Swal.fire('Error!', 'Failed to delete user.', 'error');
+      }
+    }
+  } 
+});
+
+  // Search event listener
+  const searchInput = document.getElementById("searchInput");
+  searchInput.addEventListener("input", async () => {
+    const query = searchInput.value.trim();
+    try {
+      const response = await fetch(`/admin/searchUser?q=${query}`);
+      const data = await response.json();
+      const users = data.users;
+
+      usersTableBody.innerHTML = '';
+
+      if (!users.length > 0) {
+        usersTableBody.innerHTML = "<tr class='text-center'><td colspan='7'><h4>No users found.</h4></td></tr>";
+      }
+
+      users.forEach(user => {
+        const userRow = document.createElement("tr");
+        userRow.innerHTML = `
+          <td><input class="form-check-input" type="checkbox"></td>
+          <td>${user.name}</td>
+          <td>${user.email}</td>
+          <td>${user.phone}</td>
+          <td>1234 Elm Street, hert junction Anytown, USA</td>
+          <td>
+            <button class="btn btn-sm ${user.isBlocked ? 'btn-danger' : 'btn-success'} toggle-status" data-user-id="${user._id}">
+              ${user.isBlocked ? 'Unblock' : 'Block'}
+            </button>
+          </td>
+          <td>
+            <button class="btn btn-sm btn-primary delete-user" data-user-id="${user._id}"><i class="fa fa-trash"></i></button>
+          </td>
+        `;
+        usersTableBody.appendChild(userRow);
+      });
+    } catch (error) {
+      console.error('Error searching user:', error);
+      usersTableBody.innerHTML = "<tr class='text-center'><td colspan='7'><h4>Error fetching users.</h4></td></tr>";
+    }
+  });
+
+  // Filter event listener
+  const filterOptions = document.querySelectorAll(".filter-option");
+  filterOptions.forEach(option => {
+    option.addEventListener("click", async (e) => {
+      e.preventDefault();
+      const filterType = option.dataset.filterType;
+      const filterValue = option.dataset.filterValue;
+
+      try {
+        const response = await fetch(`/admin/searchUser?${filterType}=${filterValue}&q=${searchInput.value}`);
+        const data = await response.json();
+        const users = data.users;
+
+        usersTableBody.innerHTML = '';
+
+        users.forEach(user => {
+          const userRow = document.createElement("tr");
+          userRow.innerHTML = `
+            <td><input class="form-check-input" type="checkbox"></td>
+            <td>${user.name}</td>
+            <td>${user.email}</td>
+            <td>${user.phone}</td>
+            <td>1234 Elm Street, hert junction Anytown, USA</td>
+            <td>
+              <button class="btn btn-sm ${user.isBlocked ? 'btn-danger' : 'btn-success'} toggle-status" data-user-id="${user._id}">
+                ${user.isBlocked ? 'Unblock' : 'Block'}
+              </button>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-primary delete-user" data-user-id="${user._id}"><i class="fa fa-trash"></i></button>
+            </td>
+          `;
+          usersTableBody.appendChild(userRow);
+        });
+      } catch (error) {
+        console.error('Error filtering user:', error);
+      }
+    });
+  });
+});
+
+</script>
+
+
+{{!-- below is a working button placed inside DOMContentLoaded above but removed due to non working in filter&search --}}
+{{!-- <script>
+     const toggleButtons = document.querySelectorAll(".toggle-status")
+
+    toggleButtons.forEach(button => {
+      button.addEventListener("click", async () => {
+        const userId = button.dataset.userId
+        const currentStatus = button.textContent.trim() === "Unblock"
+
+        try {
+          const response = await fetch(`/admin/userStatus?id=${userId}`, {
+            method: "POST",
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ isBlocked: !currentStatus })
+          })
+
+          const data = await response.json()
+          if (data.success) {
+            button.classList.toggle('btn-danger', !currentStatus);
+            button.classList.toggle('btn-success', currentStatus);
+            button.textContent = currentStatus ? 'Block' : 'Unblock';
+          } else {
+            console.error('Error toggling user status:', data.error);
+          }
+        } catch (error) {
+          console.error('Error toggling user status:', error);
+        }
+      })
+    })
+</script> --}}

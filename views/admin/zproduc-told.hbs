@@ -1,0 +1,78 @@
+
+          <!-- Recent Sales Start -->
+          <div class="container-fluid pt-4 px-4">
+            <div class="bg-light text-center rounded p-4">
+              {{!-- add product, search area start --}}          
+              <div class="bg-light text-center rounded p-4">
+                <div class="row align-items-center justify-content-between ">
+                  <div class="col-auto">
+                    <a href="/admin/addproduct" class="btn btn-primary m-2">Add Products</a>
+                  </div>
+                  <div class="col-md-8">
+                    <input class="form-control rounded-3 bg-transparent" type="search" value="" id="searchInput"
+                      placeholder="Search" />
+                  </div>
+                  <div class="col-auto">
+                    <div class="dropdown">
+                      <button class="btn btn-secondary dropdown-toggle" type="button" id="filterDropdownButton"
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Filter
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-end" aria-labelledby="filterDropdownButton">
+                        <a class="dropdown-item" href="#">Option 1</a>
+                        <a class="dropdown-item" href="#">Option 2</a>
+                        <a class="dropdown-item" href="#">Option 3</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {{!-- add product, search area end --}}
+              {{!-- <div class="d-flex align-items-center justify-content-between mb-4">
+                <h6 class="mb-0">Products</h6>
+                <a href="">Show All</a>
+              </div> --}}
+              <div class="table-responsive">
+                <table class="table text-start align-middle table-bordered table-hover mb-0">
+                            <thead>
+                                <tr class="text-dark">
+                                    <th scope="col"><input class="form-check-input" type="checkbox"></th>
+                                    <th scope="col">Product</th>
+                                    <th scope="col">Category</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Edit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input class="form-check-input" type="checkbox"></td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTBPRpTOwz9pwRI9H0J3fX_ApAif3vcGQ90w&s" alt="" style="width: 2rem;" class="img-fluid rounded-3">
+                                            <div class="ms-3">
+                                                <h6 class="mb-0">
+                                                    Women Shoes
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>01 Jan 2045</td>
+                                    <td>INV-0123</td>
+                                    <td>$123</td>
+                                    <td>Paid</td>
+                                    <td><a class="btn btn-sm btn-primary" href="">Details</a></td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- Recent Sales End -->
+
+  {{>adminFooter}}
+
+        </div>
+        <!-- Content End -->
