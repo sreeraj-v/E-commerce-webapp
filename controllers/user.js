@@ -146,7 +146,7 @@ const loginPage = async (req,res)=>{
 const home = async (req, res) => {
   try {
     if (!req.session.user) {
-      res.redirect("/register");
+     return  res.redirect("/login");
     }
     const products = await productHelper.viewProduct();
     res.render("user/index", { products: products });
@@ -155,13 +155,39 @@ const home = async (req, res) => {
   }
 };
 
+const productView = async(req,res)=>{
+  const productId = req.query.q
+  try{
+    const product = await productHelper.viewSingleProduct(productId)
+    const category = product.category
+    const relatedProducts = await productHelper.relatedProduct(category)
+    // console.log(relatedProducts)
+    if(!product){
+      res.redirect("/404notfound")
+    }
+    res.render("user/productView",{product,relatedProducts})
+  }catch(error){
+    console.log(error)
+  }
+}
+
+
 const logout = (req,res)=>{
   req.session.destroy()
   res.redirect("/login")
 }
 
 
-module.exports = { registeration ,verifyEmail,registerPage,home,loginPage,userLogin,logout};
+module.exports = {
+  registeration,
+  verifyEmail,
+  registerPage,
+  home,
+  loginPage,
+  userLogin,
+  productView,
+  logout,
+};
 
 
 // doubts

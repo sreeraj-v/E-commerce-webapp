@@ -7,6 +7,16 @@ module.exports={
     return products;
   },
 
+  viewSingleProduct: async (productId)=>{
+    const product = await Product.findById(productId).lean()
+    return product;
+  },
+
+  relatedProduct: async(category)=>{
+    const relatedProducts = await Product.find({category}).lean()
+    return relatedProducts;
+  },
+
   addProducts: async function(body,images){
     const { name, brand, price, category, description, stockAvailable } = body;
     const newProduct = new Product({
