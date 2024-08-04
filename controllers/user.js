@@ -173,9 +173,9 @@ const productView = async(req,res)=>{
 
 const shop = async (req,res) =>{
   try{
-    const product = productHelper.shopProducts()
-    if(product){
-      res.render("user/shop",{product})
+    const products = await productHelper.shopProducts()
+    if(products){
+      res.render("user/shop",{products})
     }
   }catch(error){
     console.log(error)
