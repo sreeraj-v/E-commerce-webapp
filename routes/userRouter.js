@@ -8,17 +8,18 @@ router.post("/register",registeration)
 router.get("/verify-email",verifyEmail)
 router.get("/",home)
 router.get("/productView",productView)
+router.get("/shop");
 
 router.get("/myaccount", (req, res) => {
   res.render("user/myaccount");
 });
 
-// router.get("/productView", (req, res) => {
-//   res.render("user/productView");
-// });
+router.get("/cart", (req, res) => {
+  res.render("user/cart");
+});
 
-router.get("/shop", (req, res) => {
-  res.render("user/shop");
+router.get("/checkout", (req, res) => {
+  res.render("user/checkout");
 });
 
 router.get("/wishlist", (req, res) => {

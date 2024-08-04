@@ -36,9 +36,9 @@
                                         <figure class="product-main-image">
                                             <img id="product-zoom" src="uploads/{{product.image.[0]}}" data-zoom-image="uploads/{{product.image.[0]}}" alt="product image">
 
-                                            <a href="#" id="btn-product-gallery" class="btn-product-gallery">
+                                            {{!-- <a href="#" id="btn-product-gallery" class="btn-product-gallery">
                                                 <i class="icon-arrows"></i>
-                                            </a>
+                                            </a> --}}
                                         </figure><!-- End .product-main-image -->
 
                                         <div id="product-zoom-gallery" class="product-image-gallery">
@@ -343,6 +343,30 @@
     </div><!-- End .sticky-bar -->
 
 {{>mobileView}}
+
+<script>
+    document.addEventListener("DOMContentLoaded",function() {
+        const bigImg = document.getElementById("product-zoom")
+        const sideImageLinks = document.querySelectorAll(".product-gallery-item")
+
+        sideImageLinks.forEach(links=>{
+            links.addEventListener("click",function(event){
+                event.preventDefault()
+
+                const sideImageSrc = this.getAttribute("data-image")
+                const zoomImageSrc = this.getAttribute("data-zoom-image")
+
+                bigImg.src = sideImageSrc
+                bigImg.setAttribute("data-zoom-image",zoomImageSrc)
+
+                sideImageLinks.forEach(links=> links.classList.remove("active"))
+                this.classList.add("active")
+            })
+        })
+    })
+</script>
+
+
 
     {{!-- <script src="assets/js/bootstrap-input-spinner.js"></script>
     <script src="assets/js/jquery.elevateZoom.min.js"></script>

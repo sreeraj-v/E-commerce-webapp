@@ -148,7 +148,7 @@ const home = async (req, res) => {
     if (!req.session.user) {
      return  res.redirect("/login");
     }
-    const products = await productHelper.viewProduct();
+    const products = await productHelper.shopProducts();
     res.render("user/index", { products: products });
   } catch (error) {
     console.log(error);
@@ -171,6 +171,16 @@ const productView = async(req,res)=>{
   }
 }
 
+const shop = async (req,res) =>{
+  try{
+    const product = productHelper.shopProducts()
+    if(product){
+      res.render("user/shop",{product})
+    }
+  }catch(error){
+    console.log(error)
+  }
+}
 
 const logout = (req,res)=>{
   req.session.destroy()
@@ -186,6 +196,7 @@ module.exports = {
   loginPage,
   userLogin,
   productView,
+  shop,
   logout,
 };
 

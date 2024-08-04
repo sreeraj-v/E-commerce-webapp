@@ -13,8 +13,13 @@ module.exports={
   },
 
   relatedProduct: async(category)=>{
-    const relatedProducts = await Product.find({category}).lean()
+    const relatedProducts = await Product.find({isActive:true,category}).lean()
     return relatedProducts;
+  },
+
+  shopProducts: async()=>{
+    const products = await Product.find({isActive:true}).lean()
+    return products;
   },
 
   addProducts: async function(body,images){
