@@ -182,6 +182,27 @@ const shop = async (req,res) =>{
   }
 }
 
+const addToCart = async (req,res)=>{
+  const productId = req.query.q
+  try{
+    const product = await productHelper.viewSingleProduct(productId)
+    if(!product){
+      return res.redirect("/404notfound")
+    }
+    res.render("user/cart",{product})
+  }catch(error){
+    console.log(error)
+  }
+}
+
+const cart = async (req,res)=>{
+  try{
+    res.render("user/cart")
+  }catch(error){
+    console.log(error)
+  }
+}
+
 const logout = (req,res)=>{
   req.session.destroy()
   res.redirect("/login")
@@ -197,6 +218,8 @@ module.exports = {
   userLogin,
   productView,
   shop,
+  addToCart,
+  cart,
   logout,
 };
 

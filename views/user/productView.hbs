@@ -98,7 +98,7 @@
                                     </div><!-- End .details-filter-row -->
 
                                     <div class="product-details-action">
-                                        <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
+                                        <a href="/cart?q={{this._id}}" class="btn-product btn-cart"><span>add to cart</span></a>
 
                                         <div class="details-action-wrapper">
                                             <a href="#" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
@@ -281,7 +281,7 @@
                                 </div><!-- End .product-action-vertical -->
 
                                 <div class="product-action">
-                                    <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
+                                    <a href="/cart?q={{this._id}}" class="btn-product btn-cart"><span>add to cart</span></a>
                                 </div><!-- End .product-action -->
                             </figure><!-- End .product-media -->
 
@@ -289,7 +289,7 @@
                                 <div class="product-cat">
                                     <a href="#">{{this.category}}</a>
                                 </div><!-- End .product-cat -->
-                                <h3 class="product-title"><a href="product.html">{{this.name}}</a></h3><!-- End .product-title -->
+                                <h3 class="product-title"><a href="/productView?q={{this._id}}">{{this.name}}</a></h3><!-- End .product-title -->
                                 <div class="product-price">
                                     ₹{{this.price}}
                                 </div><!-- End .product-price -->
@@ -334,7 +334,7 @@
                     </div><!-- End .product-details-quantity -->
 
                     <div class="product-details-action">
-                        <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
+                        <a href="/cart?q={{this._id}}" class="btn-product btn-cart"><span>add to cart</span></a>
                         <a href="#" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
                     </div><!-- End .product-details-action -->
                 </div><!-- End .col-6 -->

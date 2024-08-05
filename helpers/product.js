@@ -13,7 +13,7 @@ module.exports={
   },
 
   relatedProduct: async(category)=>{
-    const relatedProducts = await Product.find({isActive:true,category}).lean()
+    const relatedProducts = await Product.find({isActive:true,category}).limit(10).lean()
     return relatedProducts;
   },
 
