@@ -34,13 +34,14 @@
 												</tr>
 											</thead>
 				
-											<tbody>
-												<tr>
+											<tbody id="cart-items">
+												{{#each cart.items}}
+												<tr data-item-id ="{{this._id}}">
 													<td class="product-col">
 														<div class="product">
 															<figure class="product-media">
 																<a href="#">
-																	<img src="assets/images/products/table/product-1.jpg" alt="Product image">
+																	<img src="uploads/{{this.productId.image.[0]}}" alt="Product image">
 																</a>
 															</figure>
 				
@@ -140,6 +141,7 @@
     <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
 
 {{>mobileView}}
+
 
 
     {{!-- <script src="assets/js/bootstrap-input-spinner.js"></script>

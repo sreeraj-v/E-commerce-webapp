@@ -3,6 +3,7 @@ const crypto = require("crypto")
 const transporter = require("../config/nodemailer/emailer");
 const userSchema = require("../models/userSchema");
 const productHelper = require("../helpers/product")
+const cartHelper = require("../helpers/cart")
 require('dotenv').config()
 
 // registeration post route
@@ -182,14 +183,14 @@ const shop = async (req,res) =>{
   }
 }
 
+// add to cart   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
 const addToCart = async (req,res)=>{
   const productId = req.query.q
+  const userId = req.session.user._id
+  const guestId = req.sessionID
   try{
-    const product = await productHelper.viewSingleProduct(productId)
-    if(!product){
-      return res.redirect("/404notfound")
-    }
-    res.render("user/cart",{product})
+    const cart = await cartHelper.addProductToCart(productId,userId,guestId)
   }catch(error){
     console.log(error)
   }
