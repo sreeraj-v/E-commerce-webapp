@@ -86,7 +86,7 @@ const verifyEmail = async  (req,res)=>{
     req.session.loggedIn = true
     req.session.name = user.name
     console.log("user created and signuped");
-    return res.render("user/index")
+    return res.redirect("/");
   }catch(error){
     console.log(error)
     return res.render("user/register",{errorMsg:"error verifying in account"})
@@ -190,7 +190,8 @@ const addToCart = async (req,res)=>{
   const userId = req.session.user._id
   const guestId = req.sessionID
   try{
-    const cart = await cartHelper.addProductToCart(productId,userId,guestId)
+    const product = productHelper.viewSingleProduct(productId)
+    const cart = await cartHelper.addProductToCart(product,userId,guestId)
   }catch(error){
     console.log(error)
   }
