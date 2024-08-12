@@ -158,15 +158,19 @@ const home = async (req, res) => {
 
 const productView = async(req,res)=>{
   const productId = req.query.q
+  const userId = req.session.user._id
+  const guestId = req.sessionID
   try{
     const product = await productHelper.viewSingleProduct(productId)
     const category = product.category
     const relatedProducts = await productHelper.relatedProduct(category)
-    // console.log(relatedProducts)
+    const cart = await cartHelper.getCart(userId, guestId);
+    const isInCart = cart && cart.items.some(item => item.productId.equals(product._id));
+    console.log(isInCart)
     if(!product){
       res.redirect("/404notfound")
     }
-    res.render("user/productView",{product,relatedProducts})
+    res.render("user/productView",{product,isInCart,relatedProducts})
   }catch(error){
     console.log(error)
   }
@@ -187,19 +191,27 @@ const shop = async (req,res) =>{
 
 const addToCart = async (req,res)=>{
   const productId = req.query.q
-  const userId = req.session.user._id
+  const userId = req.session.user? req.session.user._id : null
   const guestId = req.sessionID
   try{
-    const product = productHelper.viewSingleProduct(productId)
+    const product =await productHelper.viewSingleProduct(productId)
+    if(!product){
+      return res.redirect("/404notFound") 
+    }
     const cart = await cartHelper.addProductToCart(product,userId,guestId)
+    console.log(cart)
+    res.render("user/cart",{cart});
   }catch(error){
     console.log(error)
   }
 }
 
 const cart = async (req,res)=>{
+  const userId = req.session.user? req.session.user._id : null
+  const guestId = req.sessionID
   try{
-    res.render("user/cart")
+    const cart = await cartHelper.getCart(userId,guestId)
+    res.render("user/cart",{cart})
   }catch(error){
     console.log(error)
   }
