@@ -146,35 +146,45 @@ const loginPage = async (req,res)=>{
 
 const home = async (req, res) => {
   try {
-    if (!req.session.user) {
-     return  res.redirect("/login");
-    }
     const products = await productHelper.shopProducts();
     res.render("user/index", { products: products });
   } catch (error) {
     console.log(error);
   }
 };
+//  this is last working
+const productView = async (req, res) => {
+  const productId = req.query.q;
+  const userId = req.session.user ? req.session.user._id : null;
 
-const productView = async(req,res)=>{
-  const productId = req.query.q
-  const userId = req.session.user._id
-  const guestId = req.sessionID
-  try{
-    const product = await productHelper.viewSingleProduct(productId)
-    const category = product.category
-    const relatedProducts = await productHelper.relatedProduct(category)
-    const cart = await cartHelper.getCart(userId, guestId);
-    const isInCart = cart && cart.items.some(item => item.productId.equals(product._id));
-    console.log(isInCart)
-    if(!product){
-      res.redirect("/404notfound")
+  try {
+    const product = await productHelper.viewSingleProduct(productId);
+    if (!product) {
+      return res.redirect("/404notfound");
     }
-    res.render("user/productView",{product,isInCart,relatedProducts})
-  }catch(error){
-    console.log(error)
+
+    const category = product.category;
+    const relatedProducts = await productHelper.relatedProduct(category);
+
+    let cart = { items: [] };
+    if (userId) {
+      const userCart = await cartHelper.getCart(userId);
+      if (userCart) {
+        cart = userCart;
+      }
+    } else if (req.session.cart) {
+      cart = req.session.cart;
+    }
+
+    const isInCart = cart.items.some(item => String(item.productId) === String(productId));
+
+    res.render("user/productView", { product, isInCart, relatedProducts });
+  } catch (error) {
+    console.error(error);
+    res.redirect("/500error");
   }
-}
+};
+
 
 const shop = async (req,res) =>{
   try{
@@ -189,33 +199,53 @@ const shop = async (req,res) =>{
 
 // add to cart   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-const addToCart = async (req,res)=>{
-  const productId = req.query.q
-  const userId = req.session.user? req.session.user._id : null
-  const guestId = req.sessionID
-  try{
-    const product =await productHelper.viewSingleProduct(productId)
-    if(!product){
-      return res.redirect("/404notFound") 
-    }
-    const cart = await cartHelper.addProductToCart(product,userId,guestId)
-    console.log(cart)
-    res.render("user/cart",{cart});
-  }catch(error){
-    console.log(error)
-  }
-}
+const addToCart = async (req, res) => {
+  const productId = req.query.q;
+  const userId = req.session.user ? req.session.user._id : null;
+  const guestCart = req.session.cart || { items: [] };
 
-const cart = async (req,res)=>{
-  const userId = req.session.user? req.session.user._id : null
-  const guestId = req.sessionID
-  try{
-    const cart = await cartHelper.getCart(userId,guestId)
-    res.render("user/cart",{cart})
-  }catch(error){
-    console.log(error)
+  try {
+    const product = await productHelper.viewSingleProduct(productId);
+    if (!product) {
+      return res.redirect("/404notfound");
+    }
+
+    if (userId) {
+      await cartHelper.addProductToCart(userId, product);
+    } else {
+      const itemIndex = guestCart.items.findIndex(item => String(item.productId) === String(product._id));
+      if (itemIndex === -1) {
+        guestCart.items.push({
+          productId: product._id,
+          price: product.price,
+          quantity: 1,
+          total: product.price,
+        });
+      }
+      req.session.cart = guestCart;
+    }
+
+    res.redirect("/cart");
+  } catch (error) {
+    console.error(error);
+    res.redirect("/500error");
   }
-}
+};
+
+
+const cart = async (req, res) => {
+  const userId = req.session.user ? req.session.user._id : null;
+
+  let cart = { items: [] };
+  if (userId) {
+    cart = await cartHelper.getCart(userId);
+  } else if (req.session.cart) {
+    cart = req.session.cart;
+  }
+
+  res.render("user/cart", { cart });
+};
+
 
 const logout = (req,res)=>{
   req.session.destroy()
