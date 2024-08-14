@@ -75,5 +75,9 @@ module.exports={
   searchProduct: async(searchCriteria)=>{
     const product = await Product.find(searchCriteria).lean()
     return product;
+  },
+
+  getProductDetails : async (productIds) => {
+    return await Product.find({ _id: { $in: productIds } }).lean();
   }
 }

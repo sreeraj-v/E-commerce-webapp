@@ -153,6 +153,38 @@ const home = async (req, res) => {
   }
 };
 //  this is last working
+// const productView = async (req, res) => {
+//   const productId = req.query.q;
+//   const userId = req.session.user ? req.session.user._id : null;
+
+//   try {
+//     const product = await productHelper.viewSingleProduct(productId);
+//     if (!product) {
+//       return res.redirect("/404notfound");
+//     }
+
+//     const category = product.category;
+//     const relatedProducts = await productHelper.relatedProduct(category);
+
+//     let cart = { items: [] };
+//     if (userId) {
+//       const userCart = await cartHelper.getCart(userId);
+//       if (userCart) {
+//         cart = userCart;
+//       }
+//     } else if (req.session.cart) {
+//       cart = req.session.cart;
+//     }
+
+//     const isInCart = cart.items.some(item => item.productId.toString() === productId);
+
+//     res.render("user/productView", { product, isInCart, relatedProducts });
+//   } catch (error) {
+//     console.log(error);
+//     res.redirect("/500error");
+//   }
+// };
+
 const productView = async (req, res) => {
   const productId = req.query.q;
   const userId = req.session.user ? req.session.user._id : null;
@@ -162,7 +194,6 @@ const productView = async (req, res) => {
     if (!product) {
       return res.redirect("/404notfound");
     }
-
     const category = product.category;
     const relatedProducts = await productHelper.relatedProduct(category);
 
@@ -175,15 +206,23 @@ const productView = async (req, res) => {
     } else if (req.session.cart) {
       cart = req.session.cart;
     }
+    console.log(req.session.cart)
+    console.log(cart)
 
-    const isInCart = cart.items.some(item => String(item.productId) === String(productId));
+    const isInCart = cart.items.some(item => String(item.productId._id || item.productId) === String(productId));
+    console.log(isInCart)
+    console.log(cart.items._id)
+    console.log(cart.items.productId)
+    console.log(productId)
 
-    res.render("user/productView", { product, isInCart, relatedProducts });
+
+    res.render("user/productView", { product, isInCart,relatedProducts });
   } catch (error) {
-    console.error(error);
+    console.log(error);
     res.redirect("/500error");
   }
 };
+
 
 
 const shop = async (req,res) =>{
@@ -199,52 +238,173 @@ const shop = async (req,res) =>{
 
 // add to cart   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-const addToCart = async (req, res) => {
-  const productId = req.query.q;
-  const userId = req.session.user ? req.session.user._id : null;
-  const guestCart = req.session.cart || { items: [] };
+// const addToCart = async (req, res) => {
+//   try {
+//     const { q: productId } = req.query;
 
+//     if (!productId) {
+//       return res.status(400).send('No product ID provided');
+//     }
+
+//     const product = await productHelper.viewSingleProduct(productId);
+//     if (!product) {
+//       return res.status(404).send('Product not found');
+//     }
+
+//     if (req.session.user) {
+//       // User is logged in, handle user cart
+//       const userId = req.session.user._id;
+//       await cartHelper.addProductToCart(userId, product);
+//     } else {
+//       // User is not logged in, handle guest cart using session
+//       let guestCart = req.session.cart || { items: [] };
+
+//       const productInCart = guestCart.items.find(item => item.productId === productId);
+
+//       if (productInCart) {
+//         productInCart.countinstock += 1;
+//         productInCart.totalPrice += product.price;
+//       } else {
+//         guestCart.items.push({
+//           productId: product._id.toString(),
+//           price: product.price,
+//           totalPrice: product.price,
+//           countinstock: 1,
+//         });
+//       }
+
+//       req.session.cart = guestCart;
+//     }
+
+//     res.redirect("/cart");
+//   } catch (error) {
+//     console.error('Error adding to cart:', error);
+//     res.status(500).send('Internal server error');
+//   }
+// };
+
+const addToCart = async (req, res) => {
   try {
+    const productId = req.query.q;
+
+    if (!productId) {
+      return res.status(400).send('No product ID provided');
+    }
+
     const product = await productHelper.viewSingleProduct(productId);
     if (!product) {
       return res.redirect("/404notfound");
     }
 
-    if (userId) {
-      await cartHelper.addProductToCart(userId, product);
+    if (req.session.user) {
+      await cartHelper.addProductToCart(req.session.user._id, product);
     } else {
-      const itemIndex = guestCart.items.findIndex(item => String(item.productId) === String(product._id));
-      if (itemIndex === -1) {
-        guestCart.items.push({
-          productId: product._id,
-          price: product.price,
-          quantity: 1,
-          total: product.price,
-        });
-      }
+      let guestCart = req.session.cart || { items: [] };
+      guestCart = cartHelper.addToGuestCart(guestCart, product);
       req.session.cart = guestCart;
     }
 
     res.redirect("/cart");
   } catch (error) {
-    console.error(error);
-    res.redirect("/500error");
+    console.error('Error adding to cart:', error);
+    res.status(500).send('Internal server error');
   }
 };
 
+
+// const cart = async (req, res) => {
+//   try {
+//     let cartItems = [];
+
+//     if (req.session.user) {
+//       // User is logged in, fetch the cart from the database
+//       const userId = req.session.user._id;
+//       const userCart = await cartHelper.getCart(userId);
+
+//       if (!userCart || userCart.items.length === 0) {
+//         return res.status(404).render('user/cart', { errorMessage: 'Your cart is empty' });
+//       }
+
+//       cartItems = userCart.items;
+//     } else {
+//       // User is not logged in, fetch the cart from the session
+//       const guestCart = req.session.cart || { items: [] };
+
+//       if (guestCart.items.length === 0) {
+//         return res.status(404).render('user/cart', { errorMessage: 'Your cart is empty' });
+//       }
+
+//       const productDetails = await cartHelper.getProductDetails(
+//         guestCart.items.map(item => item.productId)
+//       );
+
+//       cartItems = guestCart.items.map(item => {
+//         const product = productDetails.find(prod => prod._id.toString() === item.productId);
+//         return {
+//           productId: {
+//             _id: product._id,
+//             name: product.name,
+//             price: product.price,
+//             imageUrls: product.imageUrls,
+//           },
+//           countinstock: item.countinstock,
+//           totalPrice: item.totalPrice,
+//         };
+//       });
+//     }
+
+//     res.render('user/cart', { products: cartItems });
+//   } catch (error) {
+//     console.error('Error fetching cart details:', error);
+//     res.status(500).render('user/cart', { errorMessage: 'Failed to load cart details' });
+//   }
+// };
 
 const cart = async (req, res) => {
-  const userId = req.session.user ? req.session.user._id : null;
+  try {
+    let cartItems = [];
 
-  let cart = { items: [] };
-  if (userId) {
-    cart = await cartHelper.getCart(userId);
-  } else if (req.session.cart) {
-    cart = req.session.cart;
+    if (req.session.user) {
+      const userCart = await cartHelper.getCart(req.session.user._id);
+
+      if (!userCart || userCart.items.length === 0) {
+        return res.status(404).render('user/cart', { errorMessage: 'Your cart is empty' });
+      }
+
+      cartItems = userCart.items;
+    } else {
+      const guestCart = req.session.cart || { items: [] };
+
+      if (guestCart.items.length === 0) {
+        return res.status(404).render('user/cart', { errorMessage: 'Your cart is empty' });
+      }
+
+      const productDetails = await productHelper.getProductDetails(
+        guestCart.items.map(item => item.productId)
+      );
+
+      cartItems = guestCart.items.map(item => {
+        const product = productDetails.find(prod => prod._id.toString() === item.productId);
+        return { 
+          productId: {
+            _id: product._id,
+            name: product.name,
+            price: product.price,
+            image: product.image
+          },
+          quantity: item.quantity,
+          total: item.total
+        };
+      });
+    }
+
+    res.render('user/cart', { products: cartItems });
+  } catch (error) {
+    console.error('Error fetching cart details:', error);
+    res.status(500).render('user/cart', { errorMessage: 'Failed to load cart details' });
   }
-
-  res.render("user/cart", { cart });
 };
+
 
 
 const logout = (req,res)=>{

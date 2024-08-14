@@ -35,7 +35,7 @@
 											</thead>
 				
 											<tbody id="cart-items">
-												{{#each cart.items}}
+												{{#each products}}
 												<tr data-item-id ="{{this._id}}">
 													<td class="product-col">
 														<div class="product">
@@ -57,7 +57,7 @@
 																required>
 														</div><!-- End .cart-product-quantity -->
 													</td>
-													<td class="total-col">{{this.productId.price}}</td>
+													<td class="total-col">{{this.total}}</td>
 													<td class="remove-col"><button class="btn-remove"><i class="icon-close"></i></button></td>
 												</tr>
 												{{/each}}

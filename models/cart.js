@@ -7,12 +7,12 @@ const cartSchema = mongoose.Schema(
       ref:"User",
       index:true 
     },
-    guestId:String,
     items:[
       {
         productId:{
           type:mongoose.Schema.Types.ObjectId,
-          ref:"Product"
+          ref:"Product",
+          required:true
         },
         price:{
           type:Number,
