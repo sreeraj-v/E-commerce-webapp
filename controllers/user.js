@@ -335,54 +335,6 @@ const addToCart = async (req, res) => {
 };
 
 
-// const cart = async (req, res) => {
-//   try {
-//     let cartItems = [];
-
-//     if (req.session.user) {
-//       // User is logged in, fetch the cart from the database
-//       const userId = req.session.user._id;
-//       const userCart = await cartHelper.getCart(userId);
-
-//       if (!userCart || userCart.items.length === 0) {
-//         return res.status(404).render('user/cart', { errorMessage: 'Your cart is empty' });
-//       }
-
-//       cartItems = userCart.items;
-//     } else {
-//       // User is not logged in, fetch the cart from the session
-//       const guestCart = req.session.cart || { items: [] };
-
-//       if (guestCart.items.length === 0) {
-//         return res.status(404).render('user/cart', { errorMessage: 'Your cart is empty' });
-//       }
-
-//       const productDetails = await cartHelper.getProductDetails(
-//         guestCart.items.map(item => item.productId)
-//       );
-
-//       cartItems = guestCart.items.map(item => {
-//         const product = productDetails.find(prod => prod._id.toString() === item.productId);
-//         return {
-//           productId: {
-//             _id: product._id,
-//             name: product.name,
-//             price: product.price,
-//             imageUrls: product.imageUrls,
-//           },
-//           countinstock: item.countinstock,
-//           totalPrice: item.totalPrice,
-//         };
-//       });
-//     }
-
-//     res.render('user/cart', { products: cartItems });
-//   } catch (error) {
-//     console.error('Error fetching cart details:', error);
-//     res.status(500).render('user/cart', { errorMessage: 'Failed to load cart details' });
-//   }
-// };
-
 const cart = async (req, res) => {
   try {
     let cartItems = [];
