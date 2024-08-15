@@ -194,27 +194,24 @@ const productView = async (req, res) => {
     if (!product) {
       return res.redirect("/404notfound");
     }
-    const category = product.category;
-    const relatedProducts = await productHelper.relatedProduct(category);
+    const relatedProducts = await productHelper.relatedProduct( product.category);
 
     let cart = { items: [] };
     if (userId) {
-      const userCart = await cartHelper.getCart(userId);
-      if (userCart) {
-        cart = userCart;
-      }
+       cart = await cartHelper.getCart(userId);
+      // if (userCart) {
+      //   cart = userCart;
+      // }
     } else if (req.session.cart) {
       cart = req.session.cart;
     }
-    console.log(req.session.cart)
-    console.log(cart)
 
     const isInCart = cart.items.some(item => String(item.productId._id || item.productId) === String(productId));
     console.log(isInCart)
-    console.log(cart.items._id)
-    console.log(cart.items.productId)
+    // cart.items.forEach((item) => {
+    //   console.log(item.productId);
+    // });
     console.log(productId)
-
 
     res.render("user/productView", { product, isInCart,relatedProducts });
   } catch (error) {
@@ -286,11 +283,7 @@ const shop = async (req,res) =>{
 const addToCart = async (req, res) => {
   try {
     const productId = req.query.q;
-
-    if (!productId) {
-      return res.status(400).send('No product ID provided');
-    }
-
+    
     const product = await productHelper.viewSingleProduct(productId);
     if (!product) {
       return res.redirect("/404notfound");
