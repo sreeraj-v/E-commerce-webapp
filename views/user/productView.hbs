@@ -284,7 +284,7 @@
                                 </div><!-- End .product-action-vertical -->
 
                                 <div class="product-action">
-                                    {{#if isInCart}}
+                                    {{#if this.isInCart}}
                                     <a href="/cart" class="btn-product btn-cart"><span>go to cart</span></a>
                                     {{else}}
                                     <a href="/addToCart?q={{this._id}}" class="btn-product btn-cart"><span>add to cart</span></a>

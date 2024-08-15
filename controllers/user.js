@@ -145,9 +145,23 @@ const loginPage = async (req,res)=>{
 // home page getting route
 
 const home = async (req, res) => {
+  const userId = req.session.user ? req.session.user._id : null
   try {
     const products = await productHelper.shopProducts();
-    res.render("user/index", { products: products });
+
+    let cart = {items:[]};
+    if(userId){
+      cart = await cartHelper.getCart(userId)
+    }else if(req.session.cart){
+      cart = req.session.cart
+    }
+
+    const IsProductInCart = products.map(product => {
+      const isInCart = cart.items.some(item => String(item.productId._id || item.productId) === String(product._id));
+      return { ...product, isInCart }; // Add isInCart to each  product
+    });
+
+    res.render("user/index", { products: IsProductInCart });
   } catch (error) {
     console.log(error);
   }
@@ -199,21 +213,23 @@ const productView = async (req, res) => {
     let cart = { items: [] };
     if (userId) {
        cart = await cartHelper.getCart(userId);
-      // if (userCart) {
-      //   cart = userCart;
-      // }
     } else if (req.session.cart) {
       cart = req.session.cart;
     }
 
     const isInCart = cart.items.some(item => String(item.productId._id || item.productId) === String(productId));
-    console.log(isInCart)
     // cart.items.forEach((item) => {
-    //   console.log(item.productId);
-    // });
-    console.log(productId)
+      //   console.log(item.productId);
+      // });
+      // console.log(productId)
+      // console.log(isInCart)
 
-    res.render("user/productView", { product, isInCart,relatedProducts });
+    const relatedProductsWithCartStatus = relatedProducts.map(relatedProduct => {
+      const isInCart = cart.items.some(item => String(item.productId._id || item.productId) === String(relatedProduct._id));
+      return { ...relatedProduct, isInCart }; // Add isInCart to each related product
+    });
+    // console.log(relatedProductsWithCartStatus)
+    res.render("user/productView", { product, isInCart,relatedProducts:relatedProductsWithCartStatus });
   } catch (error) {
     console.log(error);
     res.redirect("/500error");
@@ -223,10 +239,24 @@ const productView = async (req, res) => {
 
 
 const shop = async (req,res) =>{
+  const userId = req.session.user ? req.session.user._id : null
   try{
     const products = await productHelper.shopProducts()
+    
+    let cart = {items : []}
+    if(userId){
+      cart = await cartHelper.getCart(userId)
+    }else if (req.session.cart){
+      cart = req.session.cart
+    }
+
+    const IsProductInCart = products.map(product => (
+      {...product,isInCart:cart.items.some(item => String(item.productId._id || item.productId) === String(product._id))}
+  ))
+  console.log(IsProductInCart)
+
     if(products){
-      res.render("user/shop",{products})
+      res.render("user/shop",{products:IsProductInCart})
     }
   }catch(error){
     console.log(error)
