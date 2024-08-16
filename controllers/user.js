@@ -166,38 +166,6 @@ const home = async (req, res) => {
     console.log(error);
   }
 };
-//  this is last working
-// const productView = async (req, res) => {
-//   const productId = req.query.q;
-//   const userId = req.session.user ? req.session.user._id : null;
-
-//   try {
-//     const product = await productHelper.viewSingleProduct(productId);
-//     if (!product) {
-//       return res.redirect("/404notfound");
-//     }
-
-//     const category = product.category;
-//     const relatedProducts = await productHelper.relatedProduct(category);
-
-//     let cart = { items: [] };
-//     if (userId) {
-//       const userCart = await cartHelper.getCart(userId);
-//       if (userCart) {
-//         cart = userCart;
-//       }
-//     } else if (req.session.cart) {
-//       cart = req.session.cart;
-//     }
-
-//     const isInCart = cart.items.some(item => item.productId.toString() === productId);
-
-//     res.render("user/productView", { product, isInCart, relatedProducts });
-//   } catch (error) {
-//     console.log(error);
-//     res.redirect("/500error");
-//   }
-// };
 
 const productView = async (req, res) => {
   const productId = req.query.q;
@@ -224,12 +192,11 @@ const productView = async (req, res) => {
       // console.log(productId)
       // console.log(isInCart)
 
-    const relatedProductsWithCartStatus = relatedProducts.map(relatedProduct => {
+    const isRelatedProductsInCart = relatedProducts.map(relatedProduct => {
       const isInCart = cart.items.some(item => String(item.productId._id || item.productId) === String(relatedProduct._id));
       return { ...relatedProduct, isInCart }; // Add isInCart to each related product
     });
-    // console.log(relatedProductsWithCartStatus)
-    res.render("user/productView", { product, isInCart,relatedProducts:relatedProductsWithCartStatus });
+    res.render("user/productView", { product, isInCart,relatedProducts:isRelatedProductsInCart });
   } catch (error) {
     console.log(error);
     res.redirect("/500error");
@@ -253,11 +220,8 @@ const shop = async (req,res) =>{
     const IsProductInCart = products.map(product => (
       {...product,isInCart:cart.items.some(item => String(item.productId._id || item.productId) === String(product._id))}
   ))
-  console.log(IsProductInCart)
 
-    if(products){
-      res.render("user/shop",{products:IsProductInCart})
-    }
+    res.render("user/shop",{products:IsProductInCart})
   }catch(error){
     console.log(error)
   }
