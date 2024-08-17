@@ -229,50 +229,7 @@ const shop = async (req,res) =>{
 
 // add to cart   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-// const addToCart = async (req, res) => {
-//   try {
-//     const { q: productId } = req.query;
 
-//     if (!productId) {
-//       return res.status(400).send('No product ID provided');
-//     }
-
-//     const product = await productHelper.viewSingleProduct(productId);
-//     if (!product) {
-//       return res.status(404).send('Product not found');
-//     }
-
-//     if (req.session.user) {
-//       // User is logged in, handle user cart
-//       const userId = req.session.user._id;
-//       await cartHelper.addProductToCart(userId, product);
-//     } else {
-//       // User is not logged in, handle guest cart using session
-//       let guestCart = req.session.cart || { items: [] };
-
-//       const productInCart = guestCart.items.find(item => item.productId === productId);
-
-//       if (productInCart) {
-//         productInCart.countinstock += 1;
-//         productInCart.totalPrice += product.price;
-//       } else {
-//         guestCart.items.push({
-//           productId: product._id.toString(),
-//           price: product.price,
-//           totalPrice: product.price,
-//           countinstock: 1,
-//         });
-//       }
-
-//       req.session.cart = guestCart;
-//     }
-
-//     res.redirect("/cart");
-//   } catch (error) {
-//     console.error('Error adding to cart:', error);
-//     res.status(500).send('Internal server error');
-//   }
-// };
 
 const addToCart = async (req, res) => {
   try {
