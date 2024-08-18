@@ -256,32 +256,83 @@ const addToCart = async (req, res) => {
 };
 
 
+// const cart = async (req, res) => {
+//   try {
+//     let cartItems = [];
+
+//     if (req.session.user) {
+//       const userCart = await cartHelper.getCart(req.session.user._id);
+
+//       if (!userCart || userCart.items.length === 0) {
+//         return res.status(404).render('user/cart', { errorMessage: 'Your cart is empty' });
+//       }
+
+//       cartItems = userCart.items;
+//     } else {
+//       const guestCart = req.session.cart || { items: [] };
+
+//       if (guestCart.items.length === 0) {
+//         return res.status(404).render('user/cart', { errorMessage: 'Your cart is empty' });
+//       }
+
+//       const productDetails = await productHelper.getProductDetails(
+//         guestCart.items.map(item => item.productId)
+//       );
+
+//       cartItems = guestCart.items.map(item => {
+//         const product = productDetails.find(prod => prod._id.toString() === item.productId);
+//         return { 
+//           productId: {
+//             _id: product._id,
+//             name: product.name,
+//             price: product.price,
+//             image: product.image
+//           },
+//           quantity: item.quantity,
+//           total: item.total
+//         };
+//       });
+//     }
+
+//     res.render('user/cart', { products: cartItems });
+//   } catch (error) {
+//     console.error('Error fetching cart details:', error);
+//     res.status(500).render('user/cart', { errorMessage: 'Failed to load cart details' });
+//   }
+// };
+
 const cart = async (req, res) => {
   try {
-    let cartItems = [];
+    // Determine if user is authenticated
+    const isAuthenticated = !!req.session.user;
 
-    if (req.session.user) {
-      const userCart = await cartHelper.getCart(req.session.user._id);
+    // Retrieve cart based on user authentication status
+    let cartData = isAuthenticated
+      ? await cartHelper.getCart(req.session.user._id)
+      : req.session.cart || { items: [] };
 
-      if (!userCart || userCart.items.length === 0) {
-        return res.status(404).render('user/cart', { errorMessage: 'Your cart is empty' });
-      }
+    // Check if cart is empty and handle accordingly
+    if (!cartData.items || cartData.items.length === 0) {
+      return res.status(404).render('user/cart', { errorMessage: 'Your cart is empty' });
+    }
 
-      cartItems = userCart.items;
-    } else {
-      const guestCart = req.session.cart || { items: [] };
-
-      if (guestCart.items.length === 0) {
-        return res.status(404).render('user/cart', { errorMessage: 'Your cart is empty' });
-      }
-
-      const productDetails = await productHelper.getProductDetails(
-        guestCart.items.map(item => item.productId)
+    // Fetch product details if user is a guest
+    let productDetails = [];
+    if (!isAuthenticated) {
+      productDetails = await productHelper.getProductDetails(
+        cartData.items.map(item => item.productId)
       );
+    }
 
-      cartItems = guestCart.items.map(item => {
+    // Format cart items with product details
+    const cartItems = cartData.items.map(item => {
+      if (isAuthenticated) {
+        // For authenticated users, the product data is already populated
+        return item;
+      } else {
+        // For guest users, fetch product details manually
         const product = productDetails.find(prod => prod._id.toString() === item.productId);
-        return { 
+        return {
           productId: {
             _id: product._id,
             name: product.name,
@@ -291,16 +342,16 @@ const cart = async (req, res) => {
           quantity: item.quantity,
           total: item.total
         };
-      });
-    }
+      }
+    });
 
+    // Render cart view with products
     res.render('user/cart', { products: cartItems });
   } catch (error) {
     console.error('Error fetching cart details:', error);
     res.status(500).render('user/cart', { errorMessage: 'Failed to load cart details' });
   }
 };
-
 
 
 const logout = (req,res)=>{
