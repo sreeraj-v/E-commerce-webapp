@@ -168,7 +168,8 @@ const home = async (req, res) => {
 };
 
 const productView = async (req, res) => {
-  const productId = req.query.q;
+  const productId = req.params.id
+  console.log("id", productId)
   const userId = req.session.user ? req.session.user._id : null;
 
   try {
@@ -256,83 +257,32 @@ const addToCart = async (req, res) => {
 };
 
 
-// const cart = async (req, res) => {
-//   try {
-//     let cartItems = [];
-
-//     if (req.session.user) {
-//       const userCart = await cartHelper.getCart(req.session.user._id);
-
-//       if (!userCart || userCart.items.length === 0) {
-//         return res.status(404).render('user/cart', { errorMessage: 'Your cart is empty' });
-//       }
-
-//       cartItems = userCart.items;
-//     } else {
-//       const guestCart = req.session.cart || { items: [] };
-
-//       if (guestCart.items.length === 0) {
-//         return res.status(404).render('user/cart', { errorMessage: 'Your cart is empty' });
-//       }
-
-//       const productDetails = await productHelper.getProductDetails(
-//         guestCart.items.map(item => item.productId)
-//       );
-
-//       cartItems = guestCart.items.map(item => {
-//         const product = productDetails.find(prod => prod._id.toString() === item.productId);
-//         return { 
-//           productId: {
-//             _id: product._id,
-//             name: product.name,
-//             price: product.price,
-//             image: product.image
-//           },
-//           quantity: item.quantity,
-//           total: item.total
-//         };
-//       });
-//     }
-
-//     res.render('user/cart', { products: cartItems });
-//   } catch (error) {
-//     console.error('Error fetching cart details:', error);
-//     res.status(500).render('user/cart', { errorMessage: 'Failed to load cart details' });
-//   }
-// };
-
 const cart = async (req, res) => {
   try {
-    // Determine if user is authenticated
-    const isAuthenticated = !!req.session.user;
+    let cartItems = [];
 
-    // Retrieve cart based on user authentication status
-    let cartData = isAuthenticated
-      ? await cartHelper.getCart(req.session.user._id)
-      : req.session.cart || { items: [] };
+    if (req.session.user) {
+      const userCart = await cartHelper.getCart(req.session.user._id);
 
-    // Check if cart is empty and handle accordingly
-    if (!cartData.items || cartData.items.length === 0) {
-      return res.status(404).render('user/cart', { errorMessage: 'Your cart is empty' });
-    }
+      if (!userCart || userCart.items.length === 0) {
+        return res.status(404).render('user/cart', { errorMessage: 'Your cart is empty' });
+      }
 
-    // Fetch product details if user is a guest
-    let productDetails = [];
-    if (!isAuthenticated) {
-      productDetails = await productHelper.getProductDetails(
-        cartData.items.map(item => item.productId)
+      cartItems = userCart.items;
+    } else {
+      const guestCart = req.session.cart || { items: [] };
+
+      if (guestCart.items.length === 0) {
+        return res.status(404).render('user/cart', { errorMessage: 'Your cart is empty' });
+      }
+
+      const productDetails = await productHelper.getProductDetails(
+        guestCart.items.map(item => item.productId)
       );
-    }
 
-    // Format cart items with product details
-    const cartItems = cartData.items.map(item => {
-      if (isAuthenticated) {
-        // For authenticated users, the product data is already populated
-        return item;
-      } else {
-        // For guest users, fetch product details manually
+      cartItems = guestCart.items.map(item => {
         const product = productDetails.find(prod => prod._id.toString() === item.productId);
-        return {
+        return { 
           productId: {
             _id: product._id,
             name: product.name,
@@ -342,16 +292,32 @@ const cart = async (req, res) => {
           quantity: item.quantity,
           total: item.total
         };
-      }
-    });
+      });
+    }
 
-    // Render cart view with products
     res.render('user/cart', { products: cartItems });
   } catch (error) {
     console.error('Error fetching cart details:', error);
     res.status(500).render('user/cart', { errorMessage: 'Failed to load cart details' });
   }
 };
+
+const removeFromCart = async(req,res)=>{
+  const productId = req.query.q
+  try{
+    if(req.session.user){
+      await cartHelper.removeProduct(productId,req.session.user._id)
+    }else{
+      const guestCart = req.session.cart || {items:[]}
+      req.session.cart.items = guestCart.items.filter(item=>item.productId!==productId)
+    }
+    res.redirect("/cart")
+  }catch(error){
+    console.error('Error fetching cart details:', error);
+    res.status(500).send('Internal server error');
+  }
+}
+
 
 
 const logout = (req,res)=>{
@@ -371,6 +337,7 @@ module.exports = {
   shop,
   addToCart,
   cart,
+  removeFromCart,
   logout,
 };
 

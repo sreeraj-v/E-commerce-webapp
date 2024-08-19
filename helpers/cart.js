@@ -125,5 +125,12 @@ module.exports = {
     }
 
     return sessionCart;
+  },
+
+  removeProduct : async(productId,userId)=>{
+    await Cart.updateOne(
+      {userId},
+      {$pull:{items:{productId}}}
+    )
   }
 };
