@@ -36,7 +36,7 @@
 				
 											<tbody id="cart-items">
 												{{#each products}}
-												<tr data-item-id ="{{this._id}}">
+												<tr data-item-id ="{{this.productId._id}}">
 													<td class="product-col">
 														<div class="product">
 															<figure class="product-media">
@@ -58,7 +58,7 @@
 														</div><!-- End .cart-product-quantity -->
 													</td>
 													<td class="total-col">{{this.total}}</td>
-													<td class="remove-col"><a href="/removeFromCart/{{this._id}}" class="btn-remove"><i class="icon-close"></i></a></td>
+													<td class="remove-col"><a href="/removeFromCart?q={{this.productId._id}}" class="btn-remove"><i class="icon-close"></i></a></td>
 												</tr>
 												{{/each}}
 											</tbody>
@@ -143,7 +143,51 @@
 
 {{>mobileView}}
 
+	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
 
+
+document.querySelectorAll('.cart-product-quantity input').forEach(input => {
+    input.addEventListener('change', function () {
+        const productId = this.closest('tr').getAttribute('data-item-id');
+        const quantity = this.value;
+                    const row = this.closest('tr');
+                    const price = parseFloat(row.querySelector('.price-col').textContent);
+        // Perform AJAX request to update quantity
+        $.ajax({
+            url: '/updateQuantity',
+            method: 'POST',
+            data: { productId: productId, quantity: quantity ,price:price },
+            success: (response) => {
+                if (response.success) {
+                    const row = this.closest('tr');
+                    const price = parseFloat(row.querySelector('.price-col').textContent);
+                    const total = price * quantity;
+                    row.querySelector('.total-col').textContent = total.toFixed(2);
+
+                    // Optionally update the cart total
+                    updateCartTotal();
+                } else {
+                    alert('Failed to update quantity');
+                }
+            },
+            error: (error) => {
+                console.error('Error updating quantity:', error);
+                alert('Failed to update quantity');
+            }
+        });
+    });
+});
+
+function updateCartTotal() {
+    let total = 0;
+    document.querySelectorAll('.total-col').forEach(col => {
+        total += parseFloat(col.textContent);
+    });
+    document.querySelector('.summary-total td:last-child').textContent = `$${total.toFixed(2)}`;
+}
+
+</script>
 
     {{!-- <script src="assets/js/bootstrap-input-spinner.js"></script>
     <!-- Main JS File -->

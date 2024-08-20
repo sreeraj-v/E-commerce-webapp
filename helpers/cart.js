@@ -128,6 +128,8 @@ module.exports = {
   },
 
   removeProduct : async(productId,userId)=>{
+    console.log(productId);
+    console.log(userId);
     await Cart.updateOne(
       {userId},
       {$pull:{items:{productId}}}

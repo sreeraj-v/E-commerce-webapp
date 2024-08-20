@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { registeration, verifyEmail, registerPage, home, loginPage, userLogin, logout, productView, shop, addToCart, cart, removeFromCart,  } = require("../controllers/user")
+const { registeration, verifyEmail, registerPage, home, loginPage, userLogin, logout, productView, shop, addToCart, cart, removeFromCart, updateQuantity,  } = require("../controllers/user")
 
 router.get("/login",loginPage)
 router.post("/login",userLogin)
@@ -11,7 +11,8 @@ router.get("/productView",productView)
 router.get("/shop",shop);
 router.get("/addToCart",addToCart);
 router.get("/cart",cart)
-router.get("/removeFromCart/:id",removeFromCart)
+router.get("/removeFromCart",removeFromCart)
+router.post("/updateQuantity",updateQuantity)
 
 router.get("/myaccount", (req, res) => {
   res.render("user/myaccount");
