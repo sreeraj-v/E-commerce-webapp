@@ -4,7 +4,6 @@ const transporter = require("../config/nodemailer/emailer");
 const userSchema = require("../models/userSchema");
 const productHelper = require("../helpers/product")
 const cartHelper = require("../helpers/cart")
-const Cart = require("../models/cart")
 require('dotenv').config()
 
 // registeration post route
@@ -324,22 +323,11 @@ const removeFromCart = async(req,res)=>{
 const updateQuantity = async (req,res)=>{
   try {
     const { productId, quantity,price } = req.body;
-    console.log(productId);
-    console.log(quantity);
-    
-
-    if (!productId || !quantity) {
-        return res.status(400).json({ error: 'Invalid product or quantity' });
-    }
+    const userId = req.session.user?req.session.user._id : null
 
     if (req.session.user) {
-        // Update quantity for logged-in user
-        await Cart.updateOne(
-            { userId: req.session.user._id, "items.productId": productId },
-            { $set: { "items.$.quantity": quantity, "items.$.total": quantity * price } }
-        );
+        await cartHelper. updateProductQuantity(userId,productId,quantity,price)
     } else {
-        // Update quantity for guest user
         let guestCart = req.session.cart || { items: [] };
         const item = guestCart.items.find(item => item.productId === productId);
 
@@ -352,6 +340,7 @@ const updateQuantity = async (req,res)=>{
     }
 
     res.json({ success: true });
+
 } catch (error) {
     console.error('Error updating cart quantity:', error);
     res.status(500).json({ error: 'Failed to update cart quantity' });

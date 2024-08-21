@@ -69,6 +69,7 @@
 // };
 
 const Cart = require("../models/cart");
+const { updateProduct } = require("./product");
 
 module.exports = {
   getCart: async function (userId) {
@@ -134,5 +135,12 @@ module.exports = {
       {userId},
       {$pull:{items:{productId}}}
     )
+  },
+
+  updateProductQuantity: async(userId,productId,quantity,price)=>{
+   return await Cart.updateOne(
+      { userId: userId, "items.productId": productId },
+      { $set: { "items.$.quantity": quantity, "items.$.total": quantity * price } }
+  );
   }
 };

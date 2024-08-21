@@ -78,10 +78,6 @@
 				
 											<table class="table table-summary">
 												<tbody>
-													<tr class="summary-subtotal">
-														<td>Price (1 item):</td>
-														<td>$160.00</td>
-													</tr><!-- End .summary-subtotal -->
 													<tr class="summary-shipping">
 														<td>Shipping:</td>
 														<td>&nbsp;</td>
@@ -114,12 +110,12 @@
 																<label class="custom-control-label" for="express-shipping">Discount:</label>
 															</div><!-- End .custom-control -->
 														</td>
-														<td>$20.00</td>
+														<td>₹0.00</td>
 													</tr><!-- End .summary-shipping-row -->
 				
 													<tr class="summary-total">
-														<td>Total:</td>
-														<td>$160.00</td>
+														<td>Total:₹</td>
+														<td></td>
 													</tr><!-- End .summary-total -->
 												</tbody>
 											</table><!-- End .table table-summary -->
@@ -143,50 +139,42 @@
 
 {{>mobileView}}
 
-	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
 
+	document.querySelectorAll(".cart-product-quantity input").forEach(input => {
+		input.addEventListener("change", function () {
+			const row = this.closest("tr")
+			const productId = row.getAttribute("data-item-id")
+			const quantity = parseInt(this.value)
+			const price = parseFloat(row.querySelector(".price-col").textContent)
 
-document.querySelectorAll('.cart-product-quantity input').forEach(input => {
-    input.addEventListener('change', function () {
-        const productId = this.closest('tr').getAttribute('data-item-id');
-        const quantity = this.value;
-                    const row = this.closest('tr');
-                    const price = parseFloat(row.querySelector('.price-col').textContent);
-        // Perform AJAX request to update quantity
-        $.ajax({
-            url: '/updateQuantity',
-            method: 'POST',
-            data: { productId: productId, quantity: quantity ,price:price },
-            success: (response) => {
-                if (response.success) {
-                    const row = this.closest('tr');
-                    const price = parseFloat(row.querySelector('.price-col').textContent);
-                    const total = price * quantity;
-                    row.querySelector('.total-col').textContent = total.toFixed(2);
+			fetch("/updateQuantity", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ productId, quantity, price })
+			})
+				.then(response => response.json())
+				.then(response => {
+					if (response.success) {
+						const total = price * quantity
+						row.querySelector(".total-col").textContent = total.toFixed(2)
+						updateCartTotal()
+					} else {
+					console.log('Error updating quantity:');
+					}
+				}).catch(error => {
+					console.error('Error updating quantity:', error);
+				})
+		})
+	})
 
-                    // Optionally update the cart total
-                    updateCartTotal();
-                } else {
-                    alert('Failed to update quantity');
-                }
-            },
-            error: (error) => {
-                console.error('Error updating quantity:', error);
-                alert('Failed to update quantity');
-            }
-        });
-    });
-});
-
-function updateCartTotal() {
-    let total = 0;
-    document.querySelectorAll('.total-col').forEach(col => {
-        total += parseFloat(col.textContent);
-    });
-    document.querySelector('.summary-total td:last-child').textContent = `$${total.toFixed(2)}`;
-}
-
+	function updateCartTotal() {
+		let total = 0
+		document.querySelectorAll(".total-col").forEach(col => {
+			total += parseFloat(col.textContent)
+		})
+		document.querySelector(".summary-total td:last-child").textContent = `₹${total.toFixed(2)}`
+	}
 </script>
 
     {{!-- <script src="assets/js/bootstrap-input-spinner.js"></script>
