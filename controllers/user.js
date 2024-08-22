@@ -260,6 +260,7 @@ const addToCart = async (req, res) => {
 const cart = async (req, res) => {
   try {
     let cartItems = [];
+    let totalCartValue = 0;
 
     if (req.session.user) {
       const userCart = await cartHelper.getCart(req.session.user._id);
@@ -269,6 +270,7 @@ const cart = async (req, res) => {
       }
 
       cartItems = userCart.items;
+      totalCartValue = cartItems.reduce((total,item)=> total+item.total,0).toFixed(2)
     } else {
       const guestCart = req.session.cart || { items: [] };
 
@@ -293,9 +295,10 @@ const cart = async (req, res) => {
           total: item.total
         };
       });
+      totalCartValue = cartItems.reduce((total,item)=> total+item.total,0).toFixed(2)
     }
 
-    res.render('user/cart', { products: cartItems });
+    res.render('user/cart', { products: cartItems ,totalCartValue});
   } catch (error) {
     console.error('Error fetching cart details:', error);
     res.status(500).render('user/cart', { errorMessage: 'Failed to load cart details' });
