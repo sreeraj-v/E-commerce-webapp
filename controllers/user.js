@@ -350,6 +350,12 @@ const updateQuantity = async (req,res)=>{
 }
 }
 
+// checkOut    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+const checkOut = async (req,res)=>{
+  res.render("user/checkout")
+}
+
 const logout = (req,res)=>{
   req.session.destroy()
   res.redirect("/login")
@@ -369,6 +375,7 @@ module.exports = {
   cart,
   removeFromCart,
   updateQuantity,
+  checkOut,
   logout,
 };
 

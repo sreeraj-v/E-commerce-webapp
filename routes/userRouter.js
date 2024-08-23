@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { registeration, verifyEmail, registerPage, home, loginPage, userLogin, logout, productView, shop, addToCart, cart, removeFromCart, updateQuantity,  } = require("../controllers/user")
+const { registeration, verifyEmail, registerPage, home, loginPage, userLogin, logout, productView, shop, addToCart, cart, removeFromCart, updateQuantity, checkOut,  } = require("../controllers/user")
 
 router.get("/login",loginPage)
 router.post("/login",userLogin)
@@ -13,6 +13,8 @@ router.get("/addToCart",addToCart);
 router.get("/cart",cart)
 router.get("/removeFromCart",removeFromCart)
 router.post("/updateQuantity",updateQuantity)
+router.get("/checkOut",checkOut)
+
 
 router.get("/myaccount", (req, res) => {
   res.render("user/myaccount");
@@ -20,9 +22,7 @@ router.get("/myaccount", (req, res) => {
 
 
 
-router.get("/checkout", (req, res) => {
-  res.render("user/checkout");
-});
+
 
 router.get("/wishlist", (req, res) => {
   res.render("user/wishlist");
