@@ -168,7 +168,7 @@ const home = async (req, res) => {
 };
 
 const productView = async (req, res) => {
-  const productId = req.params.id
+  const productId = req.query.q
   console.log("id", productId)
   const userId = req.session.user ? req.session.user._id : null;
 

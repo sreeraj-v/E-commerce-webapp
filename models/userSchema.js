@@ -1,65 +1,23 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
-// const addressSchema = mongoose.Schema(
-//   {
-
-//   }
-// )
-
-const addressSchema = mongoose.Schema({
-  user:{
+const addressSchema = mongoose.Schema(
+  {
+    userId:{
       type:mongoose.Schema.Types.ObjectId,
-      ref:'Users'
-  },
-  firstName: {
-      type: String,
-      required: true
-  },
-  lastName: {
-      type: String,
-  },
-  email: {
-      type: String,
-      required: true
-  },
-  telephone:{
-      type:String,
-      required:true
-  },
-  company:{
-      type:String
-  },
-  street:{
-      type:String
-  },
-  address:{
-      type:String,
-      required:true
-  },
-  apartment:{
-      type:String,
-      required:true
-  },
-  city:{
-      type:String,
-      required:true
-  },
-  postCode:{
-      type:String,
-      required:true
-  },
-  state:{
-      type:String,
-      required:true
-  },
-  notes:{
-      type:String
+      ref:"User"
+    },
+    firstName:String,
+    lastName:String,
+    streetAddress:String,
+    city:String,
+    country:String,
+    pincode:String,
+    phone:String,
+    phone:String,
+    email:String
   }
-
-})
-
-
+)
 
 const userSchema = mongoose.Schema(
   {
@@ -131,5 +89,6 @@ userSchema.pre('find', function() {
 });
 
 const User = mongoose.model("User", userSchema);
+const Address = mongoose.model("Address",addressSchema)
 
-module.exports = User;
+module.exports = {User,Address};
