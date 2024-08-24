@@ -1,9 +1,11 @@
 const nodemailer = require("nodemailer");
 const crypto = require("crypto")
 const transporter = require("../config/nodemailer/emailer");
-const userSchema = require("../models/userSchema");
+// const {User} = require("../models/userSchema");
 const productHelper = require("../helpers/product")
 const cartHelper = require("../helpers/cart")
+const { Address, User } = require("../models/userSchema");
+
 require('dotenv').config()
 
 // registeration post route
@@ -26,11 +28,11 @@ async function registeration(req, res) {
     if (password.length < 4) {
       return res.render("user/register", { errorMsg: "password must be more than 4 characters" })
     }
-    const dbEmail = await userSchema.findOne({ email: email })
+    const dbEmail = await User.findOne({ email: email })
     if (!dbEmail) {
       const verifyToken = crypto.randomBytes(32).toString('hex');
       const tokenExpiry = Date.now() + 3600000;
-      const user = new userSchema({
+      const user = new User({
         name,
         phone,
         password,
@@ -73,7 +75,7 @@ const verifyEmail = async  (req,res)=>{
   console.log('verification link clicked')
   try{
     const {token} = req.query
-    const user = await userSchema.findOne({verifyToken:token,tokenExpiry:{$gt:Date.now()}})
+    const user = await User.findOne({verifyToken:token,tokenExpiry:{$gt:Date.now()}})
     if(!user){
       return res.render("user/register",{errorMsg:"Invalid or expired token"})
     }
@@ -108,7 +110,9 @@ const registerPage = (req,res)=>{
 async function userLogin(req, res) {
   try {
     const { email, password } = req.body;
-    const user = await userSchema.findOne({ email: email, isVerified: true });
+    console.log(req.body);
+    
+    const user = await User.findOne({ email: email, isVerified: true });
     if (!user) {
       console.log("wrong email or isVerified false ");
       return res.render("user/login", { errorMsg: "invalid Email" });
@@ -152,6 +156,9 @@ const home = async (req, res) => {
     let cart = {items:[]};
     if(userId){
       cart = await cartHelper.getCart(userId)
+      if(!cart){
+        cart = {items:[]}
+      }
     }else if(req.session.cart){
       cart = req.session.cart
     }
@@ -352,9 +359,42 @@ const updateQuantity = async (req,res)=>{
 
 // checkOut    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-const checkOut = async (req,res)=>{
-  res.render("user/checkout")
-}
+const checkOut = async (req, res) => {
+  try {
+      const userId = req.session.user._id; // Assuming user is authenticated and user object is available in req
+      const addresses = await Address.find({ userId });
+
+      res.render("user/checkout", {
+          addresses,
+          user: req.session.user, // Pass user details for creating a new address
+      });
+  } catch (error) {
+      console.error("Error fetching addresses: ", error);
+      res.status(500).send("Internal Server Error");
+  }
+};
+
+const addNewAddress = async (req, res) => {
+  try {
+      const userId = req.session.user._id; // Assuming user is authenticated and user object is available in req
+      const addressData = {
+          firstName: req.body.firstName || req.session.user.name.split(" ")[0],
+          lastName: req.body.lastName || req.session.user.name.split(" ")[1],
+          streetAddress: req.body.streetAddress,
+          city: req.body.city,
+          country: req.body.country,
+          pincode: req.body.pincode,
+          phone: req.body.phone || req.session.user.phone,
+          email: req.body.email || req.session.user.email
+      };
+
+      await addressHelper.createAddress(userId, addressData);
+      res.redirect("/checkOut");
+  } catch (error) {
+      console.error("Error adding new address: ", error);
+      res.status(500).send("Internal Server Error");
+  }
+};
 
 const logout = (req,res)=>{
   req.session.destroy()
@@ -376,6 +416,7 @@ module.exports = {
   removeFromCart,
   updateQuantity,
   checkOut,
+  addNewAddress,
   logout,
 };
 

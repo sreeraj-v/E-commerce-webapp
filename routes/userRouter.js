@@ -1,5 +1,6 @@
 const router = require("express").Router();
-const { registeration, verifyEmail, registerPage, home, loginPage, userLogin, logout, productView, shop, addToCart, cart, removeFromCart, updateQuantity, checkOut,  } = require("../controllers/user")
+const { registeration, verifyEmail, registerPage, home, loginPage, userLogin, logout, productView, shop, addToCart, cart, removeFromCart, updateQuantity, checkOut, addNewAddress,  } = require("../controllers/user")
+const userAuth = require("../middleware/userAuth")
 
 router.get("/login",loginPage)
 router.post("/login",userLogin)
@@ -13,8 +14,8 @@ router.get("/addToCart",addToCart);
 router.get("/cart",cart)
 router.get("/removeFromCart",removeFromCart)
 router.post("/updateQuantity",updateQuantity)
-router.get("/checkOut",checkOut)
-
+router.get("/checkOut", userAuth, checkOut);
+router.post("/addNewAddress", userAuth, addNewAddress);
 
 router.get("/myaccount", (req, res) => {
   res.render("user/myaccount");
