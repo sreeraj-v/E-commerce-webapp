@@ -91,59 +91,66 @@
                                 </div><!-- End .card -->
 
                                 <!-- Create New Address -->
-                                <div class="card">
-                                    <div class="card-header" id="headingNewAddress">
-                                        <h2 class="card-title">
-                                            <a role="button" data-toggle="collapse" href="#collapseNewAddress" aria-expanded="false" aria-controls="collapseNewAddress">
-                                                Create New Address
-                                            </a>
-                                        </h2>
-                                    </div><!-- End .card-header -->
+<div class="card">
+    <div class="card-header" id="headingNewAddress">
+        <h2 class="card-title">
+            <a role="button" data-toggle="collapse" href="#collapseNewAddress" aria-expanded="false" aria-controls="collapseNewAddress">
+                Create New Address
+            </a>
+        </h2>
+    </div><!-- End .card-header -->
 
-                                    <div id="collapseNewAddress" class="collapse" aria-labelledby="headingNewAddress" data-parent="#address-accordion">
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <label>First Name *</label>
-                                                    <input type="text" class="form-control" required>
-                                                </div><!-- End .col-sm-6 -->
-                                                <div class="col-sm-6">
-                                                    <label>Last Name *</label>
-                                                    <input type="text" class="form-control" required>
-                                                </div><!-- End .col-sm-6 -->
-                                            </div><!-- End .row -->
+    <div id="collapseNewAddress" class="collapse" aria-labelledby="headingNewAddress" data-parent="#address-accordion">
+        <div class="card-body">
+            <form id="new-address-form" action="/addNewAddress" method="post">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label>First Name *</label>
+                        <input type="text" class="form-control" name="firstName" required>
+                    </div><!-- End .col-sm-6 -->
+                    <div class="col-sm-6">
+                        <label>Last Name *</label>
+                        <input type="text" class="form-control" name="lastName" required>
+                    </div><!-- End .col-sm-6 -->
+                </div><!-- End .row -->
 
-                                            <label>Street address *</label>
-                                            <input type="text" class="form-control" placeholder="House number and Street name" required>
+                <label>Street address *</label>
+                <input type="text" class="form-control" name="streetAddress" placeholder="House number and Street name" required>
 
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <label>Town / City *</label>
-                                                    <input type="text" class="form-control" required>
-                                                </div><!-- End .col-sm-6 -->
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label>City *</label>
+                        <input type="text" class="form-control" name="city" required>
+                    </div><!-- End .col-sm-6 -->
 
-                                                <div class="col-sm-6">
-                                                    <label>State / County *</label>
-                                                    <input type="text" class="form-control" required>
-                                                </div><!-- End .col-sm-6 -->
-                                            </div><!-- End .row -->
+                    <div class="col-sm-6">
+                        <label>Country *</label>
+                        <input type="text" class="form-control" name="country" required>
+                    </div><!-- End .col-sm-6 -->
+                </div><!-- End .row -->
 
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <label>Postcode / ZIP *</label>
-                                                    <input type="text" class="form-control" required>
-                                                </div><!-- End .col-sm-6 -->
-                                                <div class="col-sm-6">
-                                                    <label>Phone *</label>
-                                                    <input type="tel" class="form-control" required>
-                                                </div><!-- End .col-sm-6 -->
-                                            </div><!-- End .row -->
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label>Postcode / ZIP *</label>
+                        <input type="text" class="form-control" name="pincode" required>
+                    </div><!-- End .col-sm-6 -->
+                    <div class="col-sm-6">
+                        <label>Phone *</label>
+                        <input type="tel" class="form-control" name="phone" required>
+                    </div><!-- End .col-sm-6 -->
+                </div><!-- End .row -->
 
-                                            <label>Email address *</label>
-                                            <input type="email" class="form-control" required>
-                                        </div><!-- End .card-body -->
-                                    </div><!-- End .collapse -->
-                                </div><!-- End .card -->
+                <label>Email address *</label>
+                <input type="email" class="form-control" name="email" required>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block mt-3">
+                    Add Address
+                </button>
+            </form>
+        </div><!-- End .card-body -->
+    </div><!-- End .collapse -->
+</div><!-- End .card -->
                             </div><!-- End .accordion -->
 
                         </div><!-- End .col-lg-9 -->

@@ -1,9 +1,9 @@
 const nodemailer = require("nodemailer");
 const crypto = require("crypto")
 const transporter = require("../config/nodemailer/emailer");
-// const {User} = require("../models/userSchema");
 const productHelper = require("../helpers/product")
 const cartHelper = require("../helpers/cart")
+const addressHelper = require("../helpers/address")
 const { Address, User } = require("../models/userSchema");
 
 require('dotenv').config()
@@ -377,9 +377,11 @@ const checkOut = async (req, res) => {
 const addNewAddress = async (req, res) => {
   try {
       const userId = req.session.user._id; // Assuming user is authenticated and user object is available in req
+      console.log(userId);
+      
       const addressData = {
-          firstName: req.body.firstName || req.session.user.name.split(" ")[0],
-          lastName: req.body.lastName || req.session.user.name.split(" ")[1],
+          firstName: req.body.firstName,
+          lastName: req.body.lastName ,
           streetAddress: req.body.streetAddress,
           city: req.body.city,
           country: req.body.country,
