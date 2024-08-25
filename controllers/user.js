@@ -361,11 +361,11 @@ const updateQuantity = async (req,res)=>{
 
 const checkOut = async (req, res) => {
   try {
-      const userId = req.session.user._id; // Assuming user is authenticated and user object is available in req
+      const userId = req.session.user._id; 
       const addresses = await Address.find({ userId });
 
       res.render("user/checkout", {
-          addresses,
+          addresses, // paas address for showing existing address
           user: req.session.user, // Pass user details for creating a new address
       });
   } catch (error) {
@@ -376,18 +376,20 @@ const checkOut = async (req, res) => {
 
 const addNewAddress = async (req, res) => {
   try {
-      const userId = req.session.user._id; // Assuming user is authenticated and user object is available in req
+      const userId = req.session.user._id; 
       console.log(userId);
+      console.log("Request Body: ", req.body); // Log the request body
+
       
       const addressData = {
-          firstName: req.body.firstName,
-          lastName: req.body.lastName ,
-          streetAddress: req.body.streetAddress,
-          city: req.body.city,
-          country: req.body.country,
-          pincode: req.body.pincode,
-          phone: req.body.phone || req.session.user.phone,
-          email: req.body.email || req.session.user.email
+          firstName: req.body.firstName.trim() ,
+          lastName: req.body.lastName.trim()  ,
+          streetAddress: req.body.streetAddress.trim() ,
+          city: req.body.city.trim() ,
+          country: req.body.country.trim() ,
+          pincode: req.body.pincode.trim() ,
+          phone: req.body.phone.trim() ,
+          email: req.body.email .trim() 
       };
 
       await addressHelper.createAddress(userId, addressData);
