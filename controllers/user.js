@@ -4,7 +4,7 @@ const transporter = require("../config/nodemailer/emailer");
 const productHelper = require("../helpers/product")
 const cartHelper = require("../helpers/cart")
 const addressHelper = require("../helpers/address")
-const { Address, User } = require("../models/userSchema");
+const { User } = require("../models/userSchema");
 
 require('dotenv').config()
 
@@ -110,7 +110,6 @@ const registerPage = (req,res)=>{
 async function userLogin(req, res) {
   try {
     const { email, password } = req.body;
-    console.log(req.body);
     
     const user = await User.findOne({ email: email, isVerified: true });
     if (!user) {
@@ -119,12 +118,11 @@ async function userLogin(req, res) {
     }
     const isMatch = await user.comparePassword(password);
     if (isMatch) {
-      console.log(user.name + " : login successfully");
       req.session.user = user;
       req.session.loggedIn = true;
       req.session.username = user.name;
       if (req.session.user) {
-        console.log("user login success");
+        console.log(user.name + " : login successfully");
         return res.redirect("/");
       }
     } else {
@@ -359,44 +357,38 @@ const updateQuantity = async (req,res)=>{
 
 // checkOut    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-const checkOut = async (req, res) => {
-  try {
-      const userId = req.session.user._id; 
-      const addresses = await Address.find({ userId });
+const checkOut = async (req,res)=>{
+  try{
+    const user = req.session.user
+    const userId =user._id
+    const addresses = await addressHelper.getUserAddresses(userId)
 
-      res.render("user/checkout", {
-          addresses, // paas address for showing existing address
-          user: req.session.user, // Pass user details for creating a new address
-      });
-  } catch (error) {
-      console.error("Error fetching addresses: ", error);
-      res.status(500).send("Internal Server Error");
+  res.render("user/checkout",{user ,addresses})
+  }catch(error){
+    console.error("Error fetching address : ",error)
+    res.status(500).send("internal server error")
   }
-};
+}
 
 const addNewAddress = async (req, res) => {
   try {
-      const userId = req.session.user._id; 
-      console.log(userId);
-      console.log("Request Body: ", req.body); // Log the request body
+    const userId = req.session.user._id;
+    const addressData = {
+      firstName: req.body.firstName.trim(),
+      lastName: req.body.lastName.trim(),
+      streetAddress: req.body.streetAddress.trim(),
+      city: req.body.city.trim(),
+      country: req.body.country.trim(),
+      pincode: req.body.pincode.trim(),
+      phone: req.body.phone.trim(),
+      email: req.body.email.trim(),
+    };
 
-      
-      const addressData = {
-          firstName: req.body.firstName.trim() ,
-          lastName: req.body.lastName.trim()  ,
-          streetAddress: req.body.streetAddress.trim() ,
-          city: req.body.city.trim() ,
-          country: req.body.country.trim() ,
-          pincode: req.body.pincode.trim() ,
-          phone: req.body.phone.trim() ,
-          email: req.body.email .trim() 
-      };
-
-      await addressHelper.createAddress(userId, addressData);
-      res.redirect("/checkOut");
+    await addressHelper.createAddress(userId, addressData);
+    res.redirect("/checkOut");
   } catch (error) {
-      console.error("Error adding new address: ", error);
-      res.status(500).send("Internal Server Error");
+    console.error("Erron adding address :-", error);
+    res.status(500).send("internal error");
   }
 };
 

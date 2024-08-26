@@ -80,8 +80,9 @@
                                             <div class="form-group">
                                                 <select class="form-control" id="existing-address">
                                                     <option>Select an Address</option>
-                                                    <option value="1">123 Main St, City, State, ZIP</option>
-                                                    <option value="2">456 Other St, City, State, ZIP</option>
+                                                    {{#each addresses}}
+                                                    <option value="1">{{this.firstName}}, {{this.streetAddress}}, {{this.city}}, {{this.pincode}} ,{{this.phone}} ,{{this.email}}  </option>
+                                                    {{/each}}
                                                 </select>
                                             </div>
                                         </div><!-- End .card-body -->
@@ -101,14 +102,15 @@
     <div id="collapseNewAddress" class="collapse" aria-labelledby="headingNewAddress" data-parent="#address-accordion">
         <div class="card-body">
             <form id="new-address-form" action="/addNewAddress" method="post">
+            {{#if user}}
                 <div class="row">
                     <div class="col-sm-6">
                         <label>First Name *</label>
-                        <input type="text" class="form-control" name="firstName" required>
+                        <input type="text" class="form-control" name="firstName" value="{{user.name}}" required>
                     </div><!-- End .col-sm-6 -->
                     <div class="col-sm-6">
                         <label>Last Name *</label>
-                        <input type="text" class="form-control" name="lastName" required>
+                        <input type="text" class="form-control" name="lastName"  >
                     </div><!-- End .col-sm-6 -->
                 </div><!-- End .row -->
 
@@ -134,22 +136,23 @@
                     </div><!-- End .col-sm-6 -->
                     <div class="col-sm-6">
                         <label>Phone *</label>
-                        <input type="tel" class="form-control" name="phone" required>
+                        <input type="tel" class="form-control" name="phone" value="{{user.phone}}" required>
                     </div><!-- End .col-sm-6 -->
                 </div><!-- End .row -->
 
                 <label>Email address *</label>
-                <input type="email" class="form-control" name="email" required>
+                <input type="email" class="form-control" name="email" value="{{user.email}}" required>
 
                 <!-- Submit Button -->
                 <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block mt-3">
                     Add Address
                 </button>
+                {{/if}}
+            </form>   
         </div><!-- End .card-body -->
     </div><!-- End .collapse -->
 </div><!-- End .card -->
                             </div><!-- End .accordion -->
-
                         </div><!-- End .col-lg-9 -->
 
                         <aside class="col-lg-3">
