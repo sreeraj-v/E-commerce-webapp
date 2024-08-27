@@ -276,7 +276,19 @@ const deleteUser = async (req ,res) =>{
 }
 
 //  coupon users >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+const couponPage = async (req,res)=>{
+  try{
+    res.render("admin/coupon")
+  }catch(error){
+    console.error('Error in rendering couponPage :',error);
+  }
+}
 
+const addCoupon = async (req, res)=>{
+  try{
+    const {}
+  }
+}
 
 // 404 not found page >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 const notFound = (req, res) => {
