@@ -286,7 +286,9 @@ const couponPage = async (req,res)=>{
 
 const addCoupon = async (req, res)=>{
   try{
-    const {}
+    const {code}=req.body
+  }catch(error){
+
   }
 }
 
