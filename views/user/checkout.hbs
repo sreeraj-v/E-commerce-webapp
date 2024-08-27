@@ -79,9 +79,9 @@
                                         <div class="card-body">
                                             <div class="form-group">
                                                 <select class="form-control" id="existing-address">
-                                                    <option>Select an Address</option>
+                                                    <option >{{#if addresses.length}}Select an Address{{else}}No addresses found. Add a new one{{/if}} </option>
                                                     {{#each addresses}}
-                                                    <option value="1">{{this.firstName}}, {{this.streetAddress}}, {{this.city}}, {{this.pincode}} ,{{this.phone}} ,{{this.email}}  </option>
+                                                    <option value="{{this._id}}">{{this.firstName}}, {{this.streetAddress}}, {{this.city}}, {{this.pincode}} ,{{this.phone}} ,{{this.email}}  </option>
                                                     {{/each}}
                                                 </select>
                                             </div>
@@ -255,32 +255,60 @@
 {{>mobileView}}
 
 
-    {{!-- <script>
+    <script>
         document.addEventListener("DOMContentLoaded", function () {
             const form = document.getElementById("new-address-form");
             if (form) {
                 form.addEventListener("submit", function (e) {
                     e.preventDefault();
-                    const formData = new FormData(this);
 
+                    // Collect form data
+                    const formData = new FormData(form);
+                    const data = {};
+                    formData.forEach((value, key) => {
+                        data[key] = value.trim(); // Trim values here
+                    });
+
+                    // Send AJAX request
                     fetch("/addNewAddress", {
                         method: "POST",
-                        body: formData
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(data)
                     })
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                alert("Address added successfully!");
-                                location.reload(); // Reload the page to show the new address in the dropdown
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: data.message
+                                }).then(() => {
+                                    location.reload(); // Reload to update the address list
+                                })
                             } else {
-                                alert("Failed to add address. Please try again.");
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: data.message
+                                })
                             }
                         })
-                        .catch(error => console.error("Error:", error));
+                        .catch(error => {
+                            console.error("Error:", error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'An unexpected error occurred'
+                            });
+                        });
                 });
             }
         });
 
-    </script> --}}
+    </script>
 
     {{!-- <script src="assets/js/main.js"></script> --}}
+
+{{!-- value in the option tag for esisting address area venele ith - value="{{this._id}} use aaka. --}}

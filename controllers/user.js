@@ -381,15 +381,15 @@ const addNewAddress = async (req, res) => {
       country: req.body.country.trim(),
       pincode: req.body.pincode.trim(),
       phone: req.body.phone.trim(),
-      email: req.body.email.trim(),
+      email: req.body.email.trim()
     };
 
     await addressHelper.createAddress(userId, addressData);
-    res.redirect("/checkOut");
+    res.status(200).json({ success: true, message: "Address added successfully!" });
   } catch (error) {
     console.error("Erron adding address :-", error);
-    res.status(500).send("internal error");
-  }
+    res.status(500).json({ error: "Error adding address" });  
+}
 };
 
 const logout = (req,res)=>{
@@ -419,3 +419,27 @@ module.exports = {
 
 // doubts
 // const { error } = require("console");
+
+
+// const addNewAddress = async (req, res) => {
+//   try {
+//     const userId = req.session.user._id;
+//     console.log("req.body:", req.body); // Check the data
+//     const addressData = {
+//       firstName: req.body.firstName.trim(),
+//       lastName:  req.body.lastName ? req.body.lastName.trim() : '',
+//       streetAddress: req.body.streetAddress.trim(),
+//       city: req.body.city.trim(),
+//       country: req.body.country.trim(),
+//       pincode: req.body.pincode.trim(),
+//       phone: req.body.phone.trim(),
+//       email: req.body.email.trim(),
+//     };
+//     console.log("userId:", userId);
+//     console.log("addressData:", addressData);
+//     await addressHelper.createAddress(userId, addressData);
+//     res.status(200).json({ success: true, message: "Address added successfully!" });
+//   } catch (error) {
+//     console.error("Erron adding address :-", error);
+//     res.status(500).json({ error: "Error adding address" });  }
+// };

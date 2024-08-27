@@ -25,6 +25,7 @@ router.get("/myaccount", (req, res) => {
 
 
 
+
 router.get("/wishlist", (req, res) => {
   res.render("user/wishlist");
 });

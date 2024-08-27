@@ -275,6 +275,9 @@ const deleteUser = async (req ,res) =>{
   }
 }
 
+//  coupon users >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
 // 404 not found page >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 const notFound = (req, res) => {
   res.render("admin/404")
@@ -303,6 +306,8 @@ module.exports = {
   login,
   logout,
   notFound,
+  couponPage,
+  addCoupon
 };
 
 
