@@ -35,7 +35,8 @@ app.engine("hbs",hbs.engine({
   layoutsDir:path.join(__dirname,'views/layout'),
   partialsDir:path.join(__dirname,'views/partials'),
   helpers: {
-    eq: (a, b) => a === b
+    eq: (a, b) => a === b,
+    json: (context) => JSON.stringify(context)
   }
 }))
 

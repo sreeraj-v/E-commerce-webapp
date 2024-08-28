@@ -4,6 +4,7 @@ const transporter = require("../config/nodemailer/emailer");
 const productHelper = require("../helpers/product")
 const cartHelper = require("../helpers/cart")
 const addressHelper = require("../helpers/address")
+const couponHelper = require("../helpers/coupon")
 const { User } = require("../models/userSchema");
 
 require('dotenv').config()
@@ -362,8 +363,9 @@ const checkOut = async (req,res)=>{
     const user = req.session.user
     const userId =user._id
     const addresses = await addressHelper.getUserAddresses(userId)
+    const coupon = await couponHelper.getCoupon()
 
-  res.render("user/checkout",{user ,addresses})
+  res.render("user/checkout",{user ,addresses,coupon})
   }catch(error){
     console.error("Error fetching address : ",error)
     res.status(500).send("internal server error")

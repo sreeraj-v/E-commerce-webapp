@@ -27,8 +27,8 @@ const couponSchema=mongoose.Schema({
         type:Date,
         required:true,
     },
-    discription:{
-        type:Number,
+    description:{
+        type:String,
         required:true,
     }    
 })

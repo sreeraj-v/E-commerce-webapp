@@ -3,7 +3,7 @@ const upload = require("../middleware/multer")
 const productHelper = require("../helpers/product")
 const userHelper = require("../helpers/users")
 const adminHelper = require("../helpers/admin")
-// const Admin = require("../models/admin")
+const couponHelper = require("../helpers/coupon")
 // const { compare } = require("bcrypt")
 
 // --------------------------------------admin side:
@@ -278,17 +278,31 @@ const deleteUser = async (req ,res) =>{
 //  coupon users >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 const couponPage = async (req,res)=>{
   try{
-    res.render("admin/coupon")
+    const coupons = await couponHelper.getCoupon()    
+    res.render("admin/coupon",{coupons})
   }catch(error){
     console.error('Error in rendering couponPage :',error);
   }
 }
 
 const addCoupon = async (req, res)=>{
-  try{
-    const {code}=req.body
+  try{    
+    await couponHelper.addNewCoupons(req.body)
+    res.redirect("/admin/coupon")
   }catch(error){
+    console.error('Error in adding coupons :',error);
+  }
+}
 
+const editCouponPage = async (req,res)=>{
+  try{
+    const couponId = req.query.q
+    console.log("coupon:",couponId);
+    
+    const coupon = await couponHelper.getOneCoupon(couponId)
+    res.render("admin/coupon",{coupon})
+  }catch(error){
+    console.error('Error in editing coupons :',error);
   }
 }
 
@@ -321,7 +335,8 @@ module.exports = {
   logout,
   notFound,
   couponPage,
-  addCoupon
+  addCoupon,
+  editCouponPage
 };
 
 

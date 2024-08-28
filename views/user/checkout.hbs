@@ -24,40 +24,48 @@
             <div class="container">
 			  <h6 class="coupon-title"> Have a coupon? </h6>
                 <!-- Coupon Accordion -->
-                <div class="accordion" id="coupon-accordion">
-                    <div class="card col-sm-9 col-md-9 col-lg-9 ">
-                        <div class="card-header" id="headingCoupon">
-                            <h2 class="card-title">
-                                <a role="button" data-toggle="collapse" href="#collapseCoupon" aria-expanded="true" aria-controls="collapseCoupon">
-                                   Click here to select your coupon
-                                </a>
-                            </h2>
-                        </div><!-- End .card-header -->
 
-                        <div id="collapseCoupon" class="collapse " aria-labelledby="headingCoupon" data-parent="#coupon-accordion">
-                            <div class="card-body">
-                                <!-- Radio buttons for coupon selection -->
-                                <div class="form-group">
-                                    <div class="custom-control custom-radio">
-                                        <input type="radio" id="couponSAVE10" name="couponOption" class="custom-control-input">
-                                        <label class="custom-control-label" for="couponSAVE10">
-                                            <strong>SAVE10</strong><br>
-                                            Description: Get 10% off your entire order! Use code SAVE10 at checkout. Valid on all products. Limited time only!
-                                        </label>
-                                    </div>
+<div class="accordion col-12 col-md-6 px-3 py-3 border rounded" id="coupon-accordion">
+  <div class="card border-0">
+    <div class="card-header bg-transparent" id="headingCoupon">
+      <h2 class="mb-0">
+        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseCoupon" aria-expanded="true" aria-controls="collapseCoupon">
+          Click here to select your coupon
+        </button>
+      </h2>
+    </div>
 
-                                    <div class="custom-control custom-radio">
-                                        <input type="radio" id="couponBUY1GET1" name="couponOption" class="custom-control-input">
-                                        <label class="custom-control-label" for="couponBUY1GET1">
-                                            <strong>BUY1GET1</strong><br>
-                                            Description: Buy one item, get one free! Add two items to your cart and use code BUY1GET1. Discount applied to the lower-priced item.
-                                        </label>
-                                    </div>
-                                </div><!-- End .form-group -->
-                            </div><!-- End .card-body -->
-                        </div><!-- End .collapse -->
-                    </div><!-- End .card -->
-                </div><!-- End .accordion -->
+    <div id="collapseCoupon" class="collapse show" aria-labelledby="headingCoupon" data-parent="#coupon-accordion">
+      <div class="card-body">
+        <!-- List of Coupons -->
+        <div class="mb-3">
+          {{#each coupon}}
+          <div class="coupon-item d-flex align-items-center p-2 border-bottom" style="cursor: pointer;" onclick="selectCoupon('{{this.code}}')">
+            <i class="fas fa-tag mr-2" style="font-size: 18px; color: #333;"></i>
+            <div>
+              <strong>{{this.code}}</strong><br>
+              <small>{{this.description}}</small>
+            </div>
+          </div>
+          {{/each}}
+        </div>
+
+        <!-- Input field and Apply button -->
+        <div class="form-group">
+          <label for="selectedCouponCode" class="form-label">Selected Coupon Code</label>
+          <div class="input-group">
+            <input type="text" id="selectedCouponCode" name="selectedCouponCode" class="form-control" readonly>
+            <div class="input-group-append">
+              <button type="button" class="btn btn-primary" id="applyCouponButton">Apply</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+                <!-- End .accordion -->
 
                     <div class="row">
                         <div class="col-lg-9">
@@ -244,7 +252,7 @@
     </div><!-- End .page-content -->
 </main><!-- End .main -->
 
-
+{{!-- above kodthu.. for clude --}}
 
 
 {{>allPageFooter}}
