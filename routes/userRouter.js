@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { registeration, verifyEmail, registerPage, home, loginPage, userLogin, logout, productView, shop, addToCart, cart, removeFromCart, updateQuantity, checkOut, addNewAddress,  } = require("../controllers/user")
+const { registeration, verifyEmail, registerPage, home, loginPage, userLogin, logout, productView, shop, addToCart, cart, removeFromCart, updateQuantity, checkOut, addNewAddress, applyCoupon,  } = require("../controllers/user")
 const userAuth = require("../middleware/userAuth")
 
 router.get("/login",loginPage)
@@ -16,6 +16,7 @@ router.get("/removeFromCart",removeFromCart)
 router.post("/updateQuantity",updateQuantity)
 router.get("/checkOut", userAuth, checkOut);
 router.post("/addNewAddress", userAuth, addNewAddress);
+router.post("/applyCoupon",userAuth,applyCoupon)
 
 router.get("/myaccount", (req, res) => {
   res.render("user/myaccount");

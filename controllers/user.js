@@ -363,9 +363,17 @@ const checkOut = async (req,res)=>{
     const user = req.session.user
     const userId =user._id
     const addresses = await addressHelper.getUserAddresses(userId)
-    const coupon = await couponHelper.getCoupon()
+    const coupons = await couponHelper.getCoupon()
+    const userCart = await cartHelper.getCart(userId)
+    let totalCartValue = 0;
+    
+    if(userCart&&userCart.items.length>0){
+      totalCartValue = userCart.items.reduce((total, item) => total + item.total, 0).toFixed(2);
 
-  res.render("user/checkout",{user ,addresses,coupon})
+      res.render("user/checkout",{user ,addresses,coupons,totalCartValue,userCart})
+    }else{
+      res.redirect("/cart")
+    }
   }catch(error){
     console.error("Error fetching address : ",error)
     res.status(500).send("internal server error")
@@ -394,6 +402,26 @@ const addNewAddress = async (req, res) => {
 }
 };
 
+const applyCoupon = async (req,res)=>{
+  try{
+    const {couponCode,cartTotal} =req.body;
+    
+    const result = await couponHelper.validateCoupon(couponCode,cartTotal)
+
+    if(result.valid){
+      const newTotal = (cartTotal-result.discount)
+      res.json({ success: true, newTotal });
+    }else{
+      res.json({ success: false, message: result.message });
+    }
+  }catch(error){
+    console.error("Error applying coupon:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+}
+
+
+
 const logout = (req,res)=>{
   req.session.destroy()
   res.redirect("/login")
@@ -415,6 +443,7 @@ module.exports = {
   updateQuantity,
   checkOut,
   addNewAddress,
+  applyCoupon,
   logout,
 };
 

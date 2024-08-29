@@ -84,6 +84,10 @@
             <input type="number" class="form-control" id="discount" name="discount" required>
           </div>
           <div class="mb-3">
+            <label for="discountType" class="form-label">Discount type </label>
+            <input type="number" class="form-control" id="discountType" name="discountType" required>
+          </div>
+          <div class="mb-3">
             <label for="usageCount" class="form-label">usageCount </label>
             <input type="number" class="form-control" id="usageCount" name="usageCount" required>
           </div>
@@ -130,6 +134,10 @@
             <input type="number" class="form-control" id="editDiscount" name="discount" required>
           </div>
           <div class="mb-3">
+            <label for="editdiscountType" class="form-label">discount Type</label>
+            <input type="number" class="form-control" id="editdiscountType" name="discountType" required>
+          </div>
+          <div class="mb-3">
             <label for="editUsageCount" class="form-label">Usage Count</label>
             <input type="number" class="form-control" id="editUsageCount" name="usageCount" required>
           </div>
@@ -168,6 +176,7 @@
       document.getElementById("editCouponCode").value = coupon.code;
       document.getElementById("editDescription").value = coupon.description;
       document.getElementById("editDiscount").value = coupon.discount;
+      document.getElementById("editdiscountType").value = coupon.discountType;
       document.getElementById("editUsageCount").value = coupon.usageCount;
       document.getElementById("editMinPriceRange").value = coupon.minPriceRange;
       document.getElementById("editMaxPriceRange").value = coupon.maxPriceRange;

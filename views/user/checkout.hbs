@@ -22,237 +22,205 @@
     <div class="page-content">
         <div class="checkout">
             <div class="container">
-			  <h6 class="coupon-title"> Have a coupon? </h6>
-                <!-- Coupon Accordion -->
-
-<div class="accordion col-12 col-md-6 px-3 py-3 border rounded" id="coupon-accordion">
-  <div class="card border-0">
-    <div class="card-header bg-transparent" id="headingCoupon">
-      <h2 class="mb-0">
-        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseCoupon" aria-expanded="true" aria-controls="collapseCoupon">
-          Click here to select your coupon
-        </button>
-      </h2>
-    </div>
-
-    <div id="collapseCoupon" class="collapse show" aria-labelledby="headingCoupon" data-parent="#coupon-accordion">
-      <div class="card-body">
-        <!-- List of Coupons -->
-        <div class="mb-3">
-          {{#each coupon}}
-          <div class="coupon-item d-flex align-items-center p-2 border-bottom" style="cursor: pointer;" onclick="selectCoupon('{{this.code}}')">
-            <i class="fas fa-tag mr-2" style="font-size: 18px; color: #333;"></i>
-            <div>
-              <strong>{{this.code}}</strong><br>
-              <small>{{this.description}}</small>
-            </div>
-          </div>
-          {{/each}}
-        </div>
-
-        <!-- Input field and Apply button -->
-        <div class="form-group">
-          <label for="selectedCouponCode" class="form-label">Selected Coupon Code</label>
-          <div class="input-group">
-            <input type="text" id="selectedCouponCode" name="selectedCouponCode" class="form-control" readonly>
-            <div class="input-group-append">
-              <button type="button" class="btn btn-primary" id="applyCouponButton">Apply</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-                <!-- End .accordion -->
-
-                    <div class="row">
-                        <div class="col-lg-9">
-                            <h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
-
-                            <!-- Accordion for Address Selection -->
-                            <div class="accordion" id="address-accordion">
-                                <!-- Select Existing Address -->
+                <div class="row">
+                    <div class="col-lg-7 ml-5">
+                        <!-- Coupon Accordion -->
+                        <div class="col-12 border rounded p-3 mb-2">
+                        <h6 class="coupon-title">Have a coupon?</h6>
+                            <div class="accordion" id="coupon-accordion">
                                 <div class="card">
-                                    <div class="card-header" id="headingAddress">
+                                    <div class="card-header" id="headingCoupon">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseCoupon" aria-expanded="true" aria-controls="collapseCoupon">
+                                                Click here to select your coupon
+                                            </button>
+                                        </h2>
+                                    </div>
+
+                                    <div id="collapseCoupon" class="collapse show" aria-labelledby="headingCoupon" data-parent="#coupon-accordion">
+                                        <div class="card-body">
+                                            <!-- List of Coupons -->
+                                            <div class="mb-3">
+                                                {{#each coupons}}
+                                                <div class="d-flex align-items-center p-2 border-bottom" style="cursor: pointer;" onclick="selectCoupon('{{this.code}}')">
+                                                    <i class="fas fa-tag mr-2" style="font-size: 18px;"></i>
+                                                    <div>
+                                                        <strong>🏷️{{this.code}}</strong><br>
+                                                        <small>{{this.description}}</small>
+                                                    </div>
+                                                </div>
+                                                {{/each}}
+                                            </div>
+                                            <!-- Input field and Apply button -->
+                                            <div class="form-group">
+                                                <label for="selectedCouponCode">Selected Coupon Code</label>
+                                                <div class="input-group">
+                                                    <input type="text" id="selectedCouponCode" name="selectedCouponCode" class="form-control" readonly>
+                                                    <div class="input-group-append" style="display: flex; height: 4.5rem; margin-left: 1rem; width: 15rem;">
+                                                        <button type="button" class="btn btn-primary" id="applyCouponButton">Apply</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- End .accordion -->
+
+                     <div class="col-12 border rounded p-3 mb-2">
+                        <h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
+                        <!-- Accordion for Address Selection -->
+                        <div class="accordion" id="address-accordion">
+                            <!-- Select Existing Address -->
+                            <div class="card">
+                                <div class="card-header" id="headingAddress">
+                                    <h2 class="card-title">
+                                        <a role="button" data-toggle="collapse" href="#collapseSelectAddress" aria-expanded="true" aria-controls="collapseSelectAddress">
+                                            Select Existing Address
+                                        </a>
+                                    </h2>
+                                </div><!-- End .card-header -->
+
+                                <div id="collapseSelectAddress" class="collapse show" aria-labelledby="headingAddress" data-parent="#address-accordion">
+                                    <div class="card-body">
+                                        <div class="form-group">
+                                            <select class="form-control" id="existing-address">
+                                                <option>{{#if addresses.length}}Select an Address{{else}}No addresses found. Add a new one{{/if}}</option>
+                                                {{#each addresses}}
+                                                <option value="{{this._id}}">{{this.firstName}}, {{this.streetAddress}}, {{this.city}}, {{this.pincode}} ,{{this.phone}} ,{{this.email}}</option>
+                                                {{/each}}
+                                            </select>
+                                        </div>
+                                    </div><!-- End .card-body -->
+                                </div><!-- End .collapse -->
+                            </div><!-- End .card -->
+
+                            <!-- Create New Address -->
+                            <div class="card">
+                                <div class="card-header" id="headingNewAddress">
+                                    <h2 class="card-title">
+                                        <a role="button" data-toggle="collapse" href="#collapseNewAddress" aria-expanded="false" aria-controls="collapseNewAddress">
+                                            Create New Address
+                                        </a>
+                                    </h2>
+                                </div><!-- End .card-header -->
+
+                                <div id="collapseNewAddress" class="collapse" aria-labelledby="headingNewAddress" data-parent="#address-accordion">
+                                    <div class="card-body">
+                                        <form id="new-address-form" action="/addNewAddress" method="post">
+                                            {{#if user}}
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label>First Name *</label>
+                                                    <input type="text" class="form-control" name="firstName" value="{{user.name}}" required>
+                                                </div><!-- End .col-sm-6 -->
+                                                <div class="col-sm-6">
+                                                    <label>Last Name *</label>
+                                                    <input type="text" class="form-control" name="lastName">
+                                                </div><!-- End .col-sm-6 -->
+                                            </div><!-- End .row -->
+
+                                            <label>Street address *</label>
+                                            <input type="text" class="form-control" name="streetAddress" placeholder="House number and Street name" required>
+
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label>City *</label>
+                                                    <input type="text" class="form-control" name="city" required>
+                                                </div><!-- End .col-sm-6 -->
+
+                                                <div class="col-sm-6">
+                                                    <label>Country *</label>
+                                                    <input type="text" class="form-control" name="country" required>
+                                                </div><!-- End .col-sm-6 -->
+                                            </div><!-- End .row -->
+
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label>Postcode / ZIP *</label>
+                                                    <input type="text" class="form-control" name="pincode" required>
+                                                </div><!-- End .col-sm-6 -->
+                                                <div class="col-sm-6">
+                                                    <label>Phone *</label>
+                                                    <input type="tel" class="form-control" name="phone" value="{{user.phone}}" required>
+                                                </div><!-- End .col-sm-6 -->
+                                            </div><!-- End .row -->
+
+                                            <label>Email address *</label>
+                                            <input type="email" class="form-control" name="email" value="{{user.email}}" required>
+
+                                            <!-- Submit Button -->
+                                            <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block mt-3">
+                                                Add Address
+                                            </button>
+                                            {{/if}}
+                                        </form>
+                                    </div><!-- End .card-body -->
+                                </div><!-- End .collapse -->
+                            </div><!-- End .card -->
+                        </div><!-- End .accordion -->
+                      </div>
+                    </div><!-- End .col-lg-7 -->
+
+                    <aside class="col-lg-4 ml-5 mr-2">
+                        <div class="summary">
+                            <h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
+
+                            <table class="table table-summary">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each userCart.items}}
+                                    <tr>
+                                        <td><a href="#">{{this.productId.name}} </a></td>
+                                        <td>{{this.price}} </td>
+                                    </tr>
+                                    {{/each}}
+                                    <tr>
+                                        <td>Shipping:</td>
+                                        <td>Free shipping</td>
+                                    </tr>
+                                    <tr class="summary-total">
+                                        <td>Total:</td>
+                                        <td id="orderTotal">₹{{totalCartValue}} </td>
+                                    </tr><!-- End .summary-total -->
+                                </tbody>
+                            </table><!-- End .table table-summary -->
+
+                            <div class="accordion-summary" id="accordion-payment">
+                                <div class="card">
+                                    <div class="card-header" id="heading-3">
                                         <h2 class="card-title">
-                                            <a role="button" data-toggle="collapse" href="#collapseSelectAddress" aria-expanded="true" aria-controls="collapseSelectAddress">
-                                                Select Existing Address
+                                            <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
+                                                Cash on delivery
                                             </a>
                                         </h2>
                                     </div><!-- End .card-header -->
-
-                                    <div id="collapseSelectAddress" class="collapse show" aria-labelledby="headingAddress" data-parent="#address-accordion">
+                                    <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
                                         <div class="card-body">
-                                            <div class="form-group">
-                                                <select class="form-control" id="existing-address">
-                                                    <option >{{#if addresses.length}}Select an Address{{else}}No addresses found. Add a new one{{/if}} </option>
-                                                    {{#each addresses}}
-                                                    <option value="{{this._id}}">{{this.firstName}}, {{this.streetAddress}}, {{this.city}}, {{this.pincode}} ,{{this.phone}} ,{{this.email}}  </option>
-                                                    {{/each}}
-                                                </select>
-                                            </div>
+                                            Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.
                                         </div><!-- End .card-body -->
                                     </div><!-- End .collapse -->
                                 </div><!-- End .card -->
-
-                                <!-- Create New Address -->
-<div class="card">
-    <div class="card-header" id="headingNewAddress">
-        <h2 class="card-title">
-            <a role="button" data-toggle="collapse" href="#collapseNewAddress" aria-expanded="false" aria-controls="collapseNewAddress">
-                Create New Address
-            </a>
-        </h2>
-    </div><!-- End .card-header -->
-
-    <div id="collapseNewAddress" class="collapse" aria-labelledby="headingNewAddress" data-parent="#address-accordion">
-        <div class="card-body">
-            <form id="new-address-form" action="/addNewAddress" method="post">
-            {{#if user}}
-                <div class="row">
-                    <div class="col-sm-6">
-                        <label>First Name *</label>
-                        <input type="text" class="form-control" name="firstName" value="{{user.name}}" required>
-                    </div><!-- End .col-sm-6 -->
-                    <div class="col-sm-6">
-                        <label>Last Name *</label>
-                        <input type="text" class="form-control" name="lastName"  >
-                    </div><!-- End .col-sm-6 -->
-                </div><!-- End .row -->
-
-                <label>Street address *</label>
-                <input type="text" class="form-control" name="streetAddress" placeholder="House number and Street name" required>
-
-                <div class="row">
-                    <div class="col-sm-6">
-                        <label>City *</label>
-                        <input type="text" class="form-control" name="city" required>
-                    </div><!-- End .col-sm-6 -->
-
-                    <div class="col-sm-6">
-                        <label>Country *</label>
-                        <input type="text" class="form-control" name="country" required>
-                    </div><!-- End .col-sm-6 -->
-                </div><!-- End .row -->
-
-                <div class="row">
-                    <div class="col-sm-6">
-                        <label>Postcode / ZIP *</label>
-                        <input type="text" class="form-control" name="pincode" required>
-                    </div><!-- End .col-sm-6 -->
-                    <div class="col-sm-6">
-                        <label>Phone *</label>
-                        <input type="tel" class="form-control" name="phone" value="{{user.phone}}" required>
-                    </div><!-- End .col-sm-6 -->
-                </div><!-- End .row -->
-
-                <label>Email address *</label>
-                <input type="email" class="form-control" name="email" value="{{user.email}}" required>
-
-                <!-- Submit Button -->
-                <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block mt-3">
-                    Add Address
-                </button>
-                {{/if}}
-            </form>   
-        </div><!-- End .card-body -->
-    </div><!-- End .collapse -->
-</div><!-- End .card -->
                             </div><!-- End .accordion -->
-                        </div><!-- End .col-lg-9 -->
 
-                        <aside class="col-lg-3">
-                            <div class="summary">
-                                <h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
-
-                                <table class="table table-summary">
-                                    <thead>
-                                        <tr>
-                                            <th>Product</th>
-                                            <th>Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><a href="#">Beige knitted elastic runner shoes</a></td>
-                                            <td>$84.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">Blue utility pinafore denim dress</a></td>
-                                            <td>$76.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Shipping:</td>
-                                            <td>Free shipping</td>
-                                        </tr>
-                                        <tr class="summary-total">
-                                            <td>Total:</td>
-                                            <td>$160.00</td>
-                                        </tr><!-- End .summary-total -->
-                                    </tbody>
-                                </table><!-- End .table table-summary -->
-
-                                <div class="accordion-summary" id="accordion-payment">
-                                    <div class="card">
-                                        <div class="card-header" id="heading-3">
-                                            <h2 class="card-title">
-                                                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
-                                                    Cash on delivery
-                                                </a>
-                                            </h2>
-                                        </div><!-- End .card-header -->
-                                        <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
-                                            <div class="card-body">
-                                                Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.
-                                            </div><!-- End .card-body -->
-                                        </div><!-- End .collapse -->
-                                    </div><!-- End .card -->
-
-                                    <div class="card">
-                                        <div class="card-header" id="heading-5">
-                                            <h2 class="card-title">
-                                                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-5" aria-expanded="false" aria-controls="collapse-5">
-                                                    Credit Card (Stripe)
-                                                </a>
-                                            </h2>
-                                        </div><!-- End .card-header -->
-                                        <div id="collapse-5" class="collapse" aria-labelledby="heading-5" data-parent="#accordion-payment">
-                                            <div class="card-body">Pay with your credit card via Stripe.</div><!-- End .card-body -->
-                                        </div><!-- End .collapse -->
-                                    </div><!-- End .card -->
-
-                                    <div class="card">
-                                        <div class="card-header" id="heading-6">
-                                            <h2 class="card-title">
-                                                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-6" aria-expanded="false" aria-controls="collapse-6">
-                                                    PayPal
-                                                </a>
-                                            </h2>
-                                        </div><!-- End .card-header -->
-                                        <div id="collapse-6" class="collapse" aria-labelledby="heading-6" data-parent="#accordion-payment">
-                                            <div class="card-body">
-                                                Pay via PayPal; you can pay with your credit card if you don’t have a PayPal account.
-                                            </div><!-- End .card-body -->
-                                        </div><!-- End .collapse -->
-                                    </div><!-- End .card -->
-                                </div><!-- End .accordion -->
-
-                                <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
-                                    <span class="btn-text">Place Order</span>
-                                    <span class="btn-hover-text">Proceed to Payment</span>
-                                </button>
-                            </div><!-- End .summary -->
-                        </aside><!-- End .col-lg-3 -->
-                    </div><!-- End .row -->
-                </form>
+                            <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+                                <span class="btn-text">Place Order</span>
+                                <span class="btn-hover-text">Proceed to Checkout</span>
+                            </button>
+                        </div><!-- End .summary -->
+                    </aside><!-- End .col-lg-5 -->
+                </div><!-- End .row -->
             </div><!-- End .container -->
         </div><!-- End .checkout -->
     </div><!-- End .page-content -->
 </main><!-- End .main -->
 
-{{!-- above kodthu.. for clude --}}
+
 
 
 {{>allPageFooter}}
@@ -270,14 +238,12 @@
                 form.addEventListener("submit", function (e) {
                     e.preventDefault();
 
-                    // Collect form data
                     const formData = new FormData(form);
                     const data = {};
                     formData.forEach((value, key) => {
                         data[key] = value.trim(); // Trim values here
                     });
 
-                    // Send AJAX request
                     fetch("/addNewAddress", {
                         method: "POST",
                         headers: {
@@ -316,6 +282,57 @@
         });
 
     </script>
+
+<script>
+    function selectCoupon(code) {
+        document.getElementById('selectedCouponCode').value = code;
+    }
+
+    document.getElementById('applyCouponButton').addEventListener('click', function() {
+        const couponCode = document.getElementById('selectedCouponCode').value;
+        const cartTotal = {{totalCartValue}}; // Pass totalCartValue from the controller
+
+        fetch('/applyCoupon', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ couponCode, cartTotal })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update the order total in the UI without reloading
+                document.getElementById('orderTotal').textContent = `$${data.newTotal}`;
+
+                // Show success alert
+                Swal.fire({
+                    title: 'Coupon Applied!',
+                    text: `Your new total is $${data.newTotal}`,
+                    icon: 'success',
+                    confirmButtonText: 'Ok'
+                });
+            } else {
+                // Show error alert if coupon application failed
+                Swal.fire({
+                    title: 'Coupon Not Applied',
+                    text: data.message,
+                    icon: 'error',
+                    confirmButtonText: 'Try Again'
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error applying coupon:', error);
+            Swal.fire({
+                title: 'Error',
+                text: 'An error occurred while applying the coupon. Please try again later.',
+                icon: 'error',
+                confirmButtonText: 'Ok'
+            });
+        });
+    });
+</script>
 
     {{!-- <script src="assets/js/main.js"></script> --}}
 

@@ -30,6 +30,11 @@ const couponSchema=mongoose.Schema({
     description:{
         type:String,
         required:true,
+    },
+    discountType: {
+        type: String,
+        required: true,
+        enum: ['percentage', 'amount'],
     }    
 })
 
