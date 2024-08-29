@@ -4,11 +4,12 @@ module.exports = {
 
   addNewCoupons: async (body) => {
     try {
-      const { code, description, discount, minPriceRange, maxPriceRange, usageCount, expireDate } = body
+      const { code, description, discount, discountType, minPriceRange, maxPriceRange, usageCount, expireDate } = body
       const newCoupon = new Coupon({
         code,
         description,
         discount,
+        discountType,
         minPriceRange,
         maxPriceRange,
         usageCount,

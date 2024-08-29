@@ -294,17 +294,19 @@ const addCoupon = async (req, res)=>{
   }
 }
 
-const editCouponPage = async (req,res)=>{
-  try{
-    const couponId = req.query.q
-    console.log("coupon:",couponId);
+// const editCouponPage = async (req,res)=>{
+//   try{
+//     const couponId = req.query.q
+//     console.log("coupon:",couponId);
     
-    const coupon = await couponHelper.getOneCoupon(couponId)
-    res.render("admin/coupon",{coupon})
-  }catch(error){
-    console.error('Error in editing coupons :',error);
-  }
-}
+//     const coupon = await couponHelper.getOneCoupon(couponId)
+//     res.render("admin/coupon",{coupon})
+//   }catch(error){
+//     console.error('Error in editing coupons :',error);
+//   }
+// }
+
+
 
 // 404 not found page >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 const notFound = (req, res) => {
