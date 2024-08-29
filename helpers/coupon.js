@@ -51,10 +51,10 @@ module.exports = {
         }
 
         if (cartTotal < coupon.minPriceRange || cartTotal > coupon.maxPriceRange) {
-            return { valid: false, message: `Coupon not valid for your cart total. Minimum: ${coupon.minPriceRange} needed` };
+            return { valid: false, message: `Coupon not valid for your cart total. Minimum: ₹{coupon.minPriceRange} needed` };
         }
 
-        return { valid: true, discount: coupon.discount };
+        return { valid: true, discount: coupon.discount, discountType: coupon.discountType };
     } catch (error) {
         console.error("Error validating coupon:", error);
         throw error;

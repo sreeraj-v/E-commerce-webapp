@@ -402,23 +402,31 @@ const addNewAddress = async (req, res) => {
 }
 };
 
-const applyCoupon = async (req,res)=>{
-  try{
-    const {couponCode,cartTotal} =req.body;
-    
-    const result = await couponHelper.validateCoupon(couponCode,cartTotal)
+const applyCoupon = async (req, res) => {
+  try {
+    const { couponCode, cartTotal } = req.body;
+    const result = await couponHelper.validateCoupon(couponCode, cartTotal);
 
-    if(result.valid){
-      const newTotal = (cartTotal-result.discount)
+    if (result.valid) {
+      let newTotal;
+
+      if (result.discountType === "percentage") {
+        newTotal = cartTotal - cartTotal * (result.discount / 100);
+      } else if (result.discountType === "amount") {
+        newTotal = cartTotal - result.discount;
+      }
+
+      // newTotal = Math.max(newTotal, 0);
+
       res.json({ success: true, newTotal });
-    }else{
+    } else {
       res.json({ success: false, message: result.message });
     }
-  }catch(error){
+  } catch (error) {
     console.error("Error applying coupon:", error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
-}
+};
 
 
 

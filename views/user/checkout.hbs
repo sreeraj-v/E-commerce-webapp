@@ -303,12 +303,12 @@
         .then(data => {
             if (data.success) {
                 // Update the order total in the UI without reloading
-                document.getElementById('orderTotal').textContent = `$${data.newTotal}`;
+                document.getElementById('orderTotal').textContent = `₹${data.newTotal}`;
 
                 // Show success alert
                 Swal.fire({
                     title: 'Coupon Applied!',
-                    text: `Your new total is $${data.newTotal}`,
+                    text: `Your new total is ₹${data.newTotal}`,
                     icon: 'success',
                     confirmButtonText: 'Ok'
                 });
