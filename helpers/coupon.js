@@ -21,12 +21,21 @@ module.exports = {
     }
   },
 
-  getCoupon: async ()=>{
-    return await Coupon.find({ expireDate: { $gte: new Date() } }).lean()
+  updateCoupon: async (couponId,updatedData)=>{
+    try{
+    return await Coupon.findByIdAndUpdate(couponId,updatedData,{new:true})
+    }catch(error){
+      console.error("Error on editng coupon :", error)  
+      throw error;   
+    }
   },
 
-  getOneCoupon: async (id)=>{
-    return await Coupon.find({id}).lean()
+  removeCoupon: async (id)=>{
+    return await Coupon.deleteOne({_id:id})
+  },
+
+  getCoupon: async ()=>{
+    return await Coupon.find({ expireDate: { $gte: new Date() } }).lean()
   },
 
   validateCoupon: async (couponCode, cartTotal) => {

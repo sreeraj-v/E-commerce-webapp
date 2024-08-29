@@ -294,17 +294,35 @@ const addCoupon = async (req, res)=>{
   }
 }
 
-// const editCouponPage = async (req,res)=>{
-//   try{
-//     const couponId = req.query.q
-//     console.log("coupon:",couponId);
-    
-//     const coupon = await couponHelper.getOneCoupon(couponId)
-//     res.render("admin/coupon",{coupon})
-//   }catch(error){
-//     console.error('Error in editing coupons :',error);
-//   }
-// }
+const editCoupon = async(req,res)=>{
+  try{
+  const couponId = req.body.id
+  const updatedData = {
+    code:req.body.code,
+    description:req.body.description,
+    discount:req.body.discount,
+    discountType:req.body.discountType,
+    usageCount:req.body.usageCount,
+    minPriceRange:req.body.minPriceRange,
+    maxPriceRange:req.body.maxPriceRange,
+    expireDate:req.body.expireDate
+  }
+  await couponHelper.updateCoupon(couponId,updatedData)
+  res.redirect("/admin/coupon")
+  }catch(error){
+    console.error("Error on editng coupon :", error)
+  }
+}
+
+const deleteCoupon = async (req,res)=>{
+  try{
+    const couponId = req.query.id
+    await couponHelper.removeCoupon(couponId)
+    res.redirect("/admin/coupon")
+  }catch(error){
+    console.error("Error on deleting coupon :", error)
+  }
+}
 
 
 
@@ -338,7 +356,8 @@ module.exports = {
   notFound,
   couponPage,
   addCoupon,
-  editCouponPage
+  editCoupon,
+  deleteCoupon
 };
 
 

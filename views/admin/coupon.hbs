@@ -50,7 +50,7 @@
                 data-coupon='{{json this}}'>
                 <i class="fa fa-edit"></i>
               </a> 
-              <a class="btn btn-sm btn-danger ms-2" href="/admin/?id={{this._id}}"><i class="fa fa-trash"></i></a>
+              <a class="btn btn-sm btn-danger ms-2" href="/admin/deleteCoupon?id={{this._id}}"><i class="fa fa-trash"></i></a>
               </div>
             </td>
           </tr>
@@ -84,7 +84,7 @@
             <input type="number" class="form-control" id="discount" name="discount" required>
           </div>
           <div class="mb-3">
-            <label for="discountType" class="form-label">Discount type </label>
+            <label for="discountType" class="form-label">Discount type (amount/percentage) </label>
             <input type="text" class="form-control" id="discountType" name="discountType" required>
           </div>
           <div class="mb-3">
@@ -119,7 +119,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="editCouponForm" action="/admin/editCoupon?q={{coupons._id}}" method="post">
+        <form id="editCouponForm" action="/admin/editCoupon" method="post">
           <input type="hidden" id="editCouponId" name="id">
           <div class="mb-3">
             <label for="editCouponCode" class="form-label">Coupon Code</label>
