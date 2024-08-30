@@ -416,7 +416,7 @@ const applyCoupon = async (req, res) => {
         newTotal = cartTotal - result.discount;
       }
 
-      // newTotal = Math.max(newTotal, 0);
+      newTotal = Math.max(newTotal, 0);
 
       res.json({ success: true, newTotal });
     } else {
