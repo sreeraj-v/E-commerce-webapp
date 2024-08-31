@@ -163,4 +163,27 @@
 
 {{> adminFooter}}
 
+<script>
+  
+  document.addEventListener("DOMContentLoaded", () => {
+  const editButtons = document.querySelectorAll("[data-bs-target='#editCouponModal']");
+  
+  editButtons.forEach(button => {
+    button.addEventListener("click", function () {
+      const coupon = JSON.parse(this.getAttribute("data-coupon"));
+      
+      document.getElementById("editCouponId").value = coupon._id;
+      document.getElementById("editCouponCode").value = coupon.code;
+      document.getElementById("editDescription").value = coupon.description;
+      document.getElementById("editDiscount").value = coupon.discount;
+      document.getElementById("editdiscountType").value = coupon.discountType;
+      document.getElementById("editUsageCount").value = coupon.usageCount;
+      document.getElementById("editMinPriceRange").value = coupon.minPriceRange;
+      document.getElementById("editMaxPriceRange").value = coupon.maxPriceRange;
+      document.getElementById("editExpireDate").value = coupon.expireDate.split('T')[0]; // Date formatting
+    });
+  });
+});
+
+</script>
 
