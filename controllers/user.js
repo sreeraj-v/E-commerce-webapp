@@ -7,6 +7,9 @@ const addressHelper = require("../helpers/address")
 const couponHelper = require("../helpers/coupon")
 const { User } = require("../models/userSchema");
 
+const Stripe = require("stripe")
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY)
+
 require('dotenv').config()
 
 // registeration post route
@@ -427,6 +430,9 @@ const applyCoupon = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
+
+//  checkOut payment section
+
 
 
 

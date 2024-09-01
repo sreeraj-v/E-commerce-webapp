@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
-    "connect-mongodb-session": "^2.2.0",
+    "connect-mongodb-session": "^5.0.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",

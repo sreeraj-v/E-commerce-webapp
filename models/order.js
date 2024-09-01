@@ -1,70 +1,83 @@
-// models/orderSchema.js
-
-const mongoose = require('mongoose');
+const mongoose = require("mongoose")
 
 const orderSchema = new mongoose.Schema({
-  user: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User', 
-    required: true 
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  address: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Address",
+    required: true,
   },
   items: [
     {
-      product: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Product', 
-        required: true 
+      product: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+        required: true,
       },
-      quantity: { 
-        type: Number, 
-        required: true 
+      quantity: {
+        type: Number,
+        required: true,
       },
-      price: { 
-        type: Number, 
-        required: true 
-      }
-    }
+      price: {
+        type: Number,
+      },
+    },
   ],
-  totalAmount: { 
-    type: Number, 
-    required: true 
-  },
-  discount: { 
-    type: Number, 
-    default: 0 
-  },
-  finalAmount: { 
-    type: Number, 
-    required: true 
-  },
-  paymentStatus: { 
-    type: String, 
-    enum: ['Pending', 'Paid', 'Failed'], 
-    default: 'Pending' 
-  },
-  paymentIntentId: { 
-    type: String 
-  },
-  createdAt: { 
-    type: Date, 
-    default: Date.now 
-  },
-  address: {
-    fullName: { type: String, required: true },
-    email: { type: String, required: true },
-    phone: { type: String, required: true },
-    addressLine1: { type: String, required: true },
-    addressLine2: { type: String },
-    city: { type: String, required: true },
-    state: { type: String, required: true },
-    postalCode: { type: String, required: true },
-    country: { type: String, required: true }
-  },
-  status: {
+  orderId: {
     type: String,
-    enum: ['Processing', 'Shipped', 'Delivered', 'Cancelled'],
-    default: 'Processing'
+  },
+  datePlaced: {
+    type: Date,
+    default: Date.now,
+  },
+  orderStatus: {
+    type: String,
+    enum: ["Processing", "Shipped", "Delivered", "Cancelled"],
+    default: "Processing",
+  },
+  totalAmount: {
+    type: Number,
+    required: true,
+  },
+  discount: {
+    type: Number,
+    required: true,
+  },
+  finalAmount: {
+    type: Number,
+    required: true,
+  },
+  paymentType: {
+    type: String,
+  },
+  stripeIntentId: {
+    type: String,
+  },
+  stockUpdated: {
+    type: Boolean,
+    default: false,
+  },
+  refund: {
+    type: Boolean,
+    default: false,
+  },
+  deliveryExpectedDate: {
+    type: Date,
+  },
+  completeOrderReturn: {
+    type: Boolean,
+    default: false,
+  },
+  return: {
+    type: String,
+    default: false,
   }
 });
 
-module.exports = mongoose.model('Order', orderSchema);
+const Order = mongoose.model('Order', orderSchema);
+
+module.exports = Order;
