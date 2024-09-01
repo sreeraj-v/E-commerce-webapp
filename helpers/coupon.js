@@ -42,16 +42,8 @@ module.exports = {
     try {
         const coupon = await Coupon.findOne({ code: couponCode });
 
-        if (!coupon) {
-            return { valid: false, message: "Coupon not found" };
-        }
-
-        if (coupon.expireDate < new Date()) {
-            return { valid: false, message: "Coupon has expired" };
-        }
-
         if (cartTotal < coupon.minPriceRange || cartTotal > coupon.maxPriceRange) {
-            return { valid: false, message: `Coupon not valid for your cart total. Minimum: ₹{coupon.minPriceRange} needed` };
+            return { valid: false, message: `Coupon not valid for your cart total. Minimum: ₹${coupon.minPriceRange} needed` };
         }
 
         return { valid: true, discount: coupon.discount, discountType: coupon.discountType };
