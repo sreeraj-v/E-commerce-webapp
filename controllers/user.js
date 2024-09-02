@@ -10,6 +10,15 @@ const { User } = require("../models/userSchema");
 const Stripe = require("stripe")
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY)
 
+// below for tempory
+const Order = require('../models/order');
+const Cart = require('../models/cart'); // Assuming you have a cart schema
+const {Address} = require('../models/userSchema'); // Assuming you have an address schema
+const Product = require('../models/productSchema')
+
+// below for tempory
+
+
 require('dotenv').config()
 
 // registeration post route
@@ -431,9 +440,115 @@ const applyCoupon = async (req, res) => {
   }
 };
 
-//  checkOut payment section
+//  checkOut payment section >>>>>>>>>>>>>>>>>
 
+// {{!-- below for stripe --}}
 
+async function createStripePaymentIntent(req, res) {
+  try {
+      const { addressId, paymentType,totalCheckOutValue } = req.body;
+      const userId = req.session.user._id
+      console.log(req.body)
+      console.log(totalCheckOutValue)      
+
+      // Get cart details
+      const cart = await cartHelper.getCart(userId)
+      
+      if (!cart) {
+          return res.status(400).json({ error: 'Invalid cart.' });
+      }
+
+      // Get address details
+      const address = await Address.findById(addressId);
+      if (!address) {
+          return res.status(400).json({ error: 'Invalid address.' });
+      }
+
+      const totalAmount = cart.items.reduce((total, item) => total + item.total, 0).toFixed(2);
+      const discount = totalCheckOutValue-totalAmount 
+      const finalAmount = totalCheckOutValue;
+
+      let paymentIntent;
+
+      // Only create a payment intent if Stripe is selected
+      if (paymentType === 'Stripe Payment') {
+          paymentIntent = await stripe.paymentIntents.create({
+              amount: Math.round(finalAmount * 100), // Amount in cents
+              currency: 'inr',
+              metadata: {
+                  cartId: cart._id.toString(),
+                  userId: req.session.user._id.toString(),
+              },
+          });
+      }
+
+      // Create order
+      const order = new Order({
+          user: req.user._id,
+          address: address._id,
+          items: cart.items.map(item => ({
+              product: item.product._id,
+              quantity: item.quantity,
+              price: item.product.price,
+          })),
+          totalAmount,
+          discount,
+          finalAmount,
+          paymentType,
+          stripeIntentId: paymentIntent ? paymentIntent.id : null,
+      });
+
+      await order.save();
+
+      // Respond with the client secret for Stripe payment or success message
+      if (paymentIntent) {
+          return res.status(200).json({ clientSecret: paymentIntent.client_secret, orderId: order._id });
+      } else {
+          return res.status(200).json({ message: 'Order placed successfully without Stripe payment', orderId: order._id });
+      }
+  } catch (error) {
+      console.error('Error creating Stripe payment intent:', error);
+      res.status(500).json({ error: 'An error occurred while processing your payment.' });
+  }
+}
+
+// Confirm Order Payment
+async function confirmOrderPayment(req, res) {
+  try {
+      const { orderId, paymentStatus } = req.body;
+
+      const order = await Order.findById(orderId);
+      if (!order) {
+          return res.status(400).json({ error: 'Order not found.' });
+      }
+
+      // Update order status based on payment status
+      if (paymentStatus === 'succeeded') {
+          order.orderStatus = 'Processing';
+      } else {
+          order.orderStatus = 'Cancelled';
+      }
+
+      await order.save();
+
+      // Deduct stock for the ordered items if not done yet
+      if (order.stockUpdated === false && paymentStatus === 'succeeded') {
+          for (const item of order.items) {
+              const product = await Product.findById(item.product);
+              product.stock -= item.quantity;
+              await product.save();
+          }
+          order.stockUpdated = true;
+          await order.save();
+      }
+
+      res.status(200).json({ message: 'Order payment status updated successfully.' });
+  } catch (error) {
+      console.error('Error confirming order payment:', error);
+      res.status(500).json({ error: 'An error occurred while confirming your order.' });
+  }
+}
+// {{!-- below for stripe --}}
 
 
 const logout = (req,res)=>{
@@ -458,6 +573,8 @@ module.exports = {
   checkOut,
   addNewAddress,
   applyCoupon,
+  createStripePaymentIntent,
+  confirmOrderPayment,
   logout,
 };
 

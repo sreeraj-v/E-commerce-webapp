@@ -191,24 +191,41 @@
                                 </tbody>
                             </table><!-- End .table table-summary -->
 
-                            <div class="accordion-summary" id="accordion-payment">
-                                <div class="card">
-                                    <div class="card-header" id="heading-3">
-                                        <h2 class="card-title">
-                                            <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
-                                                Cash on delivery
-                                            </a>
-                                        </h2>
-                                    </div><!-- End .card-header -->
-                                    <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
-                                        <div class="card-body">
-                                            Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.
-                                        </div><!-- End .card-body -->
-                                    </div><!-- End .collapse -->
-                                </div><!-- End .card -->
-                            </div><!-- End .accordion -->
 
-                            <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+                            <div class="accordion-summary" id="accordion-payment">
+    <div class="card">
+        <div class="card-header" id="heading-3">
+            <h2 class="card-title">
+                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
+                    Cash on delivery
+                </a>
+            </h2>
+        </div><!-- End .card-header -->
+        <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
+            <div class="card-body">
+                Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.
+            </div><!-- End .card-body -->
+        </div><!-- End .collapse -->
+    </div><!-- End .card -->
+
+    <div class="card">
+        <div class="card-header" id="heading-4">
+            <h2 class="card-title">
+                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
+                    Stripe Payment
+                </a>
+            </h2>
+        </div><!-- End .card-header -->
+        <div id="collapse-4" class="collapse" aria-labelledby="heading-4" data-parent="#accordion-payment">
+            <div class="card-body">
+                <p>Select this option to pay using your credit or debit card through Stripe. You will be redirected to a secure payment page to complete your transaction.</p>
+            </div><!-- End .card-body -->
+        </div><!-- End .collapse -->
+    </div><!-- End .card -->
+</div><!-- End .accordion -->
+
+
+                            <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block" id="place-order-btn">
                                 <span class="btn-text">Place Order</span>
                                 <span class="btn-hover-text">Proceed to Checkout</span>
                             </button>
@@ -234,8 +251,53 @@
 {{>mobileView}}
 
 {{!-- below for stripe --}}
-<script src="https://js.stripe.com/v3/"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        const stripe = Stripe('pk_test_51Ptt5WCsHv5xvAVbuFRE7PPgkMe9Qh3iUcmALvTsfNyIirpmoAmzmTZ8xdCUo4iGGt2xDx9pHssGSazWIDBqKnrf00HR3DExzR');  // Replace with your actual public key
+        const placeOrderBtn = document.getElementById('place-order-btn');
 
+        placeOrderBtn.addEventListener('click', async function() {
+            const selectedAddressId = document.getElementById('existing-address').value;
+            const totalCheckOutValue = document.getElementById('orderTotal').textContent;
+            console.log(totalCheckOutValue)
+
+            if (selectedAddressId === 'Select an Address') {
+                alert('Please select an address before placing the order.');
+                return;
+            }
+
+            // Trigger backend to create Stripe payment intent
+            const response = await fetch('/create-payment-intent', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    addressId: selectedAddressId, 
+                    couponCode: totalCheckOutValue 
+                })
+            });
+
+            const data = await response.json();
+            
+            if (!response.ok) {
+                alert(data.message || 'Failed to create payment intent.');
+                return;
+            }
+
+            const { clientSecret } = data;
+            
+            // Confirm the payment using Stripe.js
+            const { error } = await stripe.confirmCardPayment(clientSecret);
+
+            if (error) {
+                alert(`Payment failed: ${error.message}`);
+            } else {
+                alert('Payment successful!');
+                window.location.href = '/order-success';
+            }
+        });
+    </script>
 {{!-- above for stripe --}}
 
     <script>
