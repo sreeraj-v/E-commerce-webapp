@@ -19,9 +19,10 @@ router.post("/addNewAddress", userAuth, addNewAddress);
 router.post("/applyCoupon",userAuth,applyCoupon)
 
 // {{!-- below for stripe --}}
+// router.post('/create-payment-intent', createStripePaymentIntent);
+// router.post('/confirm-order-payment', confirmOrderPayment);
 router.post('/create-payment-intent', createStripePaymentIntent);
-router.post('/confirm-order-payment', confirmOrderPayment);
-
+router.get('/order-success', confirmOrderPayment);
 
 
 router.get("/myaccount", (req, res) => {
@@ -32,6 +33,9 @@ router.get("/myaccount", (req, res) => {
 
 
 
+router.get("/about", (req, res) => {
+  res.render("user/about");
+});
 
 router.get("/wishlist", (req, res) => {
   res.render("user/wishlist");

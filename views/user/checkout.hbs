@@ -186,41 +186,29 @@
                                     </tr>
                                     <tr class="summary-total">
                                         <td>Total:</td>
-                                        <td id="orderTotal">₹{{totalCartValue}} </td>
+                                        <td id="orderTotal">{{totalCartValue}} </td>
                                     </tr><!-- End .summary-total -->
                                 </tbody>
                             </table><!-- End .table table-summary -->
 
 
-                            <div class="accordion-summary" id="accordion-payment">
-    <div class="card">
-        <div class="card-header" id="heading-3">
+<div class="accordion-summary" id="accordion-payment">
+    <div class="card mb-1" >
+        <div class="card-header">
             <h2 class="card-title">
-                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
-                    Cash on delivery
-                </a>
+                <input type="radio" name="paymentMethod" value="Cash on Delivery" id="cashOnDelivery" checked>
+                <label for="cashOnDelivery"><strong>Cash on Delivery</strong></label>
             </h2>
         </div><!-- End .card-header -->
-        <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
-            <div class="card-body">
-                Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.
-            </div><!-- End .card-body -->
-        </div><!-- End .collapse -->
     </div><!-- End .card -->
 
     <div class="card">
-        <div class="card-header" id="heading-4">
+        <div class="card-header">
             <h2 class="card-title">
-                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
-                    Stripe Payment
-                </a>
+                <input type="radio" name="paymentMethod" value="Stripe Payment" id="stripePayment">
+                <label for="stripePayment"><strong>Stripe Payment</strong></label>
             </h2>
         </div><!-- End .card-header -->
-        <div id="collapse-4" class="collapse" aria-labelledby="heading-4" data-parent="#accordion-payment">
-            <div class="card-body">
-                <p>Select this option to pay using your credit or debit card through Stripe. You will be redirected to a secure payment page to complete your transaction.</p>
-            </div><!-- End .card-body -->
-        </div><!-- End .collapse -->
     </div><!-- End .card -->
 </div><!-- End .accordion -->
 
@@ -238,7 +226,11 @@
 </main><!-- End .main -->
 
 {{!-- below for stripe --}}
+{{!-- <div id="card-element" style="display: none;">
+    <!-- Stripe's card element will be inserted here -->
+</div>
 
+<div id="card-errors" role="alert"></div> --}}
 {{!-- above for stripe --}}
 
 
@@ -251,53 +243,181 @@
 {{>mobileView}}
 
 {{!-- below for stripe --}}
-    <script src="https://js.stripe.com/v3/"></script>
-    <script>
-        const stripe = Stripe('pk_test_51Ptt5WCsHv5xvAVbuFRE7PPgkMe9Qh3iUcmALvTsfNyIirpmoAmzmTZ8xdCUo4iGGt2xDx9pHssGSazWIDBqKnrf00HR3DExzR');  // Replace with your actual public key
-        const placeOrderBtn = document.getElementById('place-order-btn');
 
-        placeOrderBtn.addEventListener('click', async function() {
-            const selectedAddressId = document.getElementById('existing-address').value;
-            const totalCheckOutValue = document.getElementById('orderTotal').textContent;
-            console.log(totalCheckOutValue)
 
-            if (selectedAddressId === 'Select an Address') {
-                alert('Please select an address before placing the order.');
-                return;
+
+<script src="https://js.stripe.com/v3/"></script>
+
+{{!-- <script>
+    const stripe = Stripe('pk_test_51Ptt5WCsHv5xvAVbuFRE7PPgkMe9Qh3iUcmALvTsfNyIirpmoAmzmTZ8xdCUo4iGGt2xDx9pHssGSazWIDBqKnrf00HR3DExzR'); // Replace with your actual public key
+    const elements = stripe.elements();
+    const cardElement = elements.create('card');
+    const placeOrderBtn = document.getElementById('place-order-btn');
+    const cardErrors = document.getElementById('card-errors');
+    
+    const cardElementContainer = document.getElementById('card-element');
+
+    placeOrderBtn.addEventListener('click', async function(event) {
+        event.preventDefault();  // Prevent form submission
+
+        const selectedAddressId = document.getElementById('existing-address').value;
+        const totalCheckOutValue = document.getElementById('orderTotal').textContent;
+        const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+        
+        if (!paymentMethod) {
+            alert('Please select a payment method.');
+            return;
+        }
+
+        const paymentType = paymentMethod.value;
+
+        if (selectedAddressId === 'Select an Address') {
+            alert('Please select an address before placing the order.');
+            return;
+        }
+
+        const requestBody = { 
+            addressId: selectedAddressId, 
+            paymentType: paymentType,
+        };
+
+        if (totalCheckOutValue) {
+            requestBody.totalCheckOutValue = totalCheckOutValue;
+        }
+
+        // Show the card input only if Stripe Payment is selected
+        if (paymentType === 'Stripe Payment') {
+            cardElement.mount('#card-element');
+            cardElementContainer.style.display = 'block';
+        } else {
+            cardElementContainer.style.display = 'none';
+        }
+
+        // Trigger backend to create Stripe payment intent
+        const response = await fetch('/create-payment-intent', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
+        });
+
+        const data = await response.json();
+        window.open(data.url,"_blank")
+        
+        if (!response.ok) {
+            alert(data.message || 'Failed to create payment intent.');
+            return;
+        }
+
+        if (paymentType === 'Stripe Payment') {
+            const { clientSecret } = data;
+
+            // Confirm the payment using Stripe.js and card details
+            const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+                payment_method: {
+                    card: cardElement,
+                    billing_details: {
+                        // Add billing details if necessary
+                    },
+                }
+            });
+
+            if (error) {
+                cardErrors.textContent = `Payment failed: ${error.message}`;
+            } else if (paymentIntent.status === 'succeeded') {
+                alert('Payment successful!');
+
+                // Now proceed with form submission or cart clearance
+                await fetch('/complete-order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        paymentIntentId: paymentIntent.id,
+                        addressId: selectedAddressId,
+                        paymentType: paymentType
+                    })
+                });
+
+                window.location.href = '/order-success';
+            } else {
+                cardErrors.textContent = 'Payment was not successful. Please try again.';
             }
-
-            // Trigger backend to create Stripe payment intent
-            const response = await fetch('/create-payment-intent', {
+        } else {
+            alert('Order placed successfully with Cash on Delivery!');
+            
+            // Handle order completion for Cash on Delivery
+            await fetch('/complete-order', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ 
-                    addressId: selectedAddressId, 
-                    couponCode: totalCheckOutValue 
+                    addressId: selectedAddressId,
+                    paymentType: paymentType
                 })
             });
 
-            const data = await response.json();
-            
-            if (!response.ok) {
-                alert(data.message || 'Failed to create payment intent.');
-                return;
-            }
+            window.location.href = '/order-success';
+        }
+    });
+</script> --}}
 
-            const { clientSecret } = data;
-            
-            // Confirm the payment using Stripe.js
-            const { error } = await stripe.confirmCardPayment(clientSecret);
+<script>
+    const stripe = Stripe('pk_test_51Ptt5WCsHv5xvAVbuFRE7PPgkMe9Qh3iUcmALvTsfNyIirpmoAmzmTZ8xdCUo4iGGt2xDx9pHssGSazWIDBqKnrf00HR3DExzR'); // Replace with your actual public key
+    const placeOrderBtn = document.getElementById('place-order-btn');
 
-            if (error) {
-                alert(`Payment failed: ${error.message}`);
-            } else {
-                alert('Payment successful!');
-                window.location.href = '/order-success';
-            }
+    placeOrderBtn.addEventListener('click', async function(event) {
+        event.preventDefault();  // Prevent form submission
+
+        const selectedAddressId = document.getElementById('existing-address').value;
+        const totalCheckOutValue = document.getElementById('orderTotal').textContent;
+        const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+        
+        if (!paymentMethod) {
+            alert('Please select a payment method.');
+            return;
+        }
+
+        const paymentType = paymentMethod.value;
+
+        if (selectedAddressId === 'Select an Address') {
+            alert('Please select an address before placing the order.');
+            return;
+        }
+
+        const requestBody = { 
+            addressId: selectedAddressId, 
+            paymentType: paymentType,
+            totalCheckOutValue: totalCheckOutValue
+        };
+
+        const response = await fetch('/create-payment-intent', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
         });
-    </script>
+
+        const data = await response.json();
+
+        if (paymentType === 'Stripe Payment') {
+            if (data.url) {
+                window.location.href = data.url;  // Redirect to Stripe hosted checkout page
+            } else {
+                alert('Failed to create Stripe session.');
+            }
+        } else {
+            // Handle order completion for Cash on Delivery
+            alert('Order placed successfully with Cash on Delivery!');
+            window.location.href = '/order-success';
+        }
+    });
+</script>
+
 {{!-- above for stripe --}}
 
     <script>
@@ -373,7 +493,7 @@
         .then(data => {
             if (data.success) {
                 // Update the order total in the UI without reloading
-                document.getElementById('orderTotal').textContent = `₹${data.newTotal}`;
+                document.getElementById('orderTotal').textContent = `${data.newTotal}`;
 
                 // Show success alert
                 Swal.fire({
