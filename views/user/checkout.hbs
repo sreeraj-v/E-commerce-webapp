@@ -170,22 +170,31 @@
                                 <thead>
                                     <tr>
                                         <th>Product</th>
-                                        <th>Total</th>
+                                        <th>Price</th>
+                                        <th >Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {{#each userCart.items}}
                                     <tr>
-                                        <td><a href="#">{{this.productId.name}} </a></td>
+                                        <td><a href="#">{{this.productId.name}} x {{this.quantity}} </a></td>
                                         <td>{{this.price}} </td>
+                                        <td>{{this.total}} </td>
                                     </tr>
                                     {{/each}}
                                     <tr>
                                         <td>Shipping:</td>
-                                        <td>Free shipping</td>
+                                        <td></td>
+                                        <td>Free </td>
+                                    </tr>
+                                    <tr class="discount">
+                                        <td>Discount:</td>
+                                        <td></td>
+                                        <td id="discountValue">0</td>
                                     </tr>
                                     <tr class="summary-total">
                                         <td>Total:</td>
+                                        <td></td>
                                         <td id="orderTotal">{{totalCartValue}} </td>
                                     </tr><!-- End .summary-total -->
                                 </tbody>
@@ -225,13 +234,7 @@
     </div><!-- End .page-content -->
 </main><!-- End .main -->
 
-{{!-- below for stripe --}}
-{{!-- <div id="card-element" style="display: none;">
-    <!-- Stripe's card element will be inserted here -->
-</div>
 
-<div id="card-errors" role="alert"></div> --}}
-{{!-- above for stripe --}}
 
 
 
@@ -242,144 +245,22 @@
 
 {{>mobileView}}
 
+
 {{!-- below for stripe --}}
-
-
 
 <script src="https://js.stripe.com/v3/"></script>
 
-{{!-- <script>
-    const stripe = Stripe('pk_test_51Ptt5WCsHv5xvAVbuFRE7PPgkMe9Qh3iUcmALvTsfNyIirpmoAmzmTZ8xdCUo4iGGt2xDx9pHssGSazWIDBqKnrf00HR3DExzR'); // Replace with your actual public key
-    const elements = stripe.elements();
-    const cardElement = elements.create('card');
-    const placeOrderBtn = document.getElementById('place-order-btn');
-    const cardErrors = document.getElementById('card-errors');
-    
-    const cardElementContainer = document.getElementById('card-element');
-
-    placeOrderBtn.addEventListener('click', async function(event) {
-        event.preventDefault();  // Prevent form submission
-
-        const selectedAddressId = document.getElementById('existing-address').value;
-        const totalCheckOutValue = document.getElementById('orderTotal').textContent;
-        const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
-        
-        if (!paymentMethod) {
-            alert('Please select a payment method.');
-            return;
-        }
-
-        const paymentType = paymentMethod.value;
-
-        if (selectedAddressId === 'Select an Address') {
-            alert('Please select an address before placing the order.');
-            return;
-        }
-
-        const requestBody = { 
-            addressId: selectedAddressId, 
-            paymentType: paymentType,
-        };
-
-        if (totalCheckOutValue) {
-            requestBody.totalCheckOutValue = totalCheckOutValue;
-        }
-
-        // Show the card input only if Stripe Payment is selected
-        if (paymentType === 'Stripe Payment') {
-            cardElement.mount('#card-element');
-            cardElementContainer.style.display = 'block';
-        } else {
-            cardElementContainer.style.display = 'none';
-        }
-
-        // Trigger backend to create Stripe payment intent
-        const response = await fetch('/create-payment-intent', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(requestBody)
-        });
-
-        const data = await response.json();
-        window.open(data.url,"_blank")
-        
-        if (!response.ok) {
-            alert(data.message || 'Failed to create payment intent.');
-            return;
-        }
-
-        if (paymentType === 'Stripe Payment') {
-            const { clientSecret } = data;
-
-            // Confirm the payment using Stripe.js and card details
-            const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-                payment_method: {
-                    card: cardElement,
-                    billing_details: {
-                        // Add billing details if necessary
-                    },
-                }
-            });
-
-            if (error) {
-                cardErrors.textContent = `Payment failed: ${error.message}`;
-            } else if (paymentIntent.status === 'succeeded') {
-                alert('Payment successful!');
-
-                // Now proceed with form submission or cart clearance
-                await fetch('/complete-order', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ 
-                        paymentIntentId: paymentIntent.id,
-                        addressId: selectedAddressId,
-                        paymentType: paymentType
-                    })
-                });
-
-                window.location.href = '/order-success';
-            } else {
-                cardErrors.textContent = 'Payment was not successful. Please try again.';
-            }
-        } else {
-            alert('Order placed successfully with Cash on Delivery!');
-            
-            // Handle order completion for Cash on Delivery
-            await fetch('/complete-order', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ 
-                    addressId: selectedAddressId,
-                    paymentType: paymentType
-                })
-            });
-
-            window.location.href = '/order-success';
-        }
-    });
-</script> --}}
-
 <script>
-    const stripe = Stripe('pk_test_51Ptt5WCsHv5xvAVbuFRE7PPgkMe9Qh3iUcmALvTsfNyIirpmoAmzmTZ8xdCUo4iGGt2xDx9pHssGSazWIDBqKnrf00HR3DExzR'); // Replace with your actual public key
+    const stripe = Stripe('pk_test_51Ptt5WCsHv5xvAVbuFRE7PPgkMe9Qh3iUcmALvTsfNyIirpmoAmzmTZ8xdCUo4iGGt2xDx9pHssGSazWIDBqKnrf00HR3DExzR');
     const placeOrderBtn = document.getElementById('place-order-btn');
 
     placeOrderBtn.addEventListener('click', async function(event) {
         event.preventDefault();  // Prevent form submission
 
         const selectedAddressId = document.getElementById('existing-address').value;
-        const totalCheckOutValue = document.getElementById('orderTotal').textContent;
+        const discount = document.getElementById('discountValue').textContent;
         const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
         
-        if (!paymentMethod) {
-            alert('Please select a payment method.');
-            return;
-        }
 
         const paymentType = paymentMethod.value;
 
@@ -391,7 +272,7 @@
         const requestBody = { 
             addressId: selectedAddressId, 
             paymentType: paymentType,
-            totalCheckOutValue: totalCheckOutValue
+            discount: discount
         };
 
         const response = await fetch('/create-payment-intent', {
@@ -413,13 +294,13 @@
         } else {
             // Handle order completion for Cash on Delivery
             alert('Order placed successfully with Cash on Delivery!');
-            window.location.href = '/order-success';
+            window.location.href = '/orderSuccess';
         }
     });
 </script>
 
-{{!-- above for stripe --}}
 
+                      {{!-- below for adding address --}}
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const form = document.getElementById("new-address-form");
@@ -472,8 +353,9 @@
 
     </script>
 
-<script>
 
+                    {{!-- below for applying coupon --}}
+<script>
     function selectCoupon(code) {
         document.getElementById('selectedCouponCode').value = code;
     }
@@ -494,6 +376,7 @@
             if (data.success) {
                 // Update the order total in the UI without reloading
                 document.getElementById('orderTotal').textContent = `${data.newTotal}`;
+                document.getElementById('discountValue').textContent = `${data.discount}`;
 
                 // Show success alert
                 Swal.fire({

@@ -421,16 +421,19 @@ const applyCoupon = async (req, res) => {
 
     if (result.valid) {
       let newTotal;
+      let discount;
 
       if (result.discountType === "percentage") {
         newTotal = cartTotal - cartTotal * (result.discount / 100);
+         discount = cartTotal-newTotal
       } else if (result.discountType === "amount") {
         newTotal = cartTotal - result.discount;
+         discount = cartTotal-newTotal
       }
 
       newTotal = Math.max(newTotal, 0);
 
-      res.json({ success: true, newTotal });
+      res.json({ success: true, newTotal,discount });
     } else {
       res.json({ success: false, message: result.message });
     }
@@ -441,118 +444,6 @@ const applyCoupon = async (req, res) => {
 };
 
 //  checkOut payment section >>>>>>>>>>>>>>>>>
-
-// {{!-- below for stripe --}}
-
-// async function createStripePaymentIntent(req, res) {
-//   try {
-//       const { addressId, paymentType, totalCheckOutValue } = req.body;
-//       console.log(addressId);
-//       console.log(req.body);
-      
-      
-//       const userId = req.session.user._id;
-
-//       // Get cart details
-//       const cart = await cartHelper.getCart(userId)
-      
-//       if (!cart) {
-//           return res.status(400).json({ error: 'Invalid cart.' });
-//       }
-
-//       // Get address details
-//       const address = await Address.findById(addressId);
-//       if (!address) {
-//           return res.status(400).json({ error: 'Invalid address.' });
-//       }
-
-//       const totalAmount = cart.items.reduce((total, item) => total + item.total, 0);
-//       const discount = totalCheckOutValue ? totalAmount - totalCheckOutValue : 0;
-//       const finalAmount = totalCheckOutValue || totalAmount;
-
-//       let paymentIntent;
-
-//       // Only create a payment intent if Stripe is selected
-//       if (paymentType === 'Stripe Payment') {
-//           paymentIntent = await stripe.paymentIntents.create({
-//               amount: Math.round(finalAmount * 100), // Amount in cents
-//               currency: 'inr',
-//               metadata: {
-//                   cartId: cart._id.toString(),
-//                   userId: userId.toString(),
-//               },
-//           });
-//       }
-
-//       // Create order
-//       const order = new Order({
-//           user: userId,
-//           address: address._id,
-//           items: cart.items.map(item => ({
-//               product: item.productId._id,
-//               quantity: item.quantity,
-//               price: item.price,
-//           })),
-//           totalAmount,
-//           discount,
-//           finalAmount,
-//           paymentType,
-//           stripeIntentId: paymentIntent ? paymentIntent.id : null,
-//       });
-
-//       await order.save();
-
-//       // Clear the user's cart after order creation
-//       await Cart.deleteOne({ userId });
-
-//       // Respond with the client secret for Stripe payment or success message
-//       if (paymentIntent) {
-//           return res.status(200).json({ clientSecret: paymentIntent.client_secret, orderId: order._id });
-//       } else {
-//           return res.status(200).json({ message: 'Order placed successfully with Cash on Delivery', orderId: order._id });
-//       }
-//   } catch (error) {
-//       console.error('Error creating Stripe payment intent:', error);
-//       res.status(500).json({ error: 'An error occurred while processing your payment.' });
-//   }
-// }
-
-// // Confirm Order Payment
-// async function confirmOrderPayment(req, res) {
-//   try {
-//       const { orderId, paymentStatus } = req.body;
-
-//       const order = await Order.findById(orderId);
-//       if (!order) {
-//           return res.status(400).json({ error: 'Order not found.' });
-//       }
-
-//       // Update order status based on payment status
-//       if (paymentStatus === 'succeeded') {
-//           order.orderStatus = 'Processing';
-//       } else {
-//           order.orderStatus = 'Cancelled';
-//       }
-
-//       await order.save();
-
-//       // Deduct stock for the ordered items if not done yet
-//       if (order.stockUpdated === false && paymentStatus === 'succeeded') {
-//           for (const item of order.items) {
-//               const product = await Product.findById(item.product);
-//               product.stock -= item.quantity;
-//               await product.save();
-//           }
-//           order.stockUpdated = true;
-//           await order.save();
-//       }
-
-//       res.status(200).json({ message: 'Order payment status updated successfully.' });
-//   } catch (error) {
-//       console.error('Error confirming order payment:', error);
-//       res.status(500).json({ error: 'An error occurred while confirming your order.' });
-//   }
-// }
 
 async function createStripePaymentIntent(req, res) {
   try {
@@ -592,7 +483,7 @@ async function createStripePaymentIntent(req, res) {
                   },
                   quantity: item.quantity,
               })),
-              success_url: `${req.protocol}://${req.get('host')}/order-success?session_id={CHECKOUT_SESSION_ID}`,
+              success_url: `${req.protocol}://${req.get('host')}/orderSuccess?session_id={CHECKOUT_SESSION_ID}`,
               cancel_url: `${req.protocol}://${req.get('host')}/checkout`,
               metadata: {
                   cartId: cart._id.toString(),
@@ -663,15 +554,12 @@ async function confirmOrderPayment(req, res) {
       await order.save();
 
       // Redirect to order success page
-      res.render('/order-success');
+      res.render('user/orderSuccess');
   } catch (error) {
       console.error('Error confirming order payment:', error);
       res.status(500).json({ error: 'An error occurred while confirming your order.' });
   }
 }
-
-
-// {{!-- below for stripe --}}
 
 
 const logout = (req,res)=>{
