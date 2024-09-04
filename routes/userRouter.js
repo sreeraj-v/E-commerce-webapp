@@ -33,8 +33,8 @@ router.get("/myaccount", (req, res) => {
 
 
 
-router.get("/about", (req, res) => {
-  res.render("user/about");
+router.get("/orderSuccess", (req, res) => {
+  res.render("user/orderSuccess");
 });
 
 router.get("/wishlist", (req, res) => {
