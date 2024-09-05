@@ -69,7 +69,6 @@
 // };
 
 const Cart = require("../models/cart");
-// const { updateProduct } = require("./product");
 
 module.exports = {
   getCart: async function (userId) {

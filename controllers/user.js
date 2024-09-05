@@ -11,9 +11,10 @@ const Stripe = require("stripe")
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY)
 
 // below for tempory
-const Order = require('../models/order');
-const Cart = require('../models/cart'); // Assuming you have a cart schema
-const {Address} = require('../models/userSchema'); // Assuming you have an address schema
+// const Order = require('../models/order');
+// const Cart = require('../models/cart'); // Assuming you have a cart schema
+// const {Address} = require('../models/userSchema'); // Assuming you have an address schema
+const orderHelper = require("../helpers")
 const Product = require('../models/productSchema')
 
 // below for tempory
@@ -445,121 +446,236 @@ const applyCoupon = async (req, res) => {
 
 //  checkOut payment section >>>>>>>>>>>>>>>>>
 
+// async function createStripePaymentIntent(req, res) {
+//   try {
+//       const { addressId, paymentType, totalCheckOutValue } = req.body;
+//       const userId = req.session.user._id;
+
+//       // Get cart details
+//       const cart = await cartHelper.getCart(userId);
+//       if (!cart) {
+//           return res.status(400).json({ error: 'Invalid cart.' });
+//       }
+
+//       // Get address details
+//       const address = await Address.findById(addressId);
+//       if (!address) {
+//           return res.status(400).json({ error: 'Invalid address.' });
+//       }
+
+//       const totalAmount = cart.items.reduce((total, item) => total + item.total, 0);
+//       const finalAmount = totalCheckOutValue || totalAmount;
+//       const discount = totalAmount - totalCheckOutValue
+//       console.log(discount);
+      
+//       let session;
+
+//       // Only create a Stripe session if Stripe is selected
+//       if (paymentType === 'Stripe Payment') {
+//           session = await stripe.checkout.sessions.create({
+//               payment_method_types: ['card'],
+//               mode: 'payment',
+//               line_items: cart.items.map(item => ({
+//                   price_data: {
+//                       currency: 'inr',
+//                       product_data: {
+//                           name: item.productId.name,
+//                       },
+//                       unit_amount: item.price * 100, // Convert to paise
+//                   },
+//                   quantity: item.quantity,
+//               })),
+//               success_url: `${req.protocol}://${req.get('host')}/orderSuccess?session_id={CHECKOUT_SESSION_ID}`,
+//               cancel_url: `${req.protocol}://${req.get('host')}/checkout`,
+//               metadata: {
+//                   cartId: cart._id.toString(),
+//                   userId: userId.toString(),
+//                   addressId: address._id.toString(),
+//               },
+//           });
+//       }
+
+//       // Create order in the database
+//       const order = new Order({
+//           user: userId,
+//           address: address._id,
+//           items: cart.items.map(item => ({
+//               product: item.productId._id,
+//               quantity: item.quantity,
+//               price: item.price,
+//           })),
+//           totalAmount,
+//           discount,
+//           finalAmount,
+//           paymentType,
+//           stripeIntentId: session ? session.id : null,
+//       });
+
+//       await order.save();
+
+//       // Clear the user's cart after order creation
+//       await Cart.deleteOne({ userId });
+
+//       // Respond with the session URL for Stripe payment or success message
+//       if (session) {
+//           return res.status(200).json({ url: session.url });
+//       } else {
+//           return res.status(200).json({ message: 'Order placed successfully with Cash on Delivery' });
+//       }
+//   } catch (error) {
+//       console.error('Error creating Stripe session:', error);
+//       res.status(500).json({ error: 'An error occurred while processing your payment.' });
+//   }
+// }
+
+// async function confirmOrderPayment(req, res) {
+//   try {
+//       const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
+//       const order = await Order.findOne({ stripeIntentId: session.id });
+
+//       if (!order) {
+//           return res.status(400).json({ error: 'Order not found.' });
+//       }
+
+//       if (session.payment_status === 'paid') {
+//           order.orderStatus = 'Processing';
+
+//           // Deduct stock for the ordered items if not done yet
+//           if (!order.stockUpdated) {
+//               for (const item of order.items) {
+//                   const product = await Product.findById(item.product);
+//                   product.stock -= item.quantity;
+//                   await product.save();
+//               }
+//               order.stockUpdated = true;
+//           }
+//       } else {
+//           order.orderStatus = 'Cancelled';
+//       }
+
+//       await order.save();
+
+//       // Redirect to order success page
+//       res.render('user/orderSuccess');
+//   } catch (error) {
+//       console.error('Error confirming order payment:', error);
+//       res.status(500).json({ error: 'An error occurred while confirming your order.' });
+//   }
+// }
+
+
 async function createStripePaymentIntent(req, res) {
   try {
-      const { addressId, paymentType, totalCheckOutValue } = req.body;
-      const userId = req.session.user._id;
+    const { addressId, paymentType, totalCheckOutValue } = req.body;
+    const userId = req.session.user._id;
 
-      // Get cart details
-      const cart = await cartHelper.getCart(userId);
-      if (!cart) {
-          return res.status(400).json({ error: 'Invalid cart.' });
-      }
+    // Fetch cart details using the cartHelper
+    const cart = await cartHelper.getCart(userId);
+    if (!cart) {
+      return res.status(400).json({ error: 'Invalid cart.' });
+    }
 
-      // Get address details
-      const address = await Address.findById(addressId);
-      if (!address) {
-          return res.status(400).json({ error: 'Invalid address.' });
-      }
+    // Fetch address details using the new addressHelper function
+    const address = await addressHelper.getAddressById(addressId);
+    if (!address) {
+      return res.status(400).json({ error: 'Invalid address.' });
+    }
 
-      const totalAmount = cart.items.reduce((total, item) => total + item.total, 0);
-      const finalAmount = totalCheckOutValue || totalAmount;
-      const discount = totalCheckOutValue ? totalAmount - totalCheckOutValue : 0;
+    // Calculate total amount and discount
+    const totalAmount = cart.items.reduce((total, item) => total + item.total, 0);
+    const finalAmount = totalCheckOutValue || totalAmount;
+    const discount = totalAmount - finalAmount;
 
-      let session;
+    let session;
 
-      // Only create a Stripe session if Stripe is selected
-      if (paymentType === 'Stripe Payment') {
-          session = await stripe.checkout.sessions.create({
-              payment_method_types: ['card'],
-              mode: 'payment',
-              line_items: cart.items.map(item => ({
-                  price_data: {
-                      currency: 'inr',
-                      product_data: {
-                          name: item.productId.name,
-                      },
-                      unit_amount: item.price * 100, // Convert to paise
-                  },
-                  quantity: item.quantity,
-              })),
-              success_url: `${req.protocol}://${req.get('host')}/orderSuccess?session_id={CHECKOUT_SESSION_ID}`,
-              cancel_url: `${req.protocol}://${req.get('host')}/checkout`,
-              metadata: {
-                  cartId: cart._id.toString(),
-                  userId: userId.toString(),
-                  addressId: address._id.toString(),
-              },
-          });
-      }
-
-      // Create order in the database
-      const order = new Order({
-          user: userId,
-          address: address._id,
-          items: cart.items.map(item => ({
-              product: item.productId._id,
-              quantity: item.quantity,
-              price: item.price,
-          })),
-          totalAmount,
-          discount,
-          finalAmount,
-          paymentType,
-          stripeIntentId: session ? session.id : null,
+    if (paymentType === 'Stripe Payment') {
+      session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        mode: 'payment',
+        line_items: cart.items.map(item => ({
+          price_data: {
+            currency: 'inr',
+            product_data: { name: item.productId.name },
+            unit_amount: item.price * 100, // Convert to paise
+          },
+          quantity: item.quantity,
+        })),
+        success_url: `${req.protocol}://${req.get('host')}/orderSuccess?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${req.protocol}://${req.get('host')}/checkout`,
+        metadata: {
+          cartId: cart._id.toString(),
+          userId: userId.toString(),
+          addressId: address._id.toString(),
+        },
       });
+    }
 
-      await order.save();
+    // Create the order using the orderHelper
+    const order = await orderHelper.createOrder({
+      user: userId,
+      address: address._id,
+      items: cart.items.map(item => ({
+        product: item.productId._id,
+        quantity: item.quantity,
+        price: item.price,
+      })),
+      totalAmount,
+      discount,
+      finalAmount,
+      paymentType,
+      stripeIntentId: session ? session.id : null,
+    });
 
-      // Clear the user's cart after order creation
-      await Cart.deleteOne({ userId });
+    // Clear the user's cart using the cartHelper
+    await cartHelper.deleteCart(userId);
 
-      // Respond with the session URL for Stripe payment or success message
-      if (session) {
-          return res.status(200).json({ url: session.url });
-      } else {
-          return res.status(200).json({ message: 'Order placed successfully with Cash on Delivery' });
-      }
+    if (session) {
+      return res.status(200).json({ url: session.url });
+    } else {
+      return res.status(200).json({ message: 'Order placed successfully with Cash on Delivery' });
+    }
   } catch (error) {
-      console.error('Error creating Stripe session:', error);
-      res.status(500).json({ error: 'An error occurred while processing your payment.' });
+    console.error('Error creating Stripe session:', error);
+    res.status(500).json({ error: 'An error occurred while processing your payment.' });
   }
 }
 
 async function confirmOrderPayment(req, res) {
   try {
-      const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
-      const order = await Order.findOne({ stripeIntentId: session.id });
+    const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
+    const order = await orderHelper.findOrderByStripeIntentId(session.id);
 
-      if (!order) {
-          return res.status(400).json({ error: 'Order not found.' });
-      }
+    if (!order) {
+      return res.status(400).json({ error: 'Order not found.' });
+    }
 
-      if (session.payment_status === 'paid') {
-          order.orderStatus = 'Processing';
+    if (session.payment_status === 'paid') {
+      order.orderStatus = 'Processing';
 
-          // Deduct stock for the ordered items if not done yet
-          if (!order.stockUpdated) {
-              for (const item of order.items) {
-                  const product = await Product.findById(item.product);
-                  product.stock -= item.quantity;
-                  await product.save();
-              }
-              order.stockUpdated = true;
+      if (!order.stockUpdated) {
+        for (const item of order.items) {
+          const product = await Product.findById(item.product);
+          if (product.stockAvailable >= item.quantity) {
+            product.stockAvailable -= item.quantity;
+            await product.save();
+          } else {
+            return res.status(400).json({ error: 'Not enough stock available.' });
           }
-      } else {
-          order.orderStatus = 'Cancelled';
+        }
+        order.stockUpdated = true;
       }
+    } else {
+      order.orderStatus = 'Cancelled';
+    }
 
-      await order.save();
-
-      // Redirect to order success page
-      res.render('user/orderSuccess');
+    await order.save();
+    res.render('user/orderSuccess', { order });
   } catch (error) {
-      console.error('Error confirming order payment:', error);
-      res.status(500).json({ error: 'An error occurred while confirming your order.' });
+    console.error('Error confirming order payment:', error);
+    res.status(500).json({ error: 'An error occurred while confirming your order.' });
   }
 }
+
 
 
 const logout = (req,res)=>{

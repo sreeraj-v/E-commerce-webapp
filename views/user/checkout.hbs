@@ -258,13 +258,13 @@
         event.preventDefault();  // Prevent form submission
 
         const selectedAddressId = document.getElementById('existing-address').value;
-        const discount = document.getElementById('discountValue').textContent;
+        const totalCheckOutValue = document.getElementById('orderTotal').textContent;
         const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
         
 
         const paymentType = paymentMethod.value;
 
-        if (selectedAddressId === 'Select an Address') {
+        if (selectedAddressId === 'Select an Address'||selectedAddressId === 'No addresses found. Add a new one') {
             alert('Please select an address before placing the order.');
             return;
         }
@@ -272,7 +272,7 @@
         const requestBody = { 
             addressId: selectedAddressId, 
             paymentType: paymentType,
-            discount: discount
+            totalCheckOutValue: totalCheckOutValue
         };
 
         const response = await fetch('/create-payment-intent', {
@@ -408,5 +408,3 @@
 </script>
 
     {{!-- <script src="assets/js/main.js"></script> --}}
-
-{{!-- value in the option tag for esisting address area venele ith - value="{{this._id}} use aaka. --}}
