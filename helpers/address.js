@@ -23,6 +23,15 @@ const addressHelper = {
       throw error;
     }
   },
+
+  getAddressById: async (addressId) => {
+    try {
+      return await Address.findById(addressId).lean();
+    } catch (error) {
+      console.error("Error fetching address by ID: ", error);
+      throw error;
+    }
+  }
 };
 
 module.exports = addressHelper;

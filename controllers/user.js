@@ -14,7 +14,7 @@ const stripe = Stripe(process.env.STRIPE_SECRET_KEY)
 // const Order = require('../models/order');
 // const Cart = require('../models/cart'); // Assuming you have a cart schema
 // const {Address} = require('../models/userSchema'); // Assuming you have an address schema
-const orderHelper = require("../helpers")
+const orderHelper = require("../helpers/order")
 const Product = require('../models/productSchema')
 
 // below for tempory
