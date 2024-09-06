@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { registeration, verifyEmail, registerPage, home, loginPage, userLogin, logout, productView, shop, addToCart, cart, removeFromCart, updateQuantity, checkOut, addNewAddress, applyCoupon, createStripePaymentIntent, confirmOrderPayment,  } = require("../controllers/user")
+const { registeration, verifyEmail, registerPage, home, loginPage, userLogin, logout, productView, shop, addToCart, cart, removeFromCart, updateQuantity, checkOut, addNewAddress, applyCoupon, confirmOrderPayment, processOrder,  } = require("../controllers/user")
 const userAuth = require("../middleware/userAuth")
 
 router.get("/login",loginPage)
@@ -21,7 +21,7 @@ router.post("/applyCoupon",userAuth,applyCoupon)
 // {{!-- below for stripe --}}
 // router.post('/create-payment-intent', createStripePaymentIntent);
 // router.post('/confirm-order-payment', confirmOrderPayment);
-router.post('/create-payment-intent', createStripePaymentIntent);
+router.post('/create-payment-intent', processOrder);
 router.get('/orderSuccess', confirmOrderPayment);
 
 

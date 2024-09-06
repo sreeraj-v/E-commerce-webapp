@@ -246,58 +246,79 @@
 {{>mobileView}}
 
 
-{{!-- below for stripe --}}
+                           {{!-- below for stripe --}}
 
 <script src="https://js.stripe.com/v3/"></script>
 
 <script>
     const stripe = Stripe('pk_test_51Ptt5WCsHv5xvAVbuFRE7PPgkMe9Qh3iUcmALvTsfNyIirpmoAmzmTZ8xdCUo4iGGt2xDx9pHssGSazWIDBqKnrf00HR3DExzR');
-    const placeOrderBtn = document.getElementById('place-order-btn');
 
-    placeOrderBtn.addEventListener('click', async function(event) {
-        event.preventDefault();  // Prevent form submission
+    document.getElementById('place-order-btn').addEventListener('click', async function (event) {
+        event.preventDefault();
 
         const selectedAddressId = document.getElementById('existing-address').value;
         const totalCheckOutValue = document.getElementById('orderTotal').textContent;
-        const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
-        
+        const paymentType = document.querySelector('input[name="paymentMethod"]:checked')?.value;
 
-        const paymentType = paymentMethod.value;
-
-        if (selectedAddressId === 'Select an Address'||selectedAddressId === 'No addresses found. Add a new one') {
-            alert('Please select an address before placing the order.');
-            return;
+        if (selectedAddressId === 'Select an Address' || selectedAddressId === 'No addresses found. Add a new one') {
+            return Swal.fire({
+                title: 'Address not selected',
+                text: 'Please select an address before placing the order.',
+                icon: 'error',
+                confirmButtonText: 'Try Again'
+            });
         }
 
-        const requestBody = { 
-            addressId: selectedAddressId, 
-            paymentType: paymentType,
-            totalCheckOutValue: totalCheckOutValue
-        };
+        try {
+            const response = await fetch('/create-payment-intent', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ addressId: selectedAddressId, paymentType, totalCheckOutValue })
+            });
 
-        const response = await fetch('/create-payment-intent', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(requestBody)
-        });
+            const data = await response.json();
 
-        const data = await response.json();
-
-        if (paymentType === 'Stripe Payment') {
-            if (data.url) {
-                window.location.href = data.url;  // Redirect to Stripe hosted checkout page
+            if (paymentType === 'Stripe Payment') {
+                if (data.url) {
+                    return window.location.href = data.url;  // Redirect to Stripe checkout
+                }
+                return Swal.fire({
+                    title: 'Failed to create Stripe session.',
+                    text: data.error,
+                    icon: 'error',
+                    confirmButtonText: 'Try Again'
+                });
             } else {
-                alert('Failed to create Stripe session.');
+                if (data.orderId) {
+                    return Swal.fire({
+                        title: 'Order placed successfully!',
+                        text: data.message,
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        window.location.href = `/orderSuccess?orderId=${data.orderId}`;
+                    });
+                }
+                return Swal.fire({
+                    title: 'Failed to place order.',
+                    text: data.error,
+                    icon: 'error',
+                    confirmButtonText: 'Try Again'
+                });
             }
-        } else {
-            // Handle order completion for Cash on Delivery
-            alert('Order placed successfully with Cash on Delivery!');
-            window.location.href = '/orderSuccess';
+        } catch (error) {
+            console.error('Order placement error:', error);
+            Swal.fire({
+                title: 'Error',
+                text: 'An error occurred while placing the order.',
+                icon: 'error',
+                confirmButtonText: 'Try Again'
+            });
         }
     });
 </script>
+
+
 
 
                       {{!-- below for adding address --}}

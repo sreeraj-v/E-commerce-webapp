@@ -141,5 +141,9 @@ module.exports = {
       { userId: userId, "items.productId": productId },
       { $set: { "items.$.quantity": quantity, "items.$.total": quantity * price } }
   );
+  },
+  
+  deleteCart: async (userId) => {
+    return await Cart.deleteOne({ userId });
   }
 };
