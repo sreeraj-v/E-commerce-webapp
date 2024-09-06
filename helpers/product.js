@@ -49,8 +49,8 @@ module.exports={
     return product;
   },
 
-  getEditPage: async function(productId){
-    const product = await Product.findById(productId).lean()
+  getProductById: async function(productId){
+    const product = await Product.findById(productId)
     return product;
   },
 

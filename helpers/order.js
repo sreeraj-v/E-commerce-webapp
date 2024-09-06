@@ -18,5 +18,9 @@ module.exports =  {
 
   updateOrderStatus: async (orderId, updates) => {
     return await Order.findByIdAndUpdate(orderId, updates, { new: true });
+  },
+
+  findOrderByOrderId: async (orderId)=>{
+    return await Order.findOne(orderId)
   }
 };

@@ -136,7 +136,7 @@ const productInactive = async (req, res) => {
 // get editProductPage >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 const editProductPage = async (req, res) => {
   const productId = req.query.id
-  const product = await productHelper.getEditPage(productId)
+  const product = await productHelper.viewSingleProduct(productId)
   if (!product) {
     return res.status(404).json({ error: "product not found" })
   }
