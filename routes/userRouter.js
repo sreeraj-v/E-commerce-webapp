@@ -19,9 +19,9 @@ router.post("/addNewAddress", userAuth, addNewAddress);
 router.post("/applyCoupon",userAuth,applyCoupon)
 
 // {{!-- below for stripe --}}
-// router.post('/create-payment-intent', createStripePaymentIntent);
+// router.post('/processOrder', createStripePaymentIntent);
 // router.post('/confirm-order-payment', confirmOrderPayment);
-router.post('/create-payment-intent', processOrder);
+router.post('/processOrder', processOrder);
 router.get('/orderSuccess', confirmOrderPayment);
 
 

@@ -5,16 +5,15 @@ const productHelper = require("../helpers/product")
 const cartHelper = require("../helpers/cart")
 const addressHelper = require("../helpers/address")
 const couponHelper = require("../helpers/coupon")
+const orderHelper = require("../helpers/order")
 const { User } = require("../models/userSchema");
 
 const Stripe = require("stripe")
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY)
+const { v4: uuidv4 } = require('uuid')
 
 // below for tempory
 const Order = require('../models/order');
-// const Cart = require('../models/cart'); // Assuming you have a cart schema
-// const {Address} = require('../models/userSchema'); // Assuming you have an address schema
-const orderHelper = require("../helpers/order")
 const Product = require('../models/productSchema')
 
 // below for tempory
@@ -571,19 +570,16 @@ async function processOrder(req, res) {
     const { addressId, paymentType, totalCheckOutValue } = req.body;
     const userId = req.session.user._id;
 
-    // Fetch cart details
     const cart = await cartHelper.getCart(userId);
     if (!cart) {
       return res.status(400).json({ error: 'Invalid cart.' });
     }
 
-    // Fetch address details
     const address = await addressHelper.getAddressById(addressId);
     if (!address) {
       return res.status(400).json({ error: 'Invalid address.' });
     }
 
-    // Calculate total amount and discount
     const totalAmount = cart.items.reduce((total, item) => total + item.total, 0);
     const finalAmount = totalCheckOutValue || totalAmount;
     const discount = totalAmount - finalAmount;
@@ -591,7 +587,6 @@ async function processOrder(req, res) {
     let session;
     let order;
 
-    // Create order in the database
     order = await orderHelper.createOrder({
       user: userId,
       address: address._id,
@@ -604,9 +599,9 @@ async function processOrder(req, res) {
       discount,
       finalAmount,
       paymentType,
-      stripeIntentId: paymentType === 'Stripe Payment' ? null : undefined,  // Add stripe intent ID later for Stripe
-      orderId: `ORDER-${Date.now()}`,  // Generate a unique order ID
-      deliveryExpectedDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),  // Estimated delivery after 7 days
+      stripeIntentId: paymentType === 'Stripe Payment' ? null : undefined, 
+      orderId: `Order-${uuidv4()}`, 
+      deliveryExpectedDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),  
     });
 
     if (paymentType === 'Stripe Payment') {
@@ -618,7 +613,7 @@ async function processOrder(req, res) {
           price_data: {
             currency: 'inr',
             product_data: { name: item.productId.name },
-            unit_amount: item.price * 100, // Convert to paise
+            unit_amount: item.price * 100,
           },
           quantity: item.quantity,
         })),
@@ -631,12 +626,10 @@ async function processOrder(req, res) {
         },
       });
 
-      // Update the order with the Stripe session ID
       order.stripeIntentId = session.id;
       await order.save();
     }
 
-    // Clear the user's cart
     await cartHelper.deleteCart(userId);
 
     if (paymentType === 'Stripe Payment') {

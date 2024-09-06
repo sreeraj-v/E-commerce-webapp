@@ -270,7 +270,7 @@
         }
 
         try {
-            const response = await fetch('/create-payment-intent', {
+            const response = await fetch('/processOrder', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ addressId: selectedAddressId, paymentType, totalCheckOutValue })

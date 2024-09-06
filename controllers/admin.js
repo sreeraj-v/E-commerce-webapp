@@ -278,7 +278,7 @@ const deleteUser = async (req ,res) =>{
 //  coupon users >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 const couponPage = async (req,res)=>{
   try{
-    const coupons = await couponHelper.getCoupon()    
+    const coupons = await couponHelper.getAllCoupons()    
     res.render("admin/coupon",{coupons})
   }catch(error){
     console.error('Error in rendering couponPage :',error);

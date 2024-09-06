@@ -51,5 +51,9 @@ module.exports = {
         console.error("Error validating coupon:", error);
         throw error;
     }
+  },
+
+  getAllCoupons: async()=>{
+    return await Coupon.find().lean()
   }
 }
