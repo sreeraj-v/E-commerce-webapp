@@ -6,6 +6,7 @@ const session = require("express-session")
 require("dotenv").config()
 const {SECRET_KEY} = process.env
 const mongoDbStore = require("connect-mongodb-session")(session)
+const hbsHelpers = require('handlebars-helpers')();
 
 const connectDb = require("./config/db/cofig")
 const adminLayoutActive = require("./middleware/adminLayoutActive")
@@ -35,6 +36,7 @@ app.engine("hbs",hbs.engine({
   layoutsDir:path.join(__dirname,'views/layout'),
   partialsDir:path.join(__dirname,'views/partials'),
   helpers: {
+    ...hbsHelpers,
     eq: (a, b) => a === b,
     json: (context) => JSON.stringify(context)
   }

@@ -523,15 +523,12 @@ async function processOrder(req, res) {
 async function confirmOrderPayment(req, res) {
   try {
     const { session_id } = req.query;
-    const userId = req.session.user._id;
-    const {orderId} = req.query;
-
+    const { orderId } = req.query;
     let order;
 
     if (session_id) {
       // Handle Stripe payment
       const session = await stripe.checkout.sessions.retrieve(session_id);
-      
       order = await orderHelper.findOrderByStripeIntentId(session.id);
 
       if (!order) {
@@ -544,15 +541,7 @@ async function confirmOrderPayment(req, res) {
 
         // Update stock if not already updated
         if (!order.stockUpdated) {
-          for (const item of order.items) {
-            const product = await productHelper.getProductById(item.product)
-            if (product.stockAvailable >= item.quantity) {
-              product.stockAvailable -= item.quantity;
-              await product.save();
-            } else {
-              return res.status(400).json({ error: 'Not enough stock available.' });
-            }
-          }
+          await updateStockForOrder(order);
           order.stockUpdated = true;
         }
       } else {
@@ -562,21 +551,45 @@ async function confirmOrderPayment(req, res) {
       await order.save();
     } else if (orderId) {
       // Handle Cash on Delivery (COD) flow
-      order = await orderHelper.findOrderByOrderId(orderId)
+      order = await orderHelper.findOrderByOrderId(orderId);
+
+      // Ensure stock is updated for COD orders
+      if (!order.stockUpdated) {
+        await updateStockForOrder(order);
+        order.stockUpdated = true;
+        order.orderStatus = 'Processing';  
+        await order.save();
+      }
     }
+
+    order = order.toObject()
     console.log(order)
     // if no orderId/stripe sessionId available redirect to home for only showing orderSucces page one time only
     if (!order) {
-      return res.redirect('/'); 
-    } 
+      return res.redirect('/');
+    }
 
     return res.render('user/orderSuccess', { order });
-    
   } catch (error) {
     console.error('Error confirming order payment:', error);
     return res.status(500).json({ error: 'An error occurred while confirming your order.' });
   }
 }
+
+// Helper function to update stock for an order
+async function updateStockForOrder(order) {
+  for (const item of order.items) {
+    const product = await productHelper.getProductById(item.product);
+
+    if (product.stockAvailable >= item.quantity) {
+      product.stockAvailable -= item.quantity;
+      await product.save();
+    } else {
+      throw new Error(`Not enough stock available for product ${product.name}`);
+    }
+  }
+}
+
 
 
 

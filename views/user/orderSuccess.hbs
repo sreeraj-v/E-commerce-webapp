@@ -34,7 +34,7 @@
                             </div>
                             <h2 class="card-title mb-2">THANK YOU</h2>
                             <h3 class="mb-3">YOUR ORDER IS CONFIRMED</h3>
-                            <p class="text-muted">We will be sending you an email confirmation to example@contrado.com shortly</p>
+                            <p class="text-muted">We will be sending you an email confirmation to {{order.address.email}} shortly</p>
                         </div>
                     </div>
 
@@ -43,11 +43,11 @@
                             <h4 class="mb-3 p-4" style="border-bottom: 2px solid #dee2e6;">Delivery Details</h4>
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <div>
-                                    <p class="mb-1">Order #2059666 was placed on January 13, 2021</p>
-                                    <p class="mb-1"><strong>Expected Delivery Date:</strong> 16 January 2021</p>
+                                    <p class="mb-1">{{order.orderId}} was placed on {{date order.datePlaced "MMMM Do, YYYY"}} </p>
+                                    <p class="mb-1"><strong>Expected Delivery Date:</strong>{{date order.deliveryExpectedDate "MMMM Do, YYYY"}} </p>
                                     <a href="#" class="btn btn-link p-0 text-primary">Track Your Order</a>
                                 </div>
-                                <button class="btn btn-outline-primary btn-sm">
+                                <button class="btn btn-outline-primary-2 btn-sm">
                                     Download Invoice
                                 </button>
                             </div>
@@ -55,7 +55,7 @@
                     </div>
 
                     <div class="text-center mt-4 mb-5">
-                        <a href="#" class="btn btn-outline-primary-2 btn-minwidth-lg">
+                        <a href="/" class="btn btn-outline-primary-2 btn-minwidth-lg">
                             <span>CONTINUE SHOPPING</span>
                             <i class="icon-long-arrow-right"></i>
                         </a>
@@ -66,7 +66,7 @@
                     <div class="card border-0 mb-3" style="background-color: #f8f9fa;">
                         <div class="card-body">
                             <h4 class="mb-3 p-3" style="border-bottom: 2px solid #dee2e6;">DELIVERY ADDRESS</h4>
-                            <p class="mb-2">Vvip Addresses, Raj Nagar Extension Road<br>Raj Nagar Extension Ghaziabad<br>london 201001 India</p>
+                            <p class="mb-2">{{order.address.streetAddress}},{{order.address.city}} <br>{{order.address.country}}<br>{{order.address.pincode}} </p>
                             <a href="#" class="btn btn-link p-0 text-primary">Change Details</a>
                         </div>
                     </div>
@@ -74,9 +74,8 @@
                     <div class="card border-0 mb-3" style="background-color: #f8f9fa;">
                         <div class="card-body">
                             <h4 class="mb-3 p-3" style="border-bottom: 2px solid #dee2e6;">CONTACT DETAILS</h4>
-                            <p class="mb-1">email@company.com</p>
-                            <p class="mb-1">+91 987 000 0000</p>
-                            <p class="mb-0">+91 987 000 000</p>
+                            <p class="mb-1">{{order.address.email}}</p>
+                            <p class="mb-1">{{order.address.phone}}</p>
                         </div>
                     </div>
 
@@ -85,15 +84,15 @@
                             <h4 class="mb-3 p-3" style="border-bottom: 2px solid #dee2e6;">ORDER SUMMARY </h4>
                             <div class="d-flex justify-content-between mb-1">
                                 <span>Sub Total</span>
-                                <span>£15.00</span>
+                                <span>₹{{order.finalAmount}}.00</span>
                             </div>
                             <div class="d-flex justify-content-between mb-1">
                                 <span>Delivery</span>
-                                <span>£16.00</span>
+                                <span>₹00.00</span>
                             </div>
                             <div class="d-flex justify-content-between font-weight-bold mt-2 pt-2" style="border-top: 1px solid #dee2e6;">
                                 <span>Total</span>
-                                <span>£31.00</span>
+                                <span>₹{{order.finalAmount}}.00</span>
                             </div>
                         </div>
                     </div>
