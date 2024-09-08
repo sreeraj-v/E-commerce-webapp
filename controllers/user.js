@@ -612,64 +612,39 @@ async function downloadInvoice(req, res) {
     // Pipe the document to the response
     doc.pipe(res);
 
-    // Add content to the PDF with improved styling
-    doc.fontSize(20).text('Order Invoice', { align: 'center', underline: true });
-    doc.moveDown(1.5);
+    // Add a single box for the entire invoice
+    doc.rect(50, 50, 500, 700).stroke();
 
-    // Order details box with a border
-    doc
-      .rect(50, doc.y, 500, 100)
-      .stroke()
-      .fontSize(14)
-      .text(`Order ID: ${order.orderId}`, 60, doc.y + 10)
-      .moveDown(0.5)
-      .text(`Date Placed: ${order.datePlaced}`)
-      .moveDown(0.5)
-      .text(`Expected Delivery Date: ${order.deliveryExpectedDate}`)
-      .moveDown(1.5);
+    // Add top space and the heading for the invoice
+    doc.moveDown(1.5).fontSize(20).text('Order Invoice', { align: 'center', underline: true }).moveDown(1.5);
 
-    // Delivery address box with a border
-    doc
-      .rect(50, doc.y, 500, 100)
-      .stroke()
-      .fontSize(16)
-      .text('Delivery Address:', 60, doc.y + 10, { underline: true })
-      .moveDown(0.5)
-      .fontSize(14)
-      .text(`${order.address.firstName} ${order.address.lastName}`, 60, doc.y)
-      .text(`${order.address.streetAddress}, ${order.address.city}`, 60, doc.y)
-      .text(`${order.address.country}, ${order.address.pincode}`, 60, doc.y)
-      .moveDown(0.5)
-      .text(`Email: ${order.address.email}`, 60, doc.y)
-      .text(`Phone: ${order.address.phone}`, 60, doc.y)
-      .moveDown(1.5);
+    // Order details inside the box
+    doc.fontSize(16).text('Order Details:', { underline: true }).moveDown(0.5);
+    doc.fontSize(14).text(`Order ID: ${order.orderId}`, 60, doc.y)
+       .text(`Date Placed: ${order.datePlaced}`).moveDown(0.5)
+       .text(`Delivery Date: ${order.deliveryExpectedDate}`).moveDown(1.5);
 
-    // Order summary box with a border
-    doc
-      .rect(50, doc.y, 500, 200)
-      .stroke()
-      .fontSize(16)
-      .text('Order Summary:', 60, doc.y + 10, { underline: true })
-      .moveDown(0.5)
-      .fontSize(14);
+    // Delivery address inside the box
+    doc.fontSize(16).text('Delivery Address:', { underline: true }).moveDown(0.5)
+       .fontSize(14).text(`${order.address.firstName} ${order.address.lastName}`, 60, doc.y)
+       .text(`${order.address.streetAddress}, ${order.address.city}`, 60, doc.y)
+       .text(`${order.address.country}, ${order.address.pincode}`, 60, doc.y)
+       .text(`Email: ${order.address.email}`, 60, doc.y)
+       .text(`Phone: ${order.address.phone}`, 60, doc.y).moveDown(1.5);
 
-    // List items inside the order summary
+    // Order summary inside the box
+    doc.fontSize(16).text('Order Summary:', { underline: true }).moveDown(0.5);
+
     order.items.forEach((item, index) => {
-      doc.text(`${index + 1}. ${item.product.name} (Qty: ${item.quantity}) - ${item.price}`, 60, doc.y);
+      doc.fontSize(14).text(`${index + 1}. ${item.product.name} (Qty: ${item.quantity}) - ${item.price}`, 60, doc.y);
     });
+
     doc.moveDown(1.5);
 
-    // Payment details box with a border
-    doc
-      .rect(50, doc.y, 500, 80)
-      .stroke()
-      .fontSize(14)
-      .text(`Sub Total: ${order.finalAmount}/-`, 60, doc.y + 10)
-      .moveDown(0.5)
-      .text('Delivery: 00.00/-')
-      .moveDown(0.5)
-      .text(`Total: ${order.finalAmount}/-`)
-      .moveDown(2);
+    // Payment details inside the box 
+    doc.fontSize(14).text(`Sub Total: ${order.finalAmount}`, 60, doc.y)
+       .text('Delivery: 00.00', 60, doc.y)
+       .text(`Total: ${order.finalAmount}`, 60, doc.y);
 
     // End the document
     doc.end();
