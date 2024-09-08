@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { registeration, verifyEmail, registerPage, home, loginPage, userLogin, logout, productView, shop, addToCart, cart, removeFromCart, updateQuantity, checkOut, addNewAddress, applyCoupon, confirmOrderPayment, processOrder,  } = require("../controllers/user")
+const { registeration, verifyEmail, registerPage, home, loginPage, userLogin, logout, productView, shop, addToCart, cart, removeFromCart, updateQuantity, checkOut, addNewAddress, applyCoupon, confirmOrderPayment, processOrder, downloadInvoice,  } = require("../controllers/user")
 const userAuth = require("../middleware/userAuth")
 
 router.get("/login",loginPage)
@@ -17,12 +17,9 @@ router.post("/updateQuantity",updateQuantity)
 router.get("/checkOut", userAuth, checkOut);
 router.post("/addNewAddress", userAuth, addNewAddress);
 router.post("/applyCoupon",userAuth,applyCoupon)
-
-// {{!-- below for stripe --}}
-// router.post('/processOrder', createStripePaymentIntent);
-// router.post('/confirm-order-payment', confirmOrderPayment);
 router.post('/processOrder', processOrder);
 router.get('/orderSuccess', confirmOrderPayment);
+router.get("/download-invoice/:orderId",downloadInvoice);
 
 
 router.get("/myaccount", (req, res) => {

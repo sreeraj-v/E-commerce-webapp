@@ -47,9 +47,7 @@
                                     <p class="mb-1"><strong>Expected Delivery Date:</strong>{{date order.deliveryExpectedDate "MMMM Do, YYYY"}} </p>
                                     <a href="#" class="btn btn-link p-0 text-primary">Track Your Order</a>
                                 </div>
-                                <button class="btn btn-outline-primary-2 btn-sm">
-                                    Download Invoice
-                                </button>
+                                  <a href="/download-invoice/{{order.orderId}}" class="btn btn-outline-primary-2 btn-sm">Download Invoice</a>
                             </div>
                         </div>
                     </div>

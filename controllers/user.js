@@ -11,6 +11,7 @@ const { User } = require("../models/userSchema");
 const Stripe = require("stripe")
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY)
 const { v4: uuidv4 } = require('uuid')
+const PDFDocument = require('pdfkit');
 
 require('dotenv').config()
 
@@ -576,7 +577,7 @@ async function confirmOrderPayment(req, res) {
   }
 }
 
-// Helper function to update stock for an order
+// above Helper function to update stock for every order
 async function updateStockForOrder(order) {
   for (const item of order.items) {
     const product = await productHelper.getProductById(item.product);
@@ -590,6 +591,93 @@ async function updateStockForOrder(order) {
   }
 }
 
+async function downloadInvoice(req, res) {
+  try {
+    const { orderId } = req.params;
+
+    // Fetch the order details
+    const order = await orderHelper.findOrderByOrderId(orderId);
+
+    if (!order) {
+      return res.status(404).json({ error: "Order not found." });
+    }
+
+    // Set the response to download the PDF
+    res.setHeader('Content-Disposition', `attachment; filename=invoice-${order.orderId}.pdf`);
+    res.setHeader('Content-Type', 'application/pdf');
+
+    // Create a new PDF document with margins
+    const doc = new PDFDocument({ margin: 50 });
+
+    // Pipe the document to the response
+    doc.pipe(res);
+
+    // Add content to the PDF with improved styling
+    doc.fontSize(20).text('Order Invoice', { align: 'center', underline: true });
+    doc.moveDown(1.5);
+
+    // Order details box with a border
+    doc
+      .rect(50, doc.y, 500, 100)
+      .stroke()
+      .fontSize(14)
+      .text(`Order ID: ${order.orderId}`, 60, doc.y + 10)
+      .moveDown(0.5)
+      .text(`Date Placed: ${order.datePlaced}`)
+      .moveDown(0.5)
+      .text(`Expected Delivery Date: ${order.deliveryExpectedDate}`)
+      .moveDown(1.5);
+
+    // Delivery address box with a border
+    doc
+      .rect(50, doc.y, 500, 100)
+      .stroke()
+      .fontSize(16)
+      .text('Delivery Address:', 60, doc.y + 10, { underline: true })
+      .moveDown(0.5)
+      .fontSize(14)
+      .text(`${order.address.firstName} ${order.address.lastName}`, 60, doc.y)
+      .text(`${order.address.streetAddress}, ${order.address.city}`, 60, doc.y)
+      .text(`${order.address.country}, ${order.address.pincode}`, 60, doc.y)
+      .moveDown(0.5)
+      .text(`Email: ${order.address.email}`, 60, doc.y)
+      .text(`Phone: ${order.address.phone}`, 60, doc.y)
+      .moveDown(1.5);
+
+    // Order summary box with a border
+    doc
+      .rect(50, doc.y, 500, 200)
+      .stroke()
+      .fontSize(16)
+      .text('Order Summary:', 60, doc.y + 10, { underline: true })
+      .moveDown(0.5)
+      .fontSize(14);
+
+    // List items inside the order summary
+    order.items.forEach((item, index) => {
+      doc.text(`${index + 1}. ${item.product.name} (Qty: ${item.quantity}) - ${item.price}`, 60, doc.y);
+    });
+    doc.moveDown(1.5);
+
+    // Payment details box with a border
+    doc
+      .rect(50, doc.y, 500, 80)
+      .stroke()
+      .fontSize(14)
+      .text(`Sub Total: ${order.finalAmount}/-`, 60, doc.y + 10)
+      .moveDown(0.5)
+      .text('Delivery: 00.00/-')
+      .moveDown(0.5)
+      .text(`Total: ${order.finalAmount}/-`)
+      .moveDown(2);
+
+    // End the document
+    doc.end();
+  } catch (error) {
+    console.error('Error generating invoice:', error);
+    res.status(500).json({ error: 'An error occurred while generating the invoice.' });
+  }
+}
 
 
 
@@ -619,6 +707,7 @@ module.exports = {
   applyCoupon,
   processOrder,
   confirmOrderPayment,
+  downloadInvoice,
   logout,
 };
 

@@ -13,7 +13,7 @@ module.exports =  {
   },
 
   findOrderByStripeIntentId: async (stripeIntentId) => {
-    return await Order.findOne({ stripeIntentId }).populate('address')
+    return await Order.findOne({ stripeIntentId }).populate('address').populate('items.product')
   },
 
   updateOrderStatus: async (orderId, updates) => {
@@ -21,6 +21,6 @@ module.exports =  {
   },
 
   findOrderByOrderId: async (orderId)=>{
-    return await Order.findOne({orderId}).populate('address')
+    return await Order.findOne({orderId}).populate('address').populate('items.product')
   }
 };
