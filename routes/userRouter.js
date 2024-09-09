@@ -30,8 +30,8 @@ router.get("/myaccount", (req, res) => {
 
 
 
-// router.get("/orderSuccess", (req, res) => {
-//   res.render("user/orderSuccess");
+// router.get("/wishlist", (req, res) => {
+//   res.render("user/wishlist");
 // });
 
 router.get("/wishlist", (req, res) => {

@@ -595,7 +595,6 @@ async function downloadInvoice(req, res) {
   try {
     const { orderId } = req.params;
 
-    // Fetch the order details
     const order = await orderHelper.findOrderByOrderId(orderId);
 
     if (!order) {
@@ -615,16 +614,15 @@ async function downloadInvoice(req, res) {
     // Add a single box for the entire invoice
     doc.rect(50, 50, 500, 700).stroke();
 
-    // Add top space and the heading for the invoice
     doc.moveDown(1.5).fontSize(20).text('Order Invoice', { align: 'center', underline: true }).moveDown(1.5);
 
-    // Order details inside the box
+    // Order details 
     doc.fontSize(16).text('Order Details:', { underline: true }).moveDown(0.5);
     doc.fontSize(14).text(`Order ID: ${order.orderId}`, 60, doc.y)
        .text(`Date Placed: ${order.datePlaced}`).moveDown(0.5)
        .text(`Delivery Date: ${order.deliveryExpectedDate}`).moveDown(1.5);
 
-    // Delivery address inside the box
+    // Delivery address 
     doc.fontSize(16).text('Delivery Address:', { underline: true }).moveDown(0.5)
        .fontSize(14).text(`${order.address.firstName} ${order.address.lastName}`, 60, doc.y)
        .text(`${order.address.streetAddress}, ${order.address.city}`, 60, doc.y)
@@ -632,7 +630,7 @@ async function downloadInvoice(req, res) {
        .text(`Email: ${order.address.email}`, 60, doc.y)
        .text(`Phone: ${order.address.phone}`, 60, doc.y).moveDown(1.5);
 
-    // Order summary inside the box
+    // Order summary 
     doc.fontSize(16).text('Order Summary:', { underline: true }).moveDown(0.5);
 
     order.items.forEach((item, index) => {
@@ -641,7 +639,7 @@ async function downloadInvoice(req, res) {
 
     doc.moveDown(1.5);
 
-    // Payment details inside the box 
+    // Payment details  
     doc.fontSize(14).text(`Sub Total: ${order.finalAmount}`, 60, doc.y)
        .text('Delivery: 00.00', 60, doc.y)
        .text(`Total: ${order.finalAmount}`, 60, doc.y);
