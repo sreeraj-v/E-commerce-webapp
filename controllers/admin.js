@@ -324,6 +324,10 @@ const deleteCoupon = async (req,res)=>{
   }
 }
 
+// orders section  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+const orders = (req, res) => {
+  res.render("admin/orders")
+}
 
 
 // 404 not found page >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -357,7 +361,8 @@ module.exports = {
   couponPage,
   addCoupon,
   editCoupon,
-  deleteCoupon
+  deleteCoupon,
+  orders
 };
 
 

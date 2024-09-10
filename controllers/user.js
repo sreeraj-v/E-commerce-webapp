@@ -508,6 +508,36 @@ async function processOrder(req, res) {
 
     await cartHelper.deleteCart(userId);
 
+    const orderedProducts = await orderHelper.findOrderByOrderId(order.orderId)
+
+    const mailOptions = {
+      from:process.env.EMAIL_USER,
+      to:req.session.user.email,
+      subject: 'Order Confirmation',
+      html: `
+        <h3>Order Confirmation</h3>
+        <p>Thank you for your purchase!</p>
+        <p><strong>Order ID:</strong> ${order.orderId}</p>
+        <p><strong>Total Amount:</strong> ${order.totalAmount}</p>
+        <p><strong>Discount:</strong> ${order.discount}</p>
+        <p><strong>final Amount:</strong> ${order.finalAmount}</p>
+        <p><strong>Delivery Address:</strong> ${address.streetAddress}, ${address.city}, ${address.country}</p>
+        <p><strong>Expected Delivery Date:</strong> ${order.deliveryExpectedDate.toDateString()}</p>
+        <p><strong>Order Summary:</strong></p>
+        <ul>
+          ${orderedProducts.items.map(item => `<li>${item.product.name} (Qty: ${item.quantity}) - ${item.price}</li>`).join('')}
+        </ul>
+      `
+    }
+
+    transporter.sendMail(mailOptions,(error,info)=>{
+      if(error){
+        console.error('Error sending email:', error);
+      }else{
+        console.log('Email send:'+ info.response);
+      }
+    })
+
     if (paymentType === 'Stripe Payment') {
       return res.status(200).json({ url: session.url });
     } else {
