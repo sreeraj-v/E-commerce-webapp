@@ -4,6 +4,7 @@ const productHelper = require("../helpers/product")
 const userHelper = require("../helpers/users")
 const adminHelper = require("../helpers/admin")
 const couponHelper = require("../helpers/coupon")
+const orderHelper = require("../helpers/order")
 // const { compare } = require("bcrypt")
 
 // --------------------------------------admin side:
@@ -325,8 +326,11 @@ const deleteCoupon = async (req,res)=>{
 }
 
 // orders section  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-const orders = (req, res) => {
-  res.render("admin/orders")
+const viewOrders = async(req, res) => {
+  const orders = await orderHelper.findOrders()
+  // console.log(orders);
+  
+  res.render("admin/orders",{orders})
 }
 
 
@@ -362,7 +366,7 @@ module.exports = {
   addCoupon,
   editCoupon,
   deleteCoupon,
-  orders
+  viewOrders,
 };
 
 

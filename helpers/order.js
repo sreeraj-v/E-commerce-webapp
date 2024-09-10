@@ -22,5 +22,9 @@ module.exports =  {
 
   findOrderByOrderId: async (orderId)=>{
     return await Order.findOne({orderId}).populate('address').populate('items.product')
-  }
+  },
+
+ findOrders: async ()=>{
+  return await Order.find().populate('items.product').populate('address').lean()
+ }
 };
