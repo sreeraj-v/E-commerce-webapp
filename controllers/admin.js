@@ -333,6 +333,18 @@ const viewOrders = async(req, res) => {
   res.render("admin/orders",{orders})
 }
 
+const updateStatus = async(req,res)=>{
+  try{
+  const {Id} = req.params
+  const {status} = req.body
+  
+  await orderHelper.updateOrderStatus(Id,{orderStatus:status})
+  res.json({success:true})
+  }catch(error){
+    console.error('Error updating order status:', error);
+    res.json({success:false})
+  }
+}
 
 // 404 not found page >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 const notFound = (req, res) => {
@@ -367,6 +379,7 @@ module.exports = {
   editCoupon,
   deleteCoupon,
   viewOrders,
+  updateStatus
 };
 
 

@@ -2,67 +2,67 @@
  {{>adminNavbar}}
             <!-- Recent Sales Start -->
             <div class="container-fluid pt-4 px-4">
-                <div class="bg-light text-center rounded p-4">
-                    <div class="d-flex align-items-center justify-content-between mb-4">
-                        <h6 class="mb-0">Recent Sales</h6>
-                        <a href="">Show All</a>
-                    </div>
-                    <div class="table-responsive">
-<table class="table text-start align-middle table-bordered table-hover mb-0">
-  <thead>
-    <tr class="text-dark">
-      <th scope="col"><input class="form-check-input" type="checkbox"></th>
-      <th scope="col">Order id</th>
-      <th scope="col">Products</th>
-      <th scope="col">Address</th>
-      <th scope="col">Amount</th>
-      <th scope="col">Date</th>
-      <th scope="col">Status</th>
-      <th scope="col">Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#each orders}}
-      <tr>
-        <td><input class="form-check-input" type="checkbox"></td>
-
-        <!-- Display the order ID here, outside of the items loop -->
-        <td>{{this.orderId}}</td> 
-
-        <!-- Loop through each item and display product info -->
-        <td>
-          {{#each this.items}}
-            <div class="d-flex align-items-center">
-              <img src="/uploads/{{this.product.image.[0]}}" alt="" style="width: 2rem;" class="rounded-3">
-              <div class="ms-3">
-                <h6 class="mb-0">{{this.product.name}}</h6> <!-- Product Name -->
-                <p>Qty: {{this.quantity}}</p> <!-- Product Quantity -->
-              </div>
-            </div>
-          {{/each}}
-        </td>
-
-        <!-- Address field (populated) -->
-        <td>{{this.address.streetAddress}}, {{this.address.city}}, {{this.address.country}}</td>
-
-        <!-- Display final amount -->
-        <td>{{this.finalAmount}}</td>
-
-        <!-- Date order placed -->
-        <td>{{date this.datePlaced "MMMM Do, YYYY"}}</td>
-
-        <!-- Order status -->
-        <td>{{this.orderStatus}}</td>
-
-        <!-- Action button -->
-        <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-      </tr>
-    {{/each}}
-  </tbody>
-</table>
-
-                    </div>
+              <div class="bg-light text-center rounded p-4">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                  <h6 class="mb-0">Recent Sales</h6>
+                  <a href="">Show All</a>
                 </div>
+                <div class="table-responsive">
+                  <table class="table text-start align-middle table-bordered table-hover mb-0">
+                    <thead>
+                      <tr class="text-dark">
+                        <th scope="col"><input class="form-check-input" type="checkbox"></th>
+                        <th scope="col">Order id</th>
+                        <th scope="col">Products</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">payment</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {{#each orders}}
+                      <tr>
+                        <td><input class="form-check-input" type="checkbox"></td>
+            
+                        <!-- Display the order ID here, outside of the items loop -->
+                        <td>{{this.orderId}}</td>
+            
+                        <!-- Loop through each item and display product info -->
+                        <td>
+                          {{#each this.items}}
+                          {{!-- <div class="d-flex align-items-center">
+                            <img src="/uploads/{{this.product.image.[0]}}" alt="" style="width: 2rem;" class="rounded-3">
+                            <div class="ms-3">
+                              <h6 class="mb-0">{{this.product.name}}</h6> 
+                              <p>Qty: {{this.quantity}}</p>
+                            </div>
+                          </div> --}}
+                          {{this.product.name}} ,Qty: {{this.quantity}}                          
+                          {{/each}}
+                        </td>
+                        <td>{{this.address.streetAddress}}, {{this.address.city}}, {{this.address.country}}</td>
+                        <td>{{this.finalAmount}}</td>
+                        <td>{{date this.datePlaced "MMMM Do, YYYY"}}</td>
+                        <td>{{this.paymentType}}</td>
+                        <td>{{this.orderStatus}}</td>
+                        <td>
+                          <select class="form-select status-select" data-order-id="{{this._id}}"style="background-color: #009cfe; color: white; appearance: none; padding-right: 30px; width: auto; text-align-last: center;">
+                          <option value="Processing" {{#if (eq this.orderStatus 'Processing' )}}selected{{/if}}>Processing</option>
+                          <option value="Shipped" {{#if (eq this.orderStatus 'Shipped' )}}selected{{/if}}>Shipped</option>
+                          <option value="Delivered" {{#if (eq this.orderStatus 'Delivered' )}}selected{{/if}}>Delivered</option>
+                          <option value="Cancelled" {{#if (eq this.orderStatus 'Cancelled' )}}selected{{/if}}>Cancelled</option>
+                          </select>
+                        </td>
+                      </tr>
+                      {{/each}}
+                    </tbody>
+                  </table>
+            
+                </div>
+              </div>
             </div>
             <!-- Recent Sales End -->
 
@@ -76,3 +76,35 @@
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
 
+<script>
+  document.querySelectorAll('.status-select').forEach(function(selectElement) {
+  selectElement.addEventListener('change', function() {
+    const orderId = this.getAttribute('data-order-id');
+    const newStatus = this.value;
+
+    // Send an AJAX request to update the order status
+    fetch(`/admin/updateOrderStatus/${orderId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        status: newStatus,
+      }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert('Order status updated successfully');
+        window.location.href='/admin/orders'
+      } else {
+        alert('Failed to update order status');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  });
+});
+
+</script>

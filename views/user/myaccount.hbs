@@ -29,9 +29,9 @@
 								    <li class="nav-item">
 								        <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
 								    </li>
-								    <li class="nav-item">
+								    {{!-- <li class="nav-item">
 								        <a class="nav-link" id="tab-downloads-link" data-toggle="tab" href="#tab-downloads" role="tab" aria-controls="tab-downloads" aria-selected="false">Downloads</a>
-								    </li>
+								    </li> --}}
 								    <li class="nav-item">
 								        <a class="nav-link" id="tab-address-link" data-toggle="tab" href="#tab-address" role="tab" aria-controls="tab-address" aria-selected="false">Adresses</a>
 								    </li>
@@ -52,15 +52,46 @@
 								    	From your account dashboard you can view your <a href="#tab-orders" class="tab-trigger-link link-underline">recent orders</a>, manage your <a href="#tab-address" class="tab-trigger-link">shipping and billing addresses</a>, and <a href="#tab-account" class="tab-trigger-link">edit your password and account details</a>.</p>
 								    </div><!-- .End .tab-pane -->
 
-								    <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
-								    	<p>No order has been made yet.</p>
-								    	<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
-								    </div><!-- .End .tab-pane -->
+<div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
+    <div class="card card-dashboard">
+        <div class="card-body">
+            <h3 class="card-title">Orders</h3><!-- End .card-title -->
+            
+            <div class="order-list">
+                <div class="order-item mb-3 p-3" style="border: 1px solid #ebebeb; border-radius: 8px; background-color: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <div class="row align-items-center">
+                        <div class="col-md-2 col-4">
+                            <img src="path/to/product-image.jpg" alt="Product Name" class="img-fluid rounded" style="max-width: 80px;">
+                        </div>
+                        <div class="col-md-3 col-8">
+                            <h5 class="mb-1" style="font-weight: 600; color: #333;">Product Name</h5>
+                            <p class="mb-0" style="color: #4a4a4a; font-size: 0.9em;">$99.99</p>
+                        </div>
+                        <div class="col-md-2 col-6">
+                            <p class="mb-0" style="font-size: 0.85em; color: #666;"><strong>Purchased:</strong></p>
+                            <p class="mb-0" style="font-size: 0.9em;">Sept 10, 2024</p>
+                        </div>
+                        <div class="col-md-2 col-6">
+                            <p class="mb-0" style="font-size: 0.85em; color: #666;"><strong>Delivered:</strong></p>
+                            <p class="mb-0" style="font-size: 0.9em;">Sept 15, 2024</p>
+                        </div>
+                        <div class="col-md-3 col-12 mt-2 mt-md-0 text-md-right">
+                            <button class="btn btn-outline-primary-2 btn-sm">Return</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Keep the existing button -->
+            <a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
+        </div><!-- End .card-body -->
+    </div><!-- End .card-dashboard -->
+</div><!-- .End .tab-pane -->
 
-								    <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
+								    {{!-- <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
 								    	<p>No downloads available yet.</p>
 								    	<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
-								    </div><!-- .End .tab-pane -->
+								    </div><!-- .End .tab-pane --> --}}
 
 								    <div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
 								    	<p>The following addresses will be used on the checkout page by default.</p>
