@@ -337,12 +337,32 @@ const updateStatus = async(req,res)=>{
   try{
   const {Id} = req.params
   const {status} = req.body
+
+  console.log(Id,status);
   
   await orderHelper.updateOrderStatus(Id,{orderStatus:status})
   res.json({success:true})
   }catch(error){
     console.error('Error updating order status:', error);
     res.json({success:false})
+  }
+}
+
+const searchAndFilterOrders = async (req,res)=>{
+  try{
+    const {search,status,payment} = req.query
+    const filter = {
+      search: search||"",
+      status: status||"",
+      payment: payment ||""
+    }
+    console.log(filter);
+    
+    const orders = await orderHelper.getFilteredOrders(filter)
+    res.json({success:true,orders})
+  } catch (error) {
+    console.error('Error during search and filtering:', error);
+    res.json({ success: false, message: 'Error occurred during search and filtering' });
   }
 }
 
@@ -379,7 +399,8 @@ module.exports = {
   editCoupon,
   deleteCoupon,
   viewOrders,
-  updateStatus
+  updateStatus,
+  searchAndFilterOrders
 };
 
 

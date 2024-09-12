@@ -25,6 +25,30 @@ module.exports =  {
   },
 
  findOrders: async ()=>{
-  return await Order.find().populate('items.product').populate('address').lean()
+  return await Order.find().populate('items.product').populate('address').lean().sort({datePlaced:-1})
+ },
+
+ getFilteredOrders: async (filters) => {
+  const { search, status, payment } = filters;
+  const query = {};
+
+  if (search) {
+    query.$or = [
+      { orderId: { $regex: search, $options: 'i' } },   // Search by Order ID
+      { finalAmount: search },                          // Search by final amount
+      { 'items.product.name': { $regex: search, $options: 'i' } } // Product Name search
+    ];
+  }
+
+  if (status) {
+    query.orderStatus = status;
+  }
+
+  if (payment) {
+    query.paymentType = payment;
+  }
+
+  return Order.find(query).populate('items.product').populate('address');
  }
+
 };

@@ -3,12 +3,51 @@
             <!-- Recent Sales Start -->
             <div class="container-fluid pt-4 px-4">
               <div class="bg-light text-center rounded p-4">
-                <div class="d-flex align-items-center justify-content-between mb-4">
+                {{!-- <div class="d-flex align-items-center justify-content-between mb-4">
                   <h6 class="mb-0">Recent Sales</h6>
                   <a href="">Show All</a>
+                </div> --}}
+                <div class="bg-light text-center rounded pb-4">
+                  <div class="row align-items-center justify-content-between ">
+                    <div class="col-md-6">
+                      <input class="form-control rounded-3 bg-transparent" type="search" value="" id="searchInput"placeholder="Search" />
+                    </div>
+                    <div class="col-auto">
+                      <div class="row ">
+                        <div class="col">
+                          <div class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle m-2" type="button" id="filterStatusButton"data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              order status
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="filterStatusButton">
+                              <a class="dropdown-item filter-option" data-filter-type="status" data-filter-value="Processing">Processing</a>
+                              <a class="dropdown-item filter-option" data-filter-type="status" data-filter-value="shipped">shipped</a>
+                              <a class="dropdown-item filter-option" data-filter-type="status"data-filter-value="delivered">delivered</a>
+                              <a class="dropdown-item filter-option" data-filter-type="status"data-filter-value="cancelled">cancelled</a>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle m-2" type="button" id="filterPaymentButton"
+                              data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              payment
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="filterPaymentButton">
+                              <a class="dropdown-item filter-option" data-filter-type="payment" data-filter-value="Cash on Delivery">Cash on Delivery</a>
+                              <a class="dropdown-item filter-option" data-filter-type="payment" data-filter-value="Stripe Payment">Stripe Payment</a>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <a href="/admin/orders" class="btn btn-primary m-2">clearfilters</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div class="table-responsive">
-                  <table class="table text-start align-middle table-bordered table-hover mb-0">
+                  <table class="table text-start align-middle table-bordered table-hover mb-0" id="orderTable">
                     <thead>
                       <tr class="text-dark">
                         <th scope="col"><input class="form-check-input" type="checkbox"></th>
@@ -26,21 +65,21 @@
                       {{#each orders}}
                       <tr>
                         <td><input class="form-check-input" type="checkbox"></td>
-            
+              
                         <!-- Display the order ID here, outside of the items loop -->
                         <td>{{this.orderId}}</td>
-            
+              
                         <!-- Loop through each item and display product info -->
                         <td>
                           {{#each this.items}}
                           {{!-- <div class="d-flex align-items-center">
                             <img src="/uploads/{{this.product.image.[0]}}" alt="" style="width: 2rem;" class="rounded-3">
                             <div class="ms-3">
-                              <h6 class="mb-0">{{this.product.name}}</h6> 
+                              <h6 class="mb-0">{{this.product.name}}</h6>
                               <p>Qty: {{this.quantity}}</p>
                             </div>
                           </div> --}}
-                          {{this.product.name}} ,Qty: {{this.quantity}}                          
+                          {{this.product.name}} ,Qty: {{this.quantity}}
                           {{/each}}
                         </td>
                         <td>{{this.address.streetAddress}}, {{this.address.city}}, {{this.address.country}}</td>
@@ -49,18 +88,19 @@
                         <td>{{this.paymentType}}</td>
                         <td>{{this.orderStatus}}</td>
                         <td>
-                          <select class="form-select status-select" data-order-id="{{this._id}}"style="background-color: #009cfe; color: white; appearance: none; padding-right: 30px; width: auto; text-align-last: center;">
-                          <option value="Processing" {{#if (eq this.orderStatus 'Processing' )}}selected{{/if}}>Processing</option>
-                          <option value="Shipped" {{#if (eq this.orderStatus 'Shipped' )}}selected{{/if}}>Shipped</option>
-                          <option value="Delivered" {{#if (eq this.orderStatus 'Delivered' )}}selected{{/if}}>Delivered</option>
-                          <option value="Cancelled" {{#if (eq this.orderStatus 'Cancelled' )}}selected{{/if}}>Cancelled</option>
+                          <select class="form-select status-select" data-order-id="{{this._id}}"
+                            style="background-color: #009cfe; color: white; appearance: none; padding-right: 30px; width: auto; text-align-last: center;">
+                            <option value="Processing" {{#if (eq this.orderStatus 'Processing' )}}selected{{/if}}>Processing</option>
+                            <option value="Shipped" {{#if (eq this.orderStatus 'Shipped' )}}selected{{/if}}>Shipped</option>
+                            <option value="Delivered" {{#if (eq this.orderStatus 'Delivered' )}}selected{{/if}}>Delivered</option>
+                            <option value="Cancelled" {{#if (eq this.orderStatus 'Cancelled' )}}selected{{/if}}>Cancelled</option>
                           </select>
                         </td>
                       </tr>
                       {{/each}}
                     </tbody>
                   </table>
-            
+              
                 </div>
               </div>
             </div>
@@ -76,7 +116,7 @@
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
 
-<script>
+{{!-- <script>
   document.querySelectorAll('.status-select').forEach(function(selectElement) {
   selectElement.addEventListener('change', function() {
     const orderId = this.getAttribute('data-order-id');
@@ -107,4 +147,132 @@
   });
 });
 
+</script> --}}
+
+<script>
+  document.querySelectorAll('.status-select').forEach(function(selectElement) {
+  selectElement.addEventListener('change', function() {
+    const orderId = this.getAttribute('data-order-id');
+    const newStatus = this.value;
+    const previousStatus = this.querySelector('option[selected]').value;  // Save the original status
+    
+    // Confirmation dialog before sending the update request
+    Swal.fire({
+      title: 'Are you sure?',
+      text: `You are about to change the order status to ${newStatus}`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, update it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Send an AJAX request to update the order status
+        fetch(`/admin/updateOrderStatus/${orderId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            status: newStatus,
+          }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            Swal.fire('Success!', 'Order status updated successfully.', 'success');
+
+            // Update the status in the status column without refreshing the page
+            const statusColumn = document.querySelector(`[data-order-id="${orderId}"]`);
+            statusColumn.closest('tr').querySelector('td:nth-child(8)').textContent = newStatus;
+            
+          } else {
+            Swal.fire('Error', 'There was an error updating the order status.', 'error');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          Swal.fire('Error', 'There was an error updating the order status.', 'error');
+        });
+      } else {
+        // User cancelled, so revert the select dropdown to the previous status
+        this.value = previousStatus;
+      }
+    });
+  });
+});
+
+</script>
+
+<script>
+// Filter and Search Logic
+let selectedStatus = '';
+let selectedPayment = '';
+
+document.querySelectorAll('.filter-option').forEach(option => {
+  option.addEventListener('click', function () {
+    const filterType = this.getAttribute('data-filter-type');
+    const filterValue = this.getAttribute('data-filter-value');
+
+    if (filterType === 'status') {
+      selectedStatus = filterValue;
+      document.getElementById('filterStatusButton').textContent = filterValue;
+    } else if (filterType === 'payment') {
+      selectedPayment = filterValue;
+      document.getElementById('filterPaymentButton').textContent = filterValue;
+    }
+
+    performSearchAndFilter();
+  });
+});
+
+document.getElementById('searchInput').addEventListener('input', performSearchAndFilter);
+
+function performSearchAndFilter() {
+  const search = document.getElementById('searchInput').value;
+
+  const params = new URLSearchParams({
+    search: search,
+    status: selectedStatus,
+    payment: selectedPayment
+  });
+
+  fetch(`/admin/orders/search?${params}`)
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        updateOrderTable(data.orders);
+      }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function updateOrderTable(orders) {
+  const tbody = document.querySelector('#orderTable tbody');
+  tbody.innerHTML = '';
+
+  orders.forEach(order => {
+    const row = document.createElement('tr');
+    
+    row.innerHTML = `
+      <td><input class="form-check-input" type="checkbox"></td>
+      <td>${order.orderId}</td>
+      <td>${order.items.map(item => item.product.name + ' (Qty: ' + item.quantity + ')').join(', ')}</td>
+      <td>${order.address.streetAddress}, ${order.address.city}</td>
+      <td>${order.finalAmount}</td>
+      <td>${new Date(order.datePlaced).toLocaleDateString()}</td>
+      <td>${order.paymentType}</td>
+      <td>${order.orderStatus}</td>
+      <td>
+        <select class="form-select status-select" data-order-id="${order._id}">
+          <option value="Processing" ${order.orderStatus === 'Processing' ? 'selected' : ''}>Processing</option>
+          <option value="Shipped" ${order.orderStatus === 'Shipped' ? 'selected' : ''}>Shipped</option>
+          <option value="Delivered" ${order.orderStatus === 'Delivered' ? 'selected' : ''}>Delivered</option>
+          <option value="Cancelled" ${order.orderStatus === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+        </select>
+      </td>
+    `;
+
+    tbody.appendChild(row);
+  });
+}
 </script>
