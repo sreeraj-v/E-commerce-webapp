@@ -166,7 +166,6 @@
       cancelButtonText: 'Cancel'
     }).then((result) => {
       if (result.isConfirmed) {
-        // Send an AJAX request to update the order status
         fetch(`/admin/updateOrderStatus/${orderId}`, {
           method: 'POST',
           headers: {
@@ -204,7 +203,6 @@
 </script>
 
 <script>
-// Filter and Search Logic
 let selectedStatus = '';
 let selectedPayment = '';
 

@@ -328,7 +328,6 @@ const deleteCoupon = async (req,res)=>{
 // orders section  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 const viewOrders = async(req, res) => {
   const orders = await orderHelper.findOrders()
-  // console.log(orders);
   
   res.render("admin/orders",{orders})
 }
