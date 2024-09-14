@@ -274,3 +274,36 @@ function updateOrderTable(orders) {
   });
 }
 </script>
+
+{{!-- <script>
+  document.querySelectorAll('.status-select').forEach(function(selectElement) {
+  selectElement.addEventListener('change', function() {
+    const orderId = this.getAttribute('data-order-id');
+    const newStatus = this.value;
+
+    // Send an AJAX request to update the order status
+    fetch(`/admin/updateOrderStatus/${orderId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        status: newStatus,
+      }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert('Order status updated successfully');
+        window.location.href='/admin/orders'
+      } else {
+        alert('Failed to update order status');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  });
+});
+
+</script> --}}
