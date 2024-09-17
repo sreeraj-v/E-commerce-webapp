@@ -347,23 +347,39 @@ const updateStatus = async(req,res)=>{
   }
 }
 
-const searchAndFilterOrders = async (req,res)=>{
-  try{
-    const {search,status,payment} = req.query
-    const filter = {
-      search: search||"",
-      status: status||"",
-      payment: payment ||""
-    }
-    console.log(filter);
+// const searchAndFilterOrders = async (req,res)=>{
+//   try{
+//     const {search,status,payment} = req.query
+//     const filter = {
+//       search: search||"",
+//       status: status||"",
+//       payment: payment ||""
+//     }
+//     console.log(filter);
     
-    const orders = await orderHelper.getFilteredOrders(filter)
-    res.json({success:true,orders})
+//     const orders = await orderHelper.getFilteredOrders(filter)
+//     res.json({success:true,orders})
+//   } catch (error) {
+//     console.error('Error during search and filtering:', error);
+//     res.json({ success: false, message: 'Error occurred during search and filtering' });
+//   }
+// }
+
+const searchOrders = async (req, res) => {
+  const { query, status, payment } = req.query;
+    console.log(req.query)
+
+
+  try {
+    const filteredOrders = await orderHelper.searchAndFilterOrders(query, status, payment);
+    console.log(filteredOrders)
+
+    res.json({ success: true, orders: filteredOrders });
   } catch (error) {
-    console.error('Error during search and filtering:', error);
-    res.json({ success: false, message: 'Error occurred during search and filtering' });
+    console.error('Error searching/filtering orders:', error);
+    res.status(500).send({ success: false, message: 'Error searching/filtering orders' });
   }
-}
+};
 
 // 404 not found page >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 const notFound = (req, res) => {
@@ -399,7 +415,7 @@ module.exports = {
   deleteCoupon,
   viewOrders,
   updateStatus,
-  searchAndFilterOrders
+  searchOrders
 };
 
 

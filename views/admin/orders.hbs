@@ -202,7 +202,7 @@
 
 </script>
 
-<script>
+{{!-- <script>
 let selectedStatus = '';
 let selectedPayment = '';
 
@@ -273,39 +273,81 @@ function updateOrderTable(orders) {
     tbody.appendChild(row);
   });
 }
-</script>
+</script> --}}
 
-{{!-- <script>
-  document.querySelectorAll('.status-select').forEach(function(selectElement) {
-  selectElement.addEventListener('change', function() {
-    const orderId = this.getAttribute('data-order-id');
-    const newStatus = this.value;
+<script>
+  let selectedStatus = '';
+  let selectedPayment = '';
 
-    // Send an AJAX request to update the order status
-    fetch(`/admin/updateOrderStatus/${orderId}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        status: newStatus,
-      }),
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        alert('Order status updated successfully');
-        window.location.href='/admin/orders'
-      } else {
-        alert('Failed to update order status');
+  document.querySelectorAll('.filter-option').forEach(option => {
+    option.addEventListener('click', function () {
+      const filterType = this.getAttribute('data-filter-type');
+      const filterValue = this.getAttribute('data-filter-value');
+
+      if (filterType === 'status') {
+        selectedStatus = filterValue;
+        document.getElementById('filterStatusButton').textContent = filterValue;
+      } else if (filterType === 'payment') {
+        selectedPayment = filterValue;
+        document.getElementById('filterPaymentButton').textContent = filterValue;
       }
-    })
-    .catch(error => {
-      console.error('Error:', error);
+
+      performSearchAndFilter();
     });
   });
-});
 
-</script> --}}
+  document.getElementById('searchInput').addEventListener('input', performSearchAndFilter);
+
+  function performSearchAndFilter() {
+    const search = document.getElementById('searchInput').value;
+
+    const params = new URLSearchParams({
+      query: search,
+      status: selectedStatus,
+      payment: selectedPayment
+    });
+
+    fetch(`/admin/orders/search?${params}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          updateOrderTable(data.orders);
+        }
+      })
+      .catch(error => console.error('Error:', error));
+  }
+
+  function updateOrderTable(orders) {
+    const tbody = document.querySelector('#orderTable tbody');
+    tbody.innerHTML = '';
+
+    orders.forEach(order => {
+      const row = document.createElement('tr');
+      
+      row.innerHTML = `
+        <td><input class="form-check-input" type="checkbox"></td>
+        <td>${order.orderId}</td>
+        <td>${order.items.map(item => item.product.name + ' (Qty: ' + item.quantity + ')').join(', ')}</td>
+        <td>${order.address.streetAddress}, ${order.address.city}</td>
+        <td>${order.finalAmount}</td>
+        <td>${new Date(order.datePlaced).toLocaleDateString()}</td>
+        <td>${order.paymentType}</td>
+        <td>${order.orderStatus}</td>
+        <td>
+          <select class="form-select status-select" data-order-id="${order._id}">
+            <option value="Processing" ${order.orderStatus === 'Processing' ? 'selected' : ''}>Processing</option>
+            <option value="Shipped" ${order.orderStatus === 'Shipped' ? 'selected' : ''}>Shipped</option>
+            <option value="Delivered" ${order.orderStatus === 'Delivered' ? 'selected' : ''}>Delivered</option>
+            <option value="Cancelled" ${order.orderStatus === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+          </select>
+        </td>
+      `;
+
+      tbody.appendChild(row);
+    });
+  }
+</script>
+
+
     
   

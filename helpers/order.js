@@ -1,4 +1,5 @@
 const Order = require("../models/order")
+const Product = require("../models/productSchema")
 
 module.exports =  {
   createOrder: async (orderData) => {
@@ -28,27 +29,35 @@ module.exports =  {
   return await Order.find().populate('items.product').populate('address').lean().sort({datePlaced:-1})
  },
 
- getFilteredOrders: async (filters) => {
-  const { search, status, payment } = filters;
-  const query = {};
+ searchAndFilterOrders: async (searchQuery, statusFilter, paymentFilter) => {
+  const searchCriteria = {};
 
-  if (search) {
-    query.$or = [
-      { orderId: { $regex: search, $options: 'i' } },   // Search by Order ID
-      { finalAmount: search },                          // Search by final amount
-      { 'items.product.name': { $regex: search, $options: 'i' } } // Product Name search
+  // If search query is provided, search by orderId or product name
+  if (searchQuery) {
+    searchCriteria.$or = [
+      { orderId: { $regex: searchQuery, $options: 'i' } },
+      { 'items.product.name': { $regex: searchQuery, $options: 'i' } },
     ];
   }
 
-  if (status) {
-    query.orderStatus = status;
+  // Apply status filter if provided
+  if (statusFilter) {
+    searchCriteria.orderStatus = statusFilter;
   }
 
-  if (payment) {
-    query.paymentType = payment;
+  // Apply payment filter if provided
+  if (paymentFilter) {
+    searchCriteria.paymentType = paymentFilter;
   }
 
-  return Order.find(query).populate('items.product').populate('address');
- }
+  try {
+    return await Order.find(searchCriteria)
+      .populate('user')
+      .populate('items.product')
+      .populate('address');
+  } catch (error) {
+    throw new Error('Error searching/filtering orders: ' + error.message);
+  }
+}
 
 };
