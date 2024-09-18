@@ -90,9 +90,9 @@
                         <td>
                           <select class="form-select status-select" data-order-id="{{this._id}}"
                             style="background-color: #009cfe; color: white; appearance: none; padding-right: 30px; width: auto; text-align-last: center;">
-                            <option value="Processing" {{#if (eq this.orderStatus 'Processing' )}}selected{{/if}}>Processing</option>
-                            <option value="Shipped" {{#if (eq this.orderStatus 'Shipped' )}}selected{{/if}}>Shipped</option>
-                            <option value="Delivered" {{#if (eq this.orderStatus 'Delivered' )}}selected{{/if}}>Delivered</option>
+                            <option value="Processing" {{#if (eq this.orderStatus 'Processing' )}}selected{{/if}} {{#if (or (eq this.orderStatus 'Shipped') (eq this.orderStatus 'Delivered') (eq this.orderStatus 'Cancelled'))}}disabled{{/if}}>Processing</option>
+                            <option value="Shipped" {{#if (eq this.orderStatus 'Shipped' )}}selected{{/if}} {{#if (or (eq this.orderStatus 'Delivered') (eq this.orderStatus 'Cancelled'))}}disabled{{/if}}>Shipped</option>
+                            <option value="Delivered" {{#if (eq this.orderStatus 'Delivered' )}}selected{{/if}} {{#if (eq this.orderStatus 'Cancelled')}}disabled{{/if}}>Delivered</option>
                             <option value="Cancelled" {{#if (eq this.orderStatus 'Cancelled' )}}selected{{/if}}>Cancelled</option>
                           </select>
                         </td>
@@ -277,7 +277,6 @@
             .catch(error => console.error('Error fetching data:', error));
     }
 });
-
 </script>
 
 

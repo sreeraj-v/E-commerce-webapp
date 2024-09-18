@@ -327,8 +327,7 @@ const deleteCoupon = async (req,res)=>{
 
 // orders section  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 const viewOrders = async(req, res) => {
-  const orders = await orderHelper.findOrders()
-  
+  const orders = await orderHelper.findOrders() 
   res.render("admin/orders",{orders})
 }
 
@@ -336,8 +335,6 @@ const updateStatus = async(req,res)=>{
   try{
   const {Id} = req.params
   const {status} = req.body
-
-  console.log(Id,status);
   
   await orderHelper.updateOrderStatus(Id,{orderStatus:status})
   res.json({success:true})
