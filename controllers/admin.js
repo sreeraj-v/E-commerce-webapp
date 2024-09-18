@@ -347,37 +347,29 @@ const updateStatus = async(req,res)=>{
   }
 }
 
-// const searchAndFilterOrders = async (req,res)=>{
-//   try{
-//     const {search,status,payment} = req.query
-//     const filter = {
-//       search: search||"",
-//       status: status||"",
-//       payment: payment ||""
-//     }
-//     console.log(filter);
-    
-//     const orders = await orderHelper.getFilteredOrders(filter)
-//     res.json({success:true,orders})
-//   } catch (error) {
-//     console.error('Error during search and filtering:', error);
-//     res.json({ success: false, message: 'Error occurred during search and filtering' });
-//   }
-// }
 
-const searchOrders = async (req, res) => {
-  const { query, status, payment } = req.query;
-    console.log(req.query)
+const filterOrders = async (req, res) => {
+  const { search, status, payment } = req.query;
+  let query = {};
 
+  if (search) {
+    query.orderId = { $regex: search, $options: "i" };
+  }
+
+  if (status) {
+    query.orderStatus = status;
+  }
+
+  if (payment) {
+    query.paymentType = payment;
+  }
 
   try {
-    const filteredOrders = await orderHelper.searchAndFilterOrders(query, status, payment);
-    console.log(filteredOrders)
-
-    res.json({ success: true, orders: filteredOrders });
+    const orders = await orderHelper.filterOrdersHelper(query);
+    res.json({ orders });
   } catch (error) {
-    console.error('Error searching/filtering orders:', error);
-    res.status(500).send({ success: false, message: 'Error searching/filtering orders' });
+    console.error("Error fetching orders:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -415,7 +407,7 @@ module.exports = {
   deleteCoupon,
   viewOrders,
   updateStatus,
-  searchOrders
+  filterOrders
 };
 
 

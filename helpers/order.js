@@ -29,35 +29,9 @@ module.exports =  {
   return await Order.find().populate('items.product').populate('address').lean().sort({datePlaced:-1})
  },
 
- searchAndFilterOrders: async (searchQuery, statusFilter, paymentFilter) => {
-  const searchCriteria = {};
-
-  // If search query is provided, search by orderId or product name
-  if (searchQuery) {
-    searchCriteria.$or = [
-      { orderId: { $regex: searchQuery, $options: 'i' } },
-      { 'items.product.name': { $regex: searchQuery, $options: 'i' } },
-    ];
-  }
-
-  // Apply status filter if provided
-  if (statusFilter) {
-    searchCriteria.orderStatus = statusFilter;
-  }
-
-  // Apply payment filter if provided
-  if (paymentFilter) {
-    searchCriteria.paymentType = paymentFilter;
-  }
-
-  try {
-    return await Order.find(searchCriteria)
-      .populate('user')
-      .populate('items.product')
-      .populate('address');
-  } catch (error) {
-    throw new Error('Error searching/filtering orders: ' + error.message);
-  }
+filterOrdersHelper: async (filter) => {
+  const orders = await Order.find(filter).populate("items.product address user")
+  return orders;
 }
 
 };

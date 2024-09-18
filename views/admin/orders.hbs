@@ -21,9 +21,9 @@
                             </button>
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="filterStatusButton">
                               <a class="dropdown-item filter-option" data-filter-type="status" data-filter-value="Processing">Processing</a>
-                              <a class="dropdown-item filter-option" data-filter-type="status" data-filter-value="shipped">shipped</a>
-                              <a class="dropdown-item filter-option" data-filter-type="status"data-filter-value="delivered">delivered</a>
-                              <a class="dropdown-item filter-option" data-filter-type="status"data-filter-value="cancelled">cancelled</a>
+                              <a class="dropdown-item filter-option" data-filter-type="status" data-filter-value="Shipped">Shipped</a>
+                              <a class="dropdown-item filter-option" data-filter-type="status"data-filter-value="Delivered">Delivered</a>
+                              <a class="dropdown-item filter-option" data-filter-type="status"data-filter-value="Cancelled">Cancelled</a>
                             </div>
                           </div>
                         </div>
@@ -202,151 +202,85 @@
 
 </script>
 
-{{!-- <script>
-let selectedStatus = '';
-let selectedPayment = '';
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("searchInput");
+    const filterOptions = document.querySelectorAll(".filter-option");
+    const orderTable = document.getElementById("orderTable");
 
-document.querySelectorAll('.filter-option').forEach(option => {
-  option.addEventListener('click', function () {
-    const filterType = this.getAttribute('data-filter-type');
-    const filterValue = this.getAttribute('data-filter-value');
+    let filter = {
+        status: '',
+        payment: '',
+        search: ''
+    };
 
-    if (filterType === 'status') {
-      selectedStatus = filterValue;
-      document.getElementById('filterStatusButton').textContent = filterValue;
-    } else if (filterType === 'payment') {
-      selectedPayment = filterValue;
-      document.getElementById('filterPaymentButton').textContent = filterValue;
+    // Event listener for search input
+    searchInput.addEventListener("input", function () {
+        filter.search = searchInput.value;
+        updateTable();
+    });
+
+    // Event listener for filter options (status and payment type)
+    filterOptions.forEach(option => {
+        option.addEventListener("click", function () {
+            const filterType = option.getAttribute("data-filter-type");
+            const filterValue = option.getAttribute("data-filter-value");
+
+            if (filterType === 'status') {
+                filter.status = filterValue;
+            } else if (filterType === 'payment') {
+                filter.payment = filterValue;
+            }
+
+            updateTable();
+        });
+    });
+
+    // Fetch data and update the table based on filter and search criteria
+    function updateTable() {
+        const queryString = new URLSearchParams(filter).toString();
+        
+        fetch(`/admin/orders/filter?${queryString}`)
+            .then(response => response.json())
+            .then(data => {
+                const orders = data.orders;
+                const tableBody = orderTable.querySelector('tbody');
+                tableBody.innerHTML = ''; // Clear the existing rows
+
+                // Populate the table with the fetched orders
+                orders.forEach(order => {
+                    let productNames = order.items.map(item => `${item.product.name}, Qty: ${item.quantity}`).join('<br>');
+                    let row = `
+                        <tr>
+                            <td><input class="form-check-input" type="checkbox"></td>
+                            <td>${order.orderId}</td>
+                            <td>${productNames}</td>
+                            <td>${order.address.streetAddress}, ${order.address.city}, ${order.address.country}</td>
+                            <td>${order.finalAmount}</td>
+                            <td>${new Date(order.datePlaced).toLocaleDateString()}</td>
+                            <td>${order.paymentType}</td>
+                            <td>${order.orderStatus}</td>
+                            <td>
+                                <select class="form-select status-select" data-order-id="${order._id}"
+                                    style="background-color: #009cfe; color: white; appearance: none; padding-right: 30px; width: auto; text-align-last: center;">
+                                    <option value="Processing" ${order.orderStatus === 'Processing' ? 'selected' : ''}>Processing</option>
+                                    <option value="Shipped" ${order.orderStatus === 'Shipped' ? 'selected' : ''}>Shipped</option>
+                                    <option value="Delivered" ${order.orderStatus === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                                    <option value="Cancelled" ${order.orderStatus === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                                </select>
+                            </td>
+                        </tr>
+                    `;
+                    tableBody.insertAdjacentHTML('beforeend', row);
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
     }
-
-    performSearchAndFilter();
-  });
 });
 
-document.getElementById('searchInput').addEventListener('input', performSearchAndFilter);
+</script>
 
-function performSearchAndFilter() {
-  const search = document.getElementById('searchInput').value;
 
-  const params = new URLSearchParams({
-    search: search,
-    status: selectedStatus,
-    payment: selectedPayment
-  });
-
-  fetch(`/admin/orders/search?${params}`)
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        updateOrderTable(data.orders);
-      }
-    })
-    .catch(error => console.error('Error:', error));
-}
-
-function updateOrderTable(orders) {
-  const tbody = document.querySelector('#orderTable tbody');
-  tbody.innerHTML = '';
-
-  orders.forEach(order => {
-    const row = document.createElement('tr');
-    
-    row.innerHTML = `
-      <td><input class="form-check-input" type="checkbox"></td>
-      <td>${order.orderId}</td>
-      <td>${order.items.map(item => item.product.name + ' (Qty: ' + item.quantity + ')').join(', ')}</td>
-      <td>${order.address.streetAddress}, ${order.address.city}</td>
-      <td>${order.finalAmount}</td>
-      <td>${new Date(order.datePlaced).toLocaleDateString()}</td>
-      <td>${order.paymentType}</td>
-      <td>${order.orderStatus}</td>
-      <td>
-        <select class="form-select status-select" data-order-id="${order._id}">
-          <option value="Processing" ${order.orderStatus === 'Processing' ? 'selected' : ''}>Processing</option>
-          <option value="Shipped" ${order.orderStatus === 'Shipped' ? 'selected' : ''}>Shipped</option>
-          <option value="Delivered" ${order.orderStatus === 'Delivered' ? 'selected' : ''}>Delivered</option>
-          <option value="Cancelled" ${order.orderStatus === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
-        </select>
-      </td>
-    `;
-
-    tbody.appendChild(row);
-  });
-}
-</script> --}}
-
-{{!-- <script>
-  let selectedStatus = '';
-  let selectedPayment = '';
-
-  document.querySelectorAll('.filter-option').forEach(option => {
-    option.addEventListener('click', function () {
-      const filterType = this.getAttribute('data-filter-type');
-      const filterValue = this.getAttribute('data-filter-value');
-
-      if (filterType === 'status') {
-        selectedStatus = filterValue;
-        document.getElementById('filterStatusButton').textContent = filterValue;
-      } else if (filterType === 'payment') {
-        selectedPayment = filterValue;
-        document.getElementById('filterPaymentButton').textContent = filterValue;
-      }
-
-      performSearchAndFilter();
-    });
-  });
-
-  document.getElementById('searchInput').addEventListener('input', performSearchAndFilter);
-
-  function performSearchAndFilter() {
-    const search = document.getElementById('searchInput').value;
-
-    const params = new URLSearchParams({
-      query: search,
-      status: selectedStatus,
-      payment: selectedPayment
-    });
-
-    fetch(`/admin/orders/search?${params}`)
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          updateOrderTable(data.orders);
-        }
-      })
-      .catch(error => console.error('Error:', error));
-  }
-
-  function updateOrderTable(orders) {
-    const tbody = document.querySelector('#orderTable tbody');
-    tbody.innerHTML = '';
-
-    orders.forEach(order => {
-      const row = document.createElement('tr');
-      
-      row.innerHTML = `
-        <td><input class="form-check-input" type="checkbox"></td>
-        <td>${order.orderId}</td>
-        <td>${order.items.map(item => item.product.name + ' (Qty: ' + item.quantity + ')').join(', ')}</td>
-        <td>${order.address.streetAddress}, ${order.address.city}</td>
-        <td>${order.finalAmount}</td>
-        <td>${new Date(order.datePlaced).toLocaleDateString()}</td>
-        <td>${order.paymentType}</td>
-        <td>${order.orderStatus}</td>
-        <td>
-          <select class="form-select status-select" data-order-id="${order._id}">
-            <option value="Processing" ${order.orderStatus === 'Processing' ? 'selected' : ''}>Processing</option>
-            <option value="Shipped" ${order.orderStatus === 'Shipped' ? 'selected' : ''}>Shipped</option>
-            <option value="Delivered" ${order.orderStatus === 'Delivered' ? 'selected' : ''}>Delivered</option>
-            <option value="Cancelled" ${order.orderStatus === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
-          </select>
-        </td>
-      `;
-
-      tbody.appendChild(row);
-    });
-  }
-</script> --}}
 
 
     
