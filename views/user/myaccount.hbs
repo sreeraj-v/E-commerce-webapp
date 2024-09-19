@@ -21,13 +21,13 @@
             	<div class="dashboard">
 	                <div class="container">
 	                	<div class="row">
-	                		<aside class="col-md-4 col-lg-3">
+	                		<aside class="col-md-3 col-lg-2">
 	                			<ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
 								    <li class="nav-item">
-								        <a class="nav-link active" id="tab-dashboard-link" data-toggle="tab" href="#tab-dashboard" role="tab" aria-controls="tab-dashboard" aria-selected="true">Dashboard</a>
+								        <a class="nav-link " id="tab-dashboard-link" data-toggle="tab" href="#tab-dashboard" role="tab" aria-controls="tab-dashboard" aria-selected="false">wallet</a>
 								    </li>
 								    <li class="nav-item">
-								        <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
+								        <a class="nav-link active" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="true">Orders</a>
 								    </li>
 								    {{!-- <li class="nav-item">
 								        <a class="nav-link" id="tab-downloads-link" data-toggle="tab" href="#tab-downloads" role="tab" aria-controls="tab-downloads" aria-selected="false">Downloads</a>
@@ -39,54 +39,21 @@
 								        <a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account" role="tab" aria-controls="tab-account" aria-selected="false">Account Details</a>
 								    </li>
 								    <li class="nav-item">
-								        <a class="nav-link" href="#">Sign Out</a>
+								        <a class="nav-link" href="/logout">Sign Out</a>
 								    </li>
 								</ul>
 	                		</aside><!-- End .col-lg-3 -->
 
-	                		<div class="col-md-8 col-lg-9">
+	                		<div class="col-md-9 col-lg-10">
 	                			<div class="tab-content">
-								    <div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link">
+								    <div class="tab-pane fade " id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link">
 								    	<p>Hello <span class="font-weight-normal text-dark">User</span> (not <span class="font-weight-normal text-dark">User</span>? <a href="#">Log out</a>) 
 								    	<br>
 								    	From your account dashboard you can view your <a href="#tab-orders" class="tab-trigger-link link-underline">recent orders</a>, manage your <a href="#tab-address" class="tab-trigger-link">shipping and billing addresses</a>, and <a href="#tab-account" class="tab-trigger-link">edit your password and account details</a>.</p>
 								    </div><!-- .End .tab-pane -->
 
-<div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
-    <div class="card card-dashboard">
-        <div class="card-body">
-            <h3 class="card-title">Orders</h3><!-- End .card-title -->
-            
-            <div class="order-list">
-                <div class="order-item mb-3 p-3" style="border: 1px solid #ebebeb; border-radius: 8px; background-color: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
-                    <div class="row align-items-center">
-                        <div class="col-md-2 col-4">
-                            <img src="path/to/product-image.jpg" alt="Product Name" class="img-fluid rounded" style="max-width: 80px;">
-                        </div>
-                        <div class="col-md-3 col-8">
-                            <h5 class="mb-1" style="font-weight: 600; color: #333;">Product Name</h5>
-                            <p class="mb-0" style="color: #4a4a4a; font-size: 0.9em;">$99.99</p>
-                        </div>
-                        <div class="col-md-2 col-6">
-                            <p class="mb-0" style="font-size: 0.85em; color: #666;"><strong>Purchased:</strong></p>
-                            <p class="mb-0" style="font-size: 0.9em;">Sept 10, 2024</p>
-                        </div>
-                        <div class="col-md-2 col-6">
-                            <p class="mb-0" style="font-size: 0.85em; color: #666;"><strong>Delivered:</strong></p>
-                            <p class="mb-0" style="font-size: 0.9em;">Sept 15, 2024</p>
-                        </div>
-                        <div class="col-md-3 col-12 mt-2 mt-md-0 text-md-right">
-                            <button class="btn btn-outline-primary-2 btn-sm">Return</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Keep the existing button -->
-            <a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
-        </div><!-- End .card-body -->
-    </div><!-- End .card-dashboard -->
-</div><!-- .End .tab-pane -->
+
+
 
 								    {{!-- <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
 								    	<p>No downloads available yet.</p>
@@ -97,38 +64,31 @@
 								    	<p>The following addresses will be used on the checkout page by default.</p>
 
 								    	<div class="row">
-								    		<div class="col-lg-6">
+								    		<div class="col-lg-10">
 								    			<div class="card card-dashboard">
 								    				<div class="card-body">
-								    					<h3 class="card-title">Billing Address</h3><!-- End .card-title -->
-
-														<p>User Name<br>
-														User Company<br>
-														John str<br>
-														New York, NY 10001<br>
-														1-234-987-6543<br>
-														yourmail@mail.com<br>
-														<a href="#">Edit <i class="icon-edit"></i></a></p>
+								    					<h3 class="card-title">Billing Addresses</h3><!-- End .card-title -->
+														<div style="border: 1px solid #ebebeb; border-radius: 8px; background-color: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.05);"></div>															
+															{{#each address}}
+														<p>{{this.firstName}} 
+														{{this.lastName}} <br>
+														{{this.streetAddress}}
+														{{this.country}}<br>
+														{{this.phone}}
+														{{this.email}}<br>
+														<div style="border: 1px solid #ebebeb; border-radius: 8px; background-color: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.05);"></div>
+														</p>
+														{{/each}}
 								    				</div><!-- End .card-body -->
 								    			</div><!-- End .card-dashboard -->
 								    		</div><!-- End .col-lg-6 -->
 
-								    		<div class="col-lg-6">
-								    			<div class="card card-dashboard">
-								    				<div class="card-body">
-								    					<h3 class="card-title">Shipping Address</h3><!-- End .card-title -->
-
-														<p>You have not set up this type of address yet.<br>
-														<a href="#">Edit <i class="icon-edit"></i></a></p>
-								    				</div><!-- End .card-body -->
-								    			</div><!-- End .card-dashboard -->
-								    		</div><!-- End .col-lg-6 -->
 								    	</div><!-- End .row -->
 								    </div><!-- .End .tab-pane -->
 
 								    <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
 								    	<form action="#">
-			                				<div class="row">
+			                				{{!-- <div class="row">
 			                					<div class="col-sm-6">
 			                						<label>First Name *</label>
 			                						<input type="text" class="form-control" required>
@@ -138,23 +98,23 @@
 			                						<label>Last Name *</label>
 			                						<input type="text" class="form-control" required>
 			                					</div><!-- End .col-sm-6 -->
-			                				</div><!-- End .row -->
+			                				</div><!-- End .row --> --}}
 
 		            						<label>Display Name *</label>
-		            						<input type="text" class="form-control" required>
+		            						<input type="text" class="form-control" readonly value="{{user.name}}">
 		            						<small class="form-text">This will be how your name will be displayed in the account section and in reviews</small>
 
 		                					<label>Email address *</label>
-		        							<input type="email" class="form-control" required>
+		        							<input type="email" class="form-control" readonly value="{{user.email}}">
 
-		            						<label>Current password (leave blank to leave unchanged)</label>
-		            						<input type="password" class="form-control">
+		            						<label>Current password </label>
+		            						<input type="password" class="form-control" readonly value="{{user.password}}">
 
-		            						<label>New password (leave blank to leave unchanged)</label>
+		            						{{!-- <label>New password (leave blank to leave unchanged)</label>
 		            						<input type="password" class="form-control">
 
 		            						<label>Confirm new password</label>
-		            						<input type="password" class="form-control mb-2">
+		            						<input type="password" class="form-control mb-2"> --}}
 
 		                					<button type="submit" class="btn btn-outline-primary-2">
 			                					<span>SAVE CHANGES</span>
@@ -177,4 +137,32 @@
 
 {{>mobileView}}
 
-  
+<script>
+	document.addEventListener("DOMContentLoaded", function() {
+    const returnButtons = document.querySelectorAll('.return-btn');
+
+    returnButtons.forEach(button => {
+        button.addEventListener('click', async function() {
+            const orderId = this.getAttribute('data-order-id');
+            const productId = this.getAttribute('data-product-id');
+
+            const response = await fetch(`/return-product`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ orderId, productId })
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                alert('Your return request has been submitted!');
+                location.reload();  // Reload the page to reflect the return status
+            } else {
+                alert('Failed to submit the return request.');
+            }
+        });
+    });
+});
+
+</script>

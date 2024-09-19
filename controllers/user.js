@@ -683,7 +683,38 @@ async function downloadInvoice(req, res) {
 }
 
 
+async function myaccount(req,res){
+  try{
+    const userId = req.session.user._id
+    
+    const user = await User.findOne(userId).lean()
+    const address = await addressHelper.getUserAddresses(userId)
+    const orders = await orderHelper.getOrder(userId)
+    res.render("user/myaccount",{orders,address,user})
+  }catch(error){
+    console.error('Error creating order:', error)
+  }
+}
 
+
+async function returnProduct(req, res) {
+  try {
+      const { orderId, productId } = req.body;
+      const userId = req.session.user._id;
+
+      // Update the order's return status
+      const updatedOrder = await orderHelper.processReturnRequest(orderId, productId, userId);
+
+      if (updatedOrder) {
+          res.json({ success: true });
+      } else {
+          res.json({ success: false });
+      }
+  } catch (error) {
+      console.error('Error processing return request:', error);
+      res.json({ success: false });
+  }
+}
 
 
 const logout = (req,res)=>{
@@ -712,6 +743,8 @@ module.exports = {
   confirmOrderPayment,
   downloadInvoice,
   logout,
+  myaccount,
+  returnProduct
 };
 
 
