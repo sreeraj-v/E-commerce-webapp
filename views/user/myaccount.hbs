@@ -52,6 +52,97 @@
 								    	From your account dashboard you can view your <a href="#tab-orders" class="tab-trigger-link link-underline">recent orders</a>, manage your <a href="#tab-address" class="tab-trigger-link">shipping and billing addresses</a>, and <a href="#tab-account" class="tab-trigger-link">edit your password and account details</a>.</p>
 								    </div><!-- .End .tab-pane -->
 
+<div class="tab-pane fade show active" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
+  <div class="card card-dashboard">
+    <div class="card-body">
+      <h3 class="card-title">Orders</h3>
+
+      <div class="order-list">
+        {{#each orders}}
+          <div class="order-item mb-3 p-3" style="border: 1px solid #ebebeb; border-radius: 8px; background-color: #f9f9f9; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);">
+            <div class="row align-items-center">
+              {{#each this.items}}
+                <!-- Product image and name -->
+                <div class="col-12 col-md-3 mb-2 mb-md-0 d-flex align-items-center">
+                  <img src="uploads/{{product.image.[0]}}" alt="{{this.product.name}}" style="max-width: 50px; height: 50px; border-radius: 5px; object-fit: cover; margin-right: 10px;">
+                  <div>
+                    <h5 style="font-size: 0.9em; color: #3a3838; font-weight: bold; margin-bottom: 0;">{{this.product.name}} <mark> × {{this.quantity}} </mark> <small>(qty)</small> </h5>
+                    <p style="color: #4a4a4a; font-size: 0.8em; margin-bottom: 0;">₹{{this.price}}</p>
+                  </div>
+                </div>
+
+                <!-- Order details -->
+                <div class="col-12 col-md-7 mb-2 mb-md-0">
+                  <div class="row">
+                    <div class="col-6 col-md-4">
+                      <p style="font-size: 0.8em; color: #666; margin-bottom: 0;"><strong>Purchased:</strong> {{date ../datePlaced "MMM Do, YYYY"}}</p>
+                    </div>
+                    <div class="col-6 col-md-4">
+                      <p style="font-size: 0.8em; color: #666; margin-bottom: 0;"><strong>Delivery by:</strong> {{date ../deliveryExpectedDate "MMM Do, YYYY"}}</p>
+                    </div>
+                    <div class="col-6 col-md-4">
+                      <p style="font-size: 0.8em; color: #666; margin-bottom: 0;"><strong>Status:</strong> {{../orderStatus}}</p>
+                      {{!-- <p style="font-size: 0.8em; color: #666; margin-bottom: 0;"><strong>Return Status:</strong> {{#if this.return}}Requested ({{this.return}}){{else}}Not Requested{{/if}}</p> --}}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Return button -->
+                <div class="col-12 col-md-2 text-right">
+                  <button class="btn btn-outline-primary-2 btn-sm" style="width: 80px; height: 30px; padding: 0; display: inline-flex; justify-content: center; align-items: center; border-radius: 4px;" data-toggle="modal" data-target="#returnModal" data-order-id="{{../_id}}" data-product-id="{{this.product._id}}">
+                    {{#if this.return}}disabled{{/if}}
+                    Return
+                  </button>
+                </div>
+              {{/each}}
+            </div>
+          </div>
+        {{/each}}
+      </div>
+
+      <!-- Go shop button -->
+      <a href="/shop" class="btn btn-outline-primary-2 mt-3" style="border-radius: 0; padding: 10px 15px;">
+        <span>GO SHOP</span>
+        <i class="icon-long-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Return Modal -->
+<div class="modal fade" id="returnModal" tabindex="-1" role="dialog" aria-labelledby="returnModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content" style="border-radius: 10px; padding: 15px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+      <div class="modal-header" style="border-bottom: 2px solid #ddd;">
+        <h5 class="modal-title" id="returnModalLabel">Return Product</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="returnForm">
+          <!-- Dropdown for return reasons -->
+          <div class="form-group">
+            <label for="returnReason">Reason for Return</label>
+            <select class="form-control" id="returnReason" required style="border-radius: 5px;">
+              <option value="" disabled selected>Select a reason</option>
+              <option value="Damaged">Product damaged</option>
+              <option value="Defective">Product defective</option>
+              <option value="Incorrect">Incorrect product received</option>
+              <option value="Others">Other reasons</option>
+            </select>
+          </div>
+          <p style="font-size: 0.85em; color: #888;">The refund amount will be credited to your wallet.</p>
+        </form>
+      </div>
+      <div class="modal-footer" style="border-top: 2px solid #ddd;">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="border-radius: 5px;">Cancel</button>
+        <button type="button" class="btn btn-danger" id="confirmReturnBtn" style="border-radius: 5px;">Confirm Return</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 
 
@@ -64,7 +155,7 @@
 								    	<p>The following addresses will be used on the checkout page by default.</p>
 
 								    	<div class="row">
-								    		<div class="col-lg-10">
+								    		<div class="col-lg-12">
 								    			<div class="card card-dashboard">
 								    				<div class="card-body">
 								    					<h3 class="card-title">Billing Addresses</h3><!-- End .card-title -->
@@ -138,31 +229,57 @@
 {{>mobileView}}
 
 <script>
-	document.addEventListener("DOMContentLoaded", function() {
-    const returnButtons = document.querySelectorAll('.return-btn');
 
-    returnButtons.forEach(button => {
-        button.addEventListener('click', async function() {
-            const orderId = this.getAttribute('data-order-id');
-            const productId = this.getAttribute('data-product-id');
+document.addEventListener("DOMContentLoaded", function () {
+  const returnModal = document.getElementById("returnModal");
+  const confirmReturnBtn = document.getElementById("confirmReturnBtn");
+  
+  let selectedOrderId, selectedProductId;
 
-            const response = await fetch(`/return-product`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ orderId, productId })
-            });
+  // Trigger modal and capture order and product IDs
+  returnModal.addEventListener("show.bs.modal", function (event) {
+    const button = event.relatedTarget;
+    selectedOrderId = button.getAttribute("data-order-id");
+    selectedProductId = button.getAttribute("data-product-id");
+  });
 
-            const result = await response.json();
-            if (result.success) {
-                alert('Your return request has been submitted!');
-                location.reload();  // Reload the page to reflect the return status
-            } else {
-                alert('Failed to submit the return request.');
-            }
-        });
-    });
+  // Confirm return button click event
+  confirmReturnBtn.addEventListener("click", async function () {
+    const returnReason = document.getElementById("returnReason").value;
+    
+    if (!returnReason) {
+      alert("Please select a reason for return.");
+      return;
+    }
+
+    const data = {
+      orderId: selectedOrderId,
+      productId: selectedProductId,
+      returnReason
+    };
+
+    try {
+      const response = await fetch("/return", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert("Return processed successfully!");
+        location.reload(); // Reload page after successful return
+      } else {
+        alert(result.message || "Failed to process return.");
+      }
+    } catch (error) {
+      console.error("Error processing return:", error);
+      alert("An error occurred. Please try again later.");
+    }
+  });
 });
 
 </script>

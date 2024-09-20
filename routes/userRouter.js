@@ -21,7 +21,7 @@ router.post('/processOrder', processOrder);
 router.get('/orderSuccess',userAuth, confirmOrderPayment);
 router.get("/download-invoice/:orderId",userAuth,downloadInvoice);
 router.get("/myaccount",userAuth,myaccount);
-router.post("/return-product", returnProduct);
+router.post("/return", returnProduct);
 
 
 
