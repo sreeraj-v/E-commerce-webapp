@@ -622,6 +622,8 @@ async function updateStockForOrder(order) {
   }
 }
 
+// ordersuccess page invoice download >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
 async function downloadInvoice(req, res) {
   try {
     const { orderId } = req.params;
@@ -683,6 +685,7 @@ async function downloadInvoice(req, res) {
   }
 }
 
+// myaccount get    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 async function myaccount(req,res){
   try{
@@ -697,26 +700,28 @@ async function myaccount(req,res){
   }
 }
 
+//  product return >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 async function returnProduct(req, res) {
   try {
-      const { orderId, productId } = req.body;
-      const userId = req.session.user._id;
+    const { orderId, productId, returnReason } = req.body;
+    console.log(orderId,productId,returnReason)
+    
+    // Call helper to process return
+    const returnResult = await returnHelper.processReturn(orderId, productId, returnReason);
 
-      // Update the order's return status
-      const updatedOrder = await orderHelper.processReturnRequest(orderId, productId, userId);
-
-      if (updatedOrder) {
-          res.json({ success: true });
-      } else {
-          res.json({ success: false });
-      }
+    if (returnResult.success) {
+      return res.status(200).json({ message: "Return request processed successfully" });
+    } else {
+      return res.status(400).json({ message: returnResult.message });
+    }
   } catch (error) {
-      console.error('Error processing return request:', error);
-      res.json({ success: false });
+    console.error("Error processing return:", error);
+    return res.status(500).json({ message: "Server error, please try again later." });
   }
 }
 
+// logout    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 const logout = (req,res)=>{
   req.session.destroy()

@@ -1,5 +1,5 @@
 const Order = require("../models/order")
-const Product = require("../models/productSchema")
+// const Product = require("../models/productSchema")
 
 module.exports =  {
   createOrder: async (orderData) => {
