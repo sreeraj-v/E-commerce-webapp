@@ -1,6 +1,6 @@
 const router = require("express").Router()
 
-const { index, addProductPage, addProduct, viewProducts, productActive, productInactive, notFound, editProductPage, editProduct, searchProducts, allUsers, userStatus, searchUser, deleteUser, loginPage, login, logout, couponPage, addCoupon, editCoupon, deleteCoupon, viewOrders, updateStatus, filterOrders, } = require("../controllers/admin");
+const { index, addProductPage, addProduct, viewProducts, productActive, productInactive, notFound, editProductPage, editProduct, searchProducts, allUsers, userStatus, searchUser, deleteUser, loginPage, login, logout, couponPage, addCoupon, editCoupon, deleteCoupon, viewOrders, updateStatus, filterOrders, returnOrders, } = require("../controllers/admin");
 const adminAuth = require("../middleware/adminAuth");
 
 // admin login get
@@ -41,12 +41,14 @@ router.post("/addCoupon" ,adminAuth,addCoupon)
 router.post("/editCoupon",adminAuth,editCoupon)
 // delete coupon
 router.get("/deleteCoupon",adminAuth,deleteCoupon)
-
+// viewing all orders
 router.get("/orders",adminAuth,viewOrders);
-
+// updating orderstatus
 router.post("/updateOrderStatus/:Id",updateStatus)
-
+// filtering Orders
 router.get("/orders/filter",filterOrders);
+// viewing all returned orders
+router.get("/returns",adminAuth,returnOrders)
 
 // logout
 router.get("/logout",logout)

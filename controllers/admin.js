@@ -5,6 +5,7 @@ const userHelper = require("../helpers/users")
 const adminHelper = require("../helpers/admin")
 const couponHelper = require("../helpers/coupon")
 const orderHelper = require("../helpers/order")
+const returnHelper = require("../helpers/return")
 // const { compare } = require("bcrypt")
 
 // --------------------------------------admin side:
@@ -370,6 +371,19 @@ const filterOrders = async (req, res) => {
   }
 };
 
+// return section  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+const returnOrders = async (req,res)=>{
+  try {
+    const orders = await returnHelper.getOrdersWithReturns();
+
+    res.render('admin/returns', { orders });
+  } catch (error) {
+    console.error('Error fetching return orders:', error);
+    res.status(500).send('Server error');
+  }
+}
+
 // 404 not found page >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 const notFound = (req, res) => {
   res.render("admin/404")
@@ -404,7 +418,8 @@ module.exports = {
   deleteCoupon,
   viewOrders,
   updateStatus,
-  filterOrders
+  filterOrders,
+  returnOrders
 };
 
 

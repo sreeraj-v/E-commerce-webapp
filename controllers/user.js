@@ -705,9 +705,11 @@ async function myaccount(req,res){
 async function returnProduct(req, res) {
   try {
     const { orderId, productId, returnReason } = req.body;
-    console.log(orderId,productId,returnReason)
-    
-    // Call helper to process return
+    console.log("Order ID received:", req.body.orderId);
+console.log("Product ID received:", req.body.productId);
+console.log("Return reason received:", req.body.returnReason);
+
+    // Process the return
     const returnResult = await returnHelper.processReturn(orderId, productId, returnReason);
 
     if (returnResult.success) {
@@ -720,6 +722,8 @@ async function returnProduct(req, res) {
     return res.status(500).json({ message: "Server error, please try again later." });
   }
 }
+
+
 
 // logout    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 

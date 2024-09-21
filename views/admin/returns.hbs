@@ -1,0 +1,71 @@
+{{>adminSidebar}}
+{{>adminNavbar}}
+
+<!-- Returns View Start -->
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-light text-center rounded p-4">
+        <div class="bg-light text-center rounded pb-4">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-md-6">
+                    <input class="form-control rounded-3 bg-transparent" type="search" value="" id="searchInput" placeholder="Search" />
+                </div>
+                <div class="col-auto">
+                    <a href="/admin/returns" class="btn btn-primary m-2">Clear Filters</a>
+                </div>
+            </div>
+        </div>
+<div class="table-responsive">
+    <table class="table text-start align-middle table-bordered table-hover mb-0" id="returnsTable">
+        <thead>
+            <tr class="text-dark">
+                <th scope="col"><input class="form-check-input" type="checkbox"></th>
+                <th scope="col">Order id</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Products</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Date</th>
+                <th scope="col">Payment</th>
+                <th scope="col">Status</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each orders}}
+            {{#each this.items}}
+            {{#if this.return}} <!--giving Only display items that have a return request -->
+            <tr>
+                <td><input class="form-check-input" type="checkbox"></td>
+                <td>{{../orderId}}</td>
+                <td>{{../user.name}} </td>
+                <td>
+                    {{this.product.name}} , Qty: {{this.quantity}}
+                </td>
+                <td>{{this.refundAmount}}</td>
+                <td>{{date ../datePlaced "MMMM Do, YYYY"}}</td>
+                <td>{{../paymentType}}</td>
+                <td>{{this.returnStatus}}</td>
+                <td>
+                    <select class="form-select status-select" data-return-id="{{this._id}}"
+                        style="background-color: #009cfe; color: white; appearance: none; padding-right: 30px; width: auto; text-align-last: center;">
+                        <option value="Requested" {{#if (eq this.returnStatus 'Requested')}}selected{{/if}}>Requested</option>
+                        <option value="Processing" {{#if (eq this.returnStatus 'Processing')}}selected{{/if}}>Processing</option>
+                        <option value="Approved" {{#if (eq this.returnStatus 'Approved')}}selected{{/if}}>Approved</option>
+                        <option value="Rejected" {{#if (eq this.returnStatus 'Rejected')}}selected{{/if}}>Rejected</option>
+                    </select>
+                </td>
+            </tr>
+            {{/if}}
+            {{/each}}
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+
+    </div>
+</div>
+<!-- Returns View End -->
+
+{{>adminFooter}}
+
+<!-- Back to Top -->
+<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>

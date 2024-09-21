@@ -89,10 +89,17 @@
 
                 <!-- Return button -->
                 <div class="col-12 col-md-2 text-right">
-                  <button class="btn btn-outline-primary-2 btn-sm" style="width: 80px; height: 30px; padding: 0; display: inline-flex; justify-content: center; align-items: center; border-radius: 4px;" data-toggle="modal" data-target="#returnModal" data-order-id="{{../_id}}" data-product-id="{{this.product._id}}">
+                  {{!-- <button class="btn btn-outline-primary-2 btn-sm" style="width: 80px; height: 30px; padding: 0; display: inline-flex; justify-content: center; align-items: center; border-radius: 4px;" data-toggle="modal" data-target="#returnModal" data-order-id="{{../orderId}}" data-product-id="{{this.product._id}}">
                     {{#if this.return}}disabled{{/if}}
                     Return
-                  </button>
+                  </button> --}}
+
+<button class="btn btn-outline-primary-2 btn-sm"
+        style="width: 80px; height: 30px; padding: 0; display: inline-flex; justify-content: center; align-items: center; border-radius: 4px;"
+        onclick="openReturnModal('{{../_id}}', '{{this.product._id}}', '{{this.return}}')">
+  Return
+</button>                  
+
                 </div>
               {{/each}}
             </div>
@@ -110,7 +117,7 @@
 </div>
 
 <!-- Return Modal -->
-<div class="modal fade" id="returnModal" tabindex="-1" role="dialog" aria-labelledby="returnModalLabel" aria-hidden="true">
+{{!-- <div class="modal fade" id="returnModal" tabindex="-1" role="dialog" aria-labelledby="returnModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content" style="border-radius: 10px; padding: 15px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
       <div class="modal-header" style="border-bottom: 2px solid #ddd;">
@@ -141,8 +148,45 @@
       </div>
     </div>
   </div>
-</div>
+</div> --}}
 
+<!-- Return Modal -->
+<div class="modal fade" id="returnModal" tabindex="-1" role="dialog" aria-labelledby="returnModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content" style="border-radius: 10px; padding: 15px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+      <div class="modal-header" style="border-bottom: 2px solid #ddd;">
+        <h5 class="modal-title" id="returnModalLabel">Return Product</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="returnForm">
+          <!-- Hidden Inputs for orderId and productId -->
+          <input type="hidden" id="orderId">
+          <input type="hidden" id="productId">
+
+          <!-- Dropdown for return reasons -->
+          <div class="form-group">
+            <label for="returnReason">Reason for Return</label>
+            <select class="form-control" id="returnReason" required style="border-radius: 5px;">
+              <option value="" disabled selected>Select a reason</option>
+              <option value="Damaged">Product damaged</option>
+              <option value="Defective">Product defective</option>
+              <option value="Incorrect">Incorrect product received</option>
+              <option value="Others">Other reasons</option>
+            </select>
+          </div>
+          <p style="font-size: 0.85em; color: #888;">The refund amount will be credited to your wallet.</p>
+        </form>
+      </div>
+      <div class="modal-footer" style="border-top: 2px solid #ddd;">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="border-radius: 5px;">Cancel</button>
+        <button type="button" class="btn btn-danger" id="confirmReturnBtn" style="border-radius: 5px;">Confirm Return</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 
@@ -229,34 +273,48 @@
 {{>mobileView}}
 
 <script>
-
 document.addEventListener("DOMContentLoaded", function () {
   const returnModal = document.getElementById("returnModal");
   const confirmReturnBtn = document.getElementById("confirmReturnBtn");
-  
-  let selectedOrderId, selectedProductId;
+  const orderIdInput = document.getElementById("orderId");
+  const productIdInput = document.getElementById("productId");
 
-  // Trigger modal and capture order and product IDs
-  returnModal.addEventListener("show.bs.modal", function (event) {
-    const button = event.relatedTarget;
-    selectedOrderId = button.getAttribute("data-order-id");
-    selectedProductId = button.getAttribute("data-product-id");
-  });
+  // Function to open the return modal and set hidden inputs
+  window.openReturnModal = function(orderId, productId, hasReturn) {
+    if (hasReturn === 'true') {
+      alert("This product has already been returned.");
+      return;
+    }
 
-  // Confirm return button click event
+    // Set the hidden input values
+    orderIdInput.value = orderId;
+    productIdInput.value = productId;
+
+    // Show the modal
+    $('#returnModal').modal('show');
+  };
+
+  // Confirm Return Button Click Event
   confirmReturnBtn.addEventListener("click", async function () {
     const returnReason = document.getElementById("returnReason").value;
-    
+
     if (!returnReason) {
       alert("Please select a reason for return.");
       return;
     }
 
+    // Collect data from the form
     const data = {
-      orderId: selectedOrderId,
-      productId: selectedProductId,
-      returnReason
+      orderId: orderIdInput.value,
+      productId: productIdInput.value,
+      returnReason: returnReason
     };
+
+    // Ensure orderId and productId are available
+    if (!data.orderId || !data.productId) {
+      alert("Order ID or Product ID is missing.");
+      return;
+    }
 
     try {
       const response = await fetch("/return", {
