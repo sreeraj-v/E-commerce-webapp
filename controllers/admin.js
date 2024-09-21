@@ -384,6 +384,23 @@ const returnOrders = async (req,res)=>{
   }
 }
 
+const updateReturnStatus = async (req, res) => {
+  try {
+    const { returnId, newStatus } = req.body; 
+
+    const success = await returnHelper.updateReturnStatuses(returnId, newStatus);
+
+    if (success) {
+      res.json({ success: true });
+    } else {
+      res.json({ success: false });
+    }
+  } catch (error) {
+    console.error('Error updating return status:', error);
+    res.status(500).json({ success: false });
+  }
+};
+
 // 404 not found page >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 const notFound = (req, res) => {
   res.render("admin/404")
@@ -419,7 +436,8 @@ module.exports = {
   viewOrders,
   updateStatus,
   filterOrders,
-  returnOrders
+  returnOrders,
+  updateReturnStatus
 };
 
 

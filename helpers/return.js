@@ -78,6 +78,20 @@ module.exports = {
       console.error('Error fetching return orders:', error);
       throw error;
     }
+  },
+
+  updateReturnStatuses: async (returnId, newStatus) => {
+    try {
+      const result = await Order.updateOne(
+        { 'items._id': returnId }, 
+        { $set: { 'items.$.returnStatus': newStatus } } 
+      );
+
+      return result.modifiedCount > 0; 
+    } catch (error) {
+      console.error('Error updating return status:', error);
+      return false; 
+    }
   }
 };
 

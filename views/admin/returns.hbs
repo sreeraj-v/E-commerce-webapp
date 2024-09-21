@@ -68,3 +68,39 @@
 
 <!-- Back to Top -->
 <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const statusSelects = document.querySelectorAll('.status-select');
+
+    statusSelects.forEach(select => {
+      select.addEventListener('change', async (event) => {
+        const returnId = event.target.getAttribute('data-return-id'); 
+        const newStatus = event.target.value; 
+
+        try {
+          const response = await fetch(`/admin/update-return-status`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ returnId, newStatus })
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            alert('Return status updated successfully!');
+          } else {
+            alert('Failed to update return status.');
+          }
+        } catch (error) {
+          console.error('Error updating return status:', error);
+          alert('An error occurred while updating return status.');
+        }
+      });
+    });
+  });
+</script>
+
