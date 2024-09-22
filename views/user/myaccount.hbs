@@ -46,11 +46,39 @@
 
 	                		<div class="col-md-9 col-lg-10">
 	                			<div class="tab-content">
-								    <div class="tab-pane fade " id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link">
+								    {{!-- <div class="tab-pane fade " id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link">
 								    	<p>Hello <span class="font-weight-normal text-dark">User</span> (not <span class="font-weight-normal text-dark">User</span>? <a href="#">Log out</a>) 
 								    	<br>
 								    	From your account dashboard you can view your <a href="#tab-orders" class="tab-trigger-link link-underline">recent orders</a>, manage your <a href="#tab-address" class="tab-trigger-link">shipping and billing addresses</a>, and <a href="#tab-account" class="tab-trigger-link">edit your password and account details</a>.</p>
-								    </div><!-- .End .tab-pane -->
+								    </div><!-- .End .tab-pane --> --}}
+ <div class="tab-pane fade" id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link">
+  <div class="card card-dashboard">
+    <div class="card-body">
+      <h3 class="card-title">My Wallet</h3>
+      
+      <div class="wallet-card mb-4" style="background: linear-gradient(45deg, #d4b62f, #2a7098); border-radius: 15px; padding: 30px; box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23); color: white;">
+        <div class="row">
+          <div class="col-12 mb-4">
+            <i class="fas fa-credit-card" style="font-size: 50px;"></i>
+          </div>
+          <div class="col-12 mb-4">
+            <h4 style="font-size: 1.2em; margin-bottom: 5px;">Current Balance</h4>
+            <p style="font-size: 2.5em; font-weight: bold; margin-bottom: 0;">₹00.00</p>
+          </div>
+          <div class="col-12">
+            <p style="font-size: 1em; margin-bottom: 5px;">Wallet Holder</p>
+            <h5 style="font-size: 1.2em; text-transform: uppercase;">  </h5>
+          </div>
+        </div>
+      </div>
+
+      <div class="wallet-info" style="background-color: #f9f9f9; border: 1px solid #ebebeb; border-radius: 8px; padding: 20px;">
+        <h4 style="font-size: 1.1em; color: #333; margin-bottom: 15px;">Wallet Details</h4>
+        <p style="font-size: 0.9em; color: #666; margin-bottom: 0;"><strong>Status:</strong> Active</p>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="tab-pane fade show active" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
   <div class="card card-dashboard">

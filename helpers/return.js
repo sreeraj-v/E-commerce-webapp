@@ -1,4 +1,6 @@
 const Order = require("../models/order")
+const {User} = require("../models/userSchema")
+const Product = require("../models/productSchema");
 
 module.exports = {
   // user side helper
@@ -48,15 +50,47 @@ module.exports = {
 
   updateReturnStatuses: async (returnId, newStatus) => {
     try {
+      const order = await Order.findOne({ 'items._id': returnId }).populate('user');
+      const item = order.items.find(item => item._id.toString() === returnId);
+  
+      if (!item) {
+        throw new Error("Item not found");
+      }
+  
+      // Update 4 return status in the order
       const result = await Order.updateOne(
-        { 'items._id': returnId }, 
-        { $set: { 'items.$.returnStatus': newStatus } } 
+        { 'items._id': returnId },
+        { 
+          $set: { 
+            'items.$.returnStatus': newStatus, 
+            'items.$.refund': newStatus === 'Approved', // Mark refund as true when approved
+          } 
+        }
       );
-
-      return result.modifiedCount > 0; 
+  
+      // If  return status is "Approved", add refund amount to wallet and update stock
+      if (newStatus === 'Approved') {
+        const refundAmount = item.refundAmount;
+        const productId = item.product;
+        const quantity = item.quantity;
+  
+        // Add refund to the wallet
+        await User.updateOne(
+          { _id: order.user._id },
+          { $inc: { wallet: refundAmount } }
+        );
+  
+        // Increase the product stock
+        await Product.updateOne(
+          { _id: productId },
+          { $inc: { stockAvailable: quantity } }
+        );
+      }
+  
+      return result.modifiedCount > 0;
     } catch (error) {
       console.error('Error updating return status:', error);
-      return false; 
+      return false;
     }
   }
 };

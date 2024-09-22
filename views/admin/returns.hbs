@@ -44,14 +44,14 @@
             <td>{{this.refundAmount}}</td>
             <td>{{date ../datePlaced "MMMM Do, YYYY"}}</td>
             <td>{{../paymentType}}</td>
-            <td>{{#if this.refund}}success{{else}}pending{{/if}} </td>
+            <td>{{#if this.refund}} <span class="badge bg-success text-white">Complete</span> {{else}} <span class="badge bg-warning text-dark">Pending</span> {{/if}} </td>
             <td>{{this.returnStatus}}</td>
             <td>
               <select class="form-select status-select" data-return-id="{{this._id}}"style="background-color: #009cfe; color: white; appearance: none; padding-right: 30px; width: auto; text-align-last: center;">
                 <option value="Requested" {{#if (eq this.returnStatus 'Requested' )}}selected{{/if}} {{#if (or (eq this.returnStatus 'Processing') (eq this.returnStatus 'Approved') (eq this.returnStatus 'Rejected'))}}disabled{{/if}}>Requested</option>
                 <option value="Processing" {{#if (eq this.returnStatus 'Processing' )}}selected{{/if}} {{#if (or (eq this.returnStatus 'Approved') (eq this.returnStatus 'Rejected'))}}disabled{{/if}}>Processing</option>
                 <option value="Approved" {{#if (eq this.returnStatus 'Approved' )}}selected{{/if}} {{#if (eq this.returnStatus 'Rejected')}}disabled{{/if}}>Approved</option>
-                <option value="Rejected" {{#if (eq this.returnStatus 'Rejected' )}}selected{{/if}}>Rejected</option>
+                <option value="Rejected" {{#if (eq this.returnStatus 'Rejected' )}}selected{{/if}}  {{#if (eq this.returnStatus 'Approved') }}disabled{{/if}}>Rejected</option>
               </select>
             </td>
           </tr>
