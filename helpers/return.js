@@ -1,41 +1,7 @@
 const Order = require("../models/order")
 
-// module.exports = {
-//   processReturn: async (orderId, productId, returnReason) =>{
-//     try {
-//       const order = await Order.findById(orderId).populate("items.product");
-//       console.log(order);
-      
-  
-//       if (!order) {
-//         return { success: false, message: "Order not found." };
-//       }
-  
-//       const productIndex = order.items.findIndex(item => item.product._id.toString() === productId);
-  
-//       if (productIndex === -1) {
-//         return { success: false, message: "Product not found in this order." };
-//       }
-  
-//       // Update the product return status in the order
-//       order.items[productIndex].return = returnReason;
-  
-//       // Mark the whole order as return if all products are returned
-//       if (order.items.every(item => item.return)) {
-//         order.completeOrderReturn = true;
-//       }
-  
-//       await order.save();
-  
-//       return { success: true };
-//     } catch (error) {
-//       console.error("Error in return processing:", error);
-//       return { success: false, message: "Error processing return." };
-//     }
-//   }
-// }
-
 module.exports = {
+  // user side helper
   processReturn: async (orderId, productId, returnReason) => {
     try {
       const order = await Order.findById(orderId).populate("items.product");
@@ -48,14 +14,12 @@ module.exports = {
         return { success: false, message: "Product not found in this order." };
       }
 
-      // Calculate the refund amount based on price * quantity
       const refundAmount = order.items[productIndex].price * order.items[productIndex].quantity;
-      
-      // Update the product return status in the order
-      order.items[productIndex].return = true; // Mark the product as returned
-      order.items[productIndex].returnReason = returnReason; // Store the return reason
-      order.items[productIndex].returnStatus = "Requested"; // Set the return status
-      order.items[productIndex].refundAmount = refundAmount; // Store the refund amount
+            
+      order.items[productIndex].return = true; 
+      order.items[productIndex].returnReason = returnReason; 
+      order.items[productIndex].returnStatus = "Requested"; 
+      order.items[productIndex].refundAmount = refundAmount;
 
       // Check if all products in the order are returned to mark completeOrderReturn
       if (order.items.every(item => item.return)) {
@@ -64,12 +28,14 @@ module.exports = {
 
       await order.save();
 
-      return { success: true, refundAmount };  // Returning refundAmount for possible use
+      return { success: true, message: "Return request processed successfully" };
     } catch (error) {
       console.error("Error in return processing:", error);
       return { success: false, message: "Error processing return." };
     }
   },
+
+  // admin side helpers
 
   getOrdersWithReturns: async function () {
     try {

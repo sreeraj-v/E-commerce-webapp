@@ -387,7 +387,6 @@ const returnOrders = async (req,res)=>{
 const updateReturnStatus = async (req, res) => {
   try {
     const { returnId, newStatus } = req.body; 
-
     const success = await returnHelper.updateReturnStatuses(returnId, newStatus);
 
     if (success) {

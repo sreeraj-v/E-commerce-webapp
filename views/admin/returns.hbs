@@ -25,6 +25,7 @@
             <th scope="col">Amount</th>
             <th scope="col">Date</th>
             <th scope="col">Payment</th>
+            <th scope="col">refund</th>
             <th scope="col">Status</th>
             <th scope="col">Action</th>
           </tr>
@@ -43,12 +44,13 @@
             <td>{{this.refundAmount}}</td>
             <td>{{date ../datePlaced "MMMM Do, YYYY"}}</td>
             <td>{{../paymentType}}</td>
+            <td>{{#if this.refund}}success{{else}}pending{{/if}} </td>
             <td>{{this.returnStatus}}</td>
             <td>
               <select class="form-select status-select" data-return-id="{{this._id}}"style="background-color: #009cfe; color: white; appearance: none; padding-right: 30px; width: auto; text-align-last: center;">
-                <option value="Requested" {{#if (eq this.returnStatus 'Requested' )}}selected{{/if}}>Requested</option>
-                <option value="Processing" {{#if (eq this.returnStatus 'Processing' )}}selected{{/if}}>Processing</option>
-                <option value="Approved" {{#if (eq this.returnStatus 'Approved' )}}selected{{/if}}>Approved</option>
+                <option value="Requested" {{#if (eq this.returnStatus 'Requested' )}}selected{{/if}} {{#if (or (eq this.returnStatus 'Processing') (eq this.returnStatus 'Approved') (eq this.returnStatus 'Rejected'))}}disabled{{/if}}>Requested</option>
+                <option value="Processing" {{#if (eq this.returnStatus 'Processing' )}}selected{{/if}} {{#if (or (eq this.returnStatus 'Approved') (eq this.returnStatus 'Rejected'))}}disabled{{/if}}>Processing</option>
+                <option value="Approved" {{#if (eq this.returnStatus 'Approved' )}}selected{{/if}} {{#if (eq this.returnStatus 'Rejected')}}disabled{{/if}}>Approved</option>
                 <option value="Rejected" {{#if (eq this.returnStatus 'Rejected' )}}selected{{/if}}>Rejected</option>
               </select>
             </td>
@@ -70,14 +72,14 @@
 <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
 
 
-<script>
+{{!-- <script>
   document.addEventListener('DOMContentLoaded', function() {
     const statusSelects = document.querySelectorAll('.status-select');
 
     statusSelects.forEach(select => {
       select.addEventListener('change', async (event) => {
-        const returnId = event.target.getAttribute('data-return-id'); 
-        const newStatus = event.target.value; 
+        const returnId = event.target.getAttribute('data-return-id');
+        const newStatus = event.target.value;
 
         try {
           const response = await fetch(`/admin/update-return-status`, {
@@ -91,16 +93,89 @@
           const result = await response.json();
 
           if (result.success) {
-            alert('Return status updated successfully!');
+            // Use SweetAlert to show success message
+            Swal.fire({
+              icon: 'success',
+              title: 'Status Updated',
+              text: 'Return status updated successfully!',
+            });
+
+            // Dynamically update the status text in the table row
+            const statusColumn = event.target.closest('tr').querySelector('td:nth-child(9)');
+            statusColumn.textContent = newStatus;
+
+            // Disable previous statuses in the select dropdown
+            disablePreviousStatuses(event.target, newStatus);
           } else {
-            alert('Failed to update return status.');
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Failed to update return status.',
+            });
           }
         } catch (error) {
           console.error('Error updating return status:', error);
-          alert('An error occurred while updating return status.');
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'An error occurred while updating return status.',
+          });
+        }
+      });
+    });
+
+    // Function to disable previous statuses after selecting a new one
+    function disablePreviousStatuses(select, newStatus) {
+      const options = select.querySelectorAll('option');
+
+      options.forEach(option => {
+        if (option.value === 'Requested' && newStatus !== 'Requested') {
+          option.disabled = true;
+        }
+        if (option.value === 'Processing' && newStatus !== 'Processing') {
+          option.disabled = true;
+        }
+        if (option.value === 'Approved' && newStatus !== 'Approved') {
+          option.disabled = true;
+        }
+        // No need to disable 'Rejected' since it's the last option.
+      });
+    }
+  });
+</script> --}}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const statusSelects = document.querySelectorAll('.status-select');
+
+    statusSelects.forEach(select => {
+      select.addEventListener('change', async (event) => {
+        const returnId = event.target.getAttribute('data-return-id');
+        const newStatus = event.target.value;
+
+        try {
+          const response = await fetch(`/admin/update-return-status`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ returnId, newStatus })
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            Swal.fire('Success!', 'Return status updated successfully.', 'success').then(() => {
+              location.reload();
+            });
+          } else {
+            Swal.fire('Error', 'Failed to update return status.', 'error');
+          }
+        } catch (error) {
+          console.error('Error updating return status:', error);
+          Swal.fire('Error', 'There was an error updating the return status.', 'error');
         }
       });
     });
   });
 </script>
-

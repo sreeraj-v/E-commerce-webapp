@@ -705,15 +705,11 @@ async function myaccount(req,res){
 async function returnProduct(req, res) {
   try {
     const { orderId, productId, returnReason } = req.body;
-    console.log("Order ID received:", req.body.orderId);
-console.log("Product ID received:", req.body.productId);
-console.log("Return reason received:", req.body.returnReason);
 
-    // Process the return
     const returnResult = await returnHelper.processReturn(orderId, productId, returnReason);
 
     if (returnResult.success) {
-      return res.status(200).json({ message: "Return request processed successfully" });
+      return res.status(200).json({ message: returnResult.message });
     } else {
       return res.status(400).json({ message: returnResult.message });
     }

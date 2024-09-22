@@ -154,7 +154,7 @@
   selectElement.addEventListener('change', function() {
     const orderId = this.getAttribute('data-order-id');
     const newStatus = this.value;
-    const previousStatus = this.querySelector('option[selected]').value;  // Save the original status
+    const previousStatus = this.querySelector('option[selected]').value; 
     
     // Confirmation dialog before sending the update request
     Swal.fire({
@@ -178,12 +178,10 @@
         .then(response => response.json())
         .then(data => {
           if (data.success) {
-            Swal.fire('Success!', 'Order status updated successfully.', 'success');
-
-            // Update the status in the status column without refreshing the page
-            const statusColumn = document.querySelector(`[data-order-id="${orderId}"]`);
-            statusColumn.closest('tr').querySelector('td:nth-child(8)').textContent = newStatus;
-            
+            Swal.fire('Success!', 'Order status updated successfully.', 'success')
+            .then(() => {
+             location.reload();
+            });
           } else {
             Swal.fire('Error', 'There was an error updating the order status.', 'error');
           }

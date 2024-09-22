@@ -47,6 +47,11 @@ const userSchema = mongoose.Schema(
       required: true,
       maxlength: [10, "invalid phone number"],
     },
+    wallet: {
+      type: Number,
+      default: 0, 
+    }
+    ,
     isBlocked: {
       type: Boolean,
       default: false,
