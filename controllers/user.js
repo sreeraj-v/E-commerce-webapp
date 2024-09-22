@@ -8,6 +8,7 @@ const couponHelper = require("../helpers/coupon")
 const orderHelper = require("../helpers/order")
 const returnHelper = require("../helpers/return");
 const { User } = require("../models/userSchema");
+const Order = require("../models/order")
 
 const Stripe = require("stripe")
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY)
@@ -720,6 +721,60 @@ async function returnProduct(req, res) {
 }
 
 
+const cancelOrder = async (req, res) => {
+  try {
+    const { orderId, productId } = req.body;
+
+    // Find the order by orderId and productId
+    const order = await Order.findOne({ _id: orderId, 'items.product': productId });
+
+    if (!order) {
+      return res.status(404).json({ success: false, message: "Order not found" });
+    }
+
+    // Check if the order can be canceled
+    if (order.orderStatus !== 'Processing' && order.orderStatus !== 'Shipped') {
+      return res.status(400).json({ success: false, message: "Order cannot be canceled" });
+    }
+
+    // Find the specific product in the order
+    const orderItem = order.items.find(item => item.product.toString() === productId);
+
+    // Process refund if paymentType is Stripe
+    if (order.paymentType === 'Stripe Payment') {
+      const refundAmount = orderItem.price * orderItem.quantity;
+
+      // Refund the amount via Stripe
+      const refund = await stripe.refunds.create({
+        payment_intent: order.stripeIntentId,
+        amount: Math.round(refundAmount * 100) // Stripe works in smallest currency unit (cents)
+      });
+
+      if (!refund) {
+        return res.status(500).json({ success: false, message: "Failed to process the refund" });
+      }
+
+      // Update the user's wallet with the refund amount
+      const user = await User.findById(order.user);
+      user.wallet += refundAmount;
+      await user.save();
+      
+      // Update refund status in the order
+      orderItem.refund = true;
+      orderItem.refundAmount = refundAmount;
+    }
+
+    // Update order status to Cancelled
+    order.orderStatus = 'Cancelled';
+    await order.save();
+
+    return res.status(200).json({ success: true, message: "Order canceled successfully" });
+  } catch (error) {
+    console.error('Cancel Order Error:', error);
+    return res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
 
 // logout    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -750,7 +805,8 @@ module.exports = {
   downloadInvoice,
   logout,
   myaccount,
-  returnProduct
+  returnProduct,
+  cancelOrder
 };
 
 

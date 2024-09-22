@@ -59,15 +59,15 @@
       <div class="wallet-card mb-4" style="background: linear-gradient(45deg, #d4b62f, #2a7098); border-radius: 15px; padding: 30px; box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23); color: white;">
         <div class="row">
           <div class="col-12 mb-4">
-            <i class="fas fa-credit-card" style="font-size: 50px;"></i>
+            <i class="fas fa-coins" style="font-size: 50px;"></i>
           </div>
           <div class="col-12 mb-4">
             <h4 style="font-size: 1.2em; margin-bottom: 5px;">Current Balance</h4>
-            <p style="font-size: 2.5em; font-weight: bold; margin-bottom: 0;">₹00.00</p>
+            <p style="font-size: 2.5em; font-weight: bold; margin-bottom: 0;">{{#if user.wallet}} ₹{{user.wallet}}.00 {{else}}₹00.00 {{/if}} </p>
           </div>
           <div class="col-12">
             <p style="font-size: 1em; margin-bottom: 5px;">Wallet Holder</p>
-            <h5 style="font-size: 1.2em; text-transform: uppercase;">  </h5>
+            <h5 style="font-size: 1.2em; text-transform: uppercase;"> {{user.name}} </h5>
           </div>
         </div>
       </div>
@@ -116,12 +116,42 @@
                 </div>
 
                 <!-- Return button -->
-                <div class="col-12 col-md-2 text-right">
+                {{!-- <div class="col-12 col-md-2 text-right">
                   <button class="btn btn-outline-primary-2 btn-sm" style="width: 80px; height: 30px; padding: 0; display: inline-flex; justify-content: center; align-items: center; border-radius: 4px;"
                     onclick="openReturnModal('{{../_id}}', '{{this.product._id}}', '{{this.return}}')">
                     Return
                   </button>
-                </div>
+                </div> --}}
+
+                          <!-- Cancel or Return button -->
+          <div class="col-12 col-md-2 text-right">
+            {{#if (or (eq ../orderStatus "Processing") (eq ../orderStatus "Shipped"))}}
+              <!-- Show 'Cancel' button if the order is still processing or shipped -->
+              <button class="btn btn-outline-danger btn-sm" style="width: 80px; height: 30px; padding: 0; display: inline-flex; justify-content: center; align-items: center; border-radius: 4px;"
+                onclick="cancelOrder('{{../_id}}', '{{this.product._id}}')">
+                Cancel
+              </button>
+            {{else if (eq ../orderStatus "Delivered")}}
+              <!-- If order is delivered -->
+              {{#if this.return}}
+                <!-- If a return is requested, show the current return status -->
+                <button class="btn btn-outline-success btn-sm" style="width: 120px; height: 30px; padding: 0; display: inline-flex; justify-content: center; align-items: center; border-radius: 4px;" disabled>
+                  {{#if (eq this.returnStatus "Approved")}}
+                    Refund Completed
+                  {{else}}
+                    Refund {{this.returnStatus}}
+                  {{/if}}
+                </button>
+              {{else}}
+                <!-- If no return requested, show the 'Return' button -->
+                <button class="btn btn-outline-primary-2 btn-sm" style="width: 80px; height: 30px; padding: 0; display: inline-flex; justify-content: center; align-items: center; border-radius: 4px;"
+                  onclick="openReturnModal('{{../_id}}', '{{this.product._id}}', '{{this.return}}')">
+                  Return
+                </button>
+              {{/if}}
+            {{/if}}
+          </div>
+
               {{/each}}
             </div>
           </div>
@@ -320,4 +350,35 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+</script>
+
+
+<script>
+  function cancelOrder(orderId, productId) {
+    const confirmation = confirm("Are you sure you want to cancel this order?");
+    if (confirmation) {
+      fetch(`/orders/cancel`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          orderId: orderId,
+          productId: productId
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Order has been cancelled successfully.');
+          location.reload(); // Reload the page to show the updated status
+        } else {
+          alert(data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    }
+  }
 </script>
