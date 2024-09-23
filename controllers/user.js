@@ -605,9 +605,12 @@ async function confirmOrderPayment(req, res) {
         return res.status(400).json({ error: 'Order not found.' });
       }
 
+      const paymentIntentId = session.payment_intent;  // <--- Retrieve Payment Intent ID
+
       // If payment is successful
       if (session.payment_status === 'paid') {
         order.orderStatus = 'Processing';
+        order.paymentIntentId = paymentIntentId;  // <--- Save Payment Intent ID (new)
 
         // Update stock if not already updated
         if (!order.stockUpdated) {

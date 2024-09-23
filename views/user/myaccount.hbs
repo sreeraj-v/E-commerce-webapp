@@ -382,3 +382,215 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 </script>
+
+{{!-- below is hbs --}}
+{{!-- <div class="order-list"> 
+  {{#each orders}}
+    <div class="order-item mb-3 p-3" style="border: 1px solid #ebebeb; border-radius: 8px; background-color: #f9f9f9; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);">
+      <div class="row align-items-center">
+        
+        <!-- Loop through each product in the order -->
+        {{#each this.items}}
+          <!-- Product image and name -->
+          <div class="col-12 col-md-3 mb-2 mb-md-0 d-flex align-items-center">
+            <img src="uploads/{{product.image.[0]}}" alt="{{this.product.name}}" style="max-width: 50px; height: 50px; border-radius: 5px; object-fit: cover; margin-right: 10px;">
+            <div>
+              <h5 style="font-size: 0.9em; color: #3a3838; font-weight: bold; margin-bottom: 0;">{{this.product.name}} <mark> × {{this.quantity}} </mark> <small>(qty)</small> </h5>
+              <p style="color: #4a4a4a; font-size: 0.8em; margin-bottom: 0;">₹{{this.price}}</p>
+            </div>
+          </div>
+
+          <!-- Order details -->
+          <div class="col-12 col-md-7 mb-2 mb-md-0">
+            <div class="row">
+              <div class="col-6 col-md-4">
+                <p style="font-size: 0.8em; color: #666; margin-bottom: 0;"><strong>Purchased:</strong> {{date ../datePlaced "MMM Do, YYYY"}}</p>
+              </div>
+              <div class="col-6 col-md-4">
+                <p style="font-size: 0.8em; color: #666; margin-bottom: 0;"><strong>Delivery by:</strong> {{date ../deliveryExpectedDate "MMM Do, YYYY"}}</p>
+              </div>
+              <div class="col-6 col-md-4">
+                <p style="font-size: 0.8em; color: #666; margin-bottom: 0;"><strong>Status:</strong> {{../orderStatus}}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Return button for each product -->
+          <div class="col-12 col-md-2 text-right">
+            {{#if (eq ../orderStatus "Delivered")}}
+              <!-- If product is delivered and return is available -->
+              {{#if this.return}}
+                <button class="btn btn-outline-success btn-sm" style="width: 120px; height: 30px; padding: 0; display: inline-flex; justify-content: center; align-items: center; border-radius: 4px;" disabled>
+                  {{#if (eq this.returnStatus "Approved")}}
+                    Refund Completed
+                  {{else}}
+                    Refund {{this.returnStatus}}
+                  {{/if}}
+                </button>
+              {{else}}
+                <button class="btn btn-outline-primary-2 btn-sm" style="width: 80px; height: 30px; padding: 0; display: inline-flex; justify-content: center; align-items: center; border-radius: 4px;" 
+                  onclick="openReturnModal('{{../_id}}', '{{this.product._id}}', '{{this.return}}')">
+                  Return
+                </button>
+              {{/if}}
+            {{/if}}
+          </div>
+
+        {{/each}}
+
+        <!-- Single Cancel button for entire order (aligned right in the same row) -->
+        <div class="col-12 col-md-12 text-right ">
+          {{#if (or (eq orderStatus "Processing") (eq orderStatus "Shipped"))}}
+            <button class="btn btn-outline-danger btn-sm" style="width: 80px; height: 30px; padding: 0; display: inline-flex; justify-content: center; align-items: center; border-radius: 4px; float: right;"
+              onclick="cancelOrder('{{../_id}}')">
+              Cancel 
+            </button>
+          {{else if (eq ../orderStatus "Cancelled")}}
+            {{#if (eq ../paymentType "Stripe Payment")}}
+              <span class="text-success">Refund Completed</span>
+            {{else if (eq ../paymentType "Cash on Delivery")}}
+              <span class="text-danger">Cancelled</span>
+            {{/if}}
+          {{/if}}
+        </div>
+
+      </div>
+    </div>
+  {{/each}}
+</div> --}}
+
+{{!-- ajax --}}
+{{!-- <script>
+  function cancelOrder(orderId) {
+  // Show confirmation dialog before cancelling
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "Do you want to cancel this order?",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Yes, cancel it!'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Send an AJAX request to cancel the order
+      $.ajax({
+        url: '/cancel-order', // Ensure the route matches your backend
+        method: 'POST',
+        data: {
+          orderId: orderId,
+        },
+        success: (response) => {
+          if (response.success) {
+            Swal.fire('Cancelled!', response.message, 'success')
+              .then(() => {
+                // Reload the page or update the UI to reflect the change
+                window.location.reload();
+              });
+          } else {
+            Swal.fire('Error!', response.message, 'error');
+          }
+        },
+        error: () => {
+          Swal.fire('Error!', 'Failed to cancel the order', 'error');
+        }
+      });
+    }
+  });
+}
+
+</script> --}}
+
+{{!-- controlr --}}
+{{!-- <script>
+  controller
+  const orderHelper = require('../helpers/orderHelper');
+
+const cancelOrder = async (req, res) => {
+  try {
+    const { orderId, productId } = req.body;
+    
+    // Call the helper function to handle the cancellation logic
+    const result = await orderHelper.cancelOrder(orderId, productId);
+    
+    if (!result.success) {
+      return res.status(result.status).json({ success: false, message: result.message });
+    }
+
+    return res.status(200).json({ success: true, message: result.message });
+  } catch (error) {
+    console.error('Cancel Order Error:', error);
+    return res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+module.exports = {
+  cancelOrder,
+};
+
+</script> --}}
+
+{{!-- helpr --}}
+{{!-- <script>
+  helper
+  const Order = require('../models/orderSchema');
+const User = require('../models/userSchema');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
+const cancelOrder = async (orderId, productId) => {
+  try {
+    // Find the order by orderId and productId
+    const order = await Order.findOne({ _id: orderId, 'items.product': productId });
+
+    if (!order) {
+      return { success: false, message: "Order not found", status: 404 };
+    }
+
+    // Check if the order can be canceled (only if Processing or Shipped)
+    if (order.orderStatus !== 'Processing' && order.orderStatus !== 'Shipped') {
+      return { success: false, message: "Order cannot be canceled", status: 400 };
+    }
+
+    // Find the specific product in the order
+    const orderItem = order.items.find(item => item.product.toString() === productId);
+
+    // Handle Stripe Payment Refund
+    if (order.paymentType === 'Stripe Payment') {
+      const refundAmount = orderItem.price * orderItem.quantity;
+
+      try {
+        // Process refund with Stripe
+        await stripe.refunds.create({
+          payment_intent: order.stripeIntentId,
+          amount: Math.round(refundAmount * 100), // Stripe works in cents
+        });
+
+        // Update the user's wallet with the refund amount
+        const user = await User.findById(order.user);
+        user.wallet += refundAmount;
+        await user.save();
+
+        // Mark the refund as successful in the order
+        orderItem.refund = true;
+        orderItem.refundAmount = refundAmount;
+      } catch (error) {
+        return { success: false, message: "Failed to process the refund", status: 500 };
+      }
+    }
+
+    // Update the order status to Cancelled and save
+    order.orderStatus = 'Cancelled';
+    await order.save();
+
+    return { success: true, message: "Order canceled successfully", status: 200 };
+  } catch (error) {
+    console.error('Cancel Order Helper Error:', error);
+    return { success: false, message: "Internal Server Error", status: 500 };
+  }
+};
+
+module.exports = {
+  cancelOrder,
+};
+
+</script> --}}
