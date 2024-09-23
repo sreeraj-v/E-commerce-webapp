@@ -159,6 +159,9 @@ const orderSchema = new mongoose.Schema({
   stripeIntentId: {
     type: String,
   },
+  paymentIntentId: {
+    type: String,  
+  },
   stockUpdated: {
     type: Boolean,
     default: false,
@@ -172,3 +175,8 @@ const Order = mongoose.model('Order', orderSchema);
 
 module.exports = Order;
 
+// addedd below ,remove if error
+  // New field to store the Payment Intent ID
+  // paymentIntentId: {
+  //   type: String,  // <--- Added this field
+  // }
