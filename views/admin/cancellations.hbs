@@ -1,0 +1,62 @@
+{{>adminSidebar}}
+{{>adminNavbar}}
+
+<!-- Returns View Start -->
+<div class="container-fluid pt-4 px-4">
+  <div class="bg-light text-center rounded p-4">
+    <div class="bg-light text-center rounded pb-4">
+      <div class="row align-items-center justify-content-between">
+        <div class="col-md-6">
+          <input class="form-control rounded-3 bg-transparent" type="search" value="" id="searchInput"placeholder="Search" />
+        </div>
+        <div class="col-auto">
+          <a href="/admin/returns" class="btn btn-primary m-2">Clear Filters</a>
+        </div>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="table text-start align-middle table-bordered table-hover mb-0" id="returnsTable">
+        <thead>
+          <tr class="text-dark">
+            <th scope="col"><input class="form-check-input" type="checkbox"></th>
+            <th scope="col">Order id</th>
+            <th scope="col">Customer</th>
+            <th scope="col">Products</th>
+            <th scope="col">Amount</th>
+            {{!-- <th scope="col">Date</th> --}}
+            <th scope="col">Payment</th>
+            <th scope="col">refund</th>
+            <th scope="col">Order Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each orders}}
+          <tr>
+            <td><input class="form-check-input" type="checkbox"></td>
+            <td>{{this.orderId}}</td>
+            <td>{{this.user.name}} </td>
+            <td>
+              {{#each this.items}}
+              {{this.product.name}}  Qty: {{this.quantity}},
+              {{/each}}
+            </td>
+            <td>{{this.finalAmount}}</td>
+            {{!-- <td>{{date ../datePlaced "MMMM Do, YYYY"}}</td> --}}
+            <td>{{this.paymentType}}</td>
+            <td>{{#if (eq this.paymentType 'Stripe Payment') }} <span class="badge bg-success text-white">Complete</span> {{else}} <span class="badge bg-warning text-dark">No Payment</span> {{/if}} </td>
+            <td>{{#if this.completeOrderReturn}}Cancelled{{/if}} </td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+<!-- Returns View End -->
+
+{{>adminFooter}}
+
+<!-- Back to Top -->
+<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+

@@ -7,17 +7,14 @@ module.exports={
   
    cancelOrders: async (orderId) => {
     try {
-      // Find the order by orderId
       const order = await Order.findOne({ _id: orderId });
   
       if (!order) {
         return { success: false, message: "Order not found", status: 404 };
       }
   
-      // Handle Stripe Payment Refund
       if (order.paymentType === 'Stripe Payment') {
         try {
-          // Process refund with Stripe
           await stripe.refunds.create({
             payment_intent: order.paymentIntentId,
             amount: Math.round(order.finalAmount * 100), // Stripe works in cents
@@ -38,14 +35,12 @@ module.exports={
         const product = await Product.findById(item.product);
         if (product) {
           product.stockAvailable += item.quantity; // Increment stock by ordered quantity
-          await product.save(); // Save the updated stock
+          await product.save(); 
         }
       }
   
-      // Update the order status to Cancelled, mark stock as updated, and set completeOrderReturn to true
       order.orderStatus = 'Cancelled';
-      order.stockUpdated = true; // Mark stock as updated
-      order.completeOrderReturn = true; // Mark the completeOrderReturn as true
+      order.completeOrderReturn = true; 
       await order.save();
   
       return { success: true, message: "Order canceled successfully", status: 200 };
@@ -55,4 +50,7 @@ module.exports={
     }
   },
   
+  getCancelledOrders: async()=>{
+    return await Order.find({completeOrderReturn:true}).populate('user', 'name').populate('items.product', 'name').lean();                                 
+  }
 }

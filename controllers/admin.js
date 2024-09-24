@@ -6,6 +6,8 @@ const adminHelper = require("../helpers/admin")
 const couponHelper = require("../helpers/coupon")
 const orderHelper = require("../helpers/order")
 const returnHelper = require("../helpers/return")
+const cancelHelper = require("../helpers/cancel")
+
 // const { compare } = require("bcrypt")
 
 // --------------------------------------admin side:
@@ -400,6 +402,15 @@ const updateReturnStatus = async (req, res) => {
   }
 };
 
+const cancellations = async (req,res)=>{
+  try{
+    const orders = await cancelHelper.getCancelledOrders()
+    res.render("admin/cancellations",{orders})
+  }catch(error){
+    console.error('Error getting cancellations page:', error);
+  }
+}
+
 // 404 not found page >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 const notFound = (req, res) => {
   res.render("admin/404")
@@ -436,7 +447,8 @@ module.exports = {
   updateStatus,
   filterOrders,
   returnOrders,
-  updateReturnStatus
+  updateReturnStatus,
+  cancellations
 };
 
 
