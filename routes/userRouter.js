@@ -22,7 +22,7 @@ router.get('/orderSuccess',userAuth, confirmOrderPayment);
 router.get("/download-invoice/:orderId",userAuth,downloadInvoice);
 router.get("/myaccount",userAuth,myaccount);
 router.post("/return", returnProduct);
-router.post('/orders/cancel',cancelOrder )
+router.post('/cancelOrder',cancelOrder )
 
 
 

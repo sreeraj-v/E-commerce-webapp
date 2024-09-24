@@ -85,54 +85,47 @@
     <div class="card-body">
       <h3 class="card-title">Orders</h3>
 
-      <div class="order-list">
-        {{#each orders}}
-          <div class="order-item mb-3 p-3" style="border: 1px solid #ebebeb; border-radius: 8px; background-color: #f9f9f9; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);">
-            <div class="row align-items-center">
-              {{#each this.items}}
-                <!-- Product image and name -->
-                <div class="col-12 col-md-3 mb-2 mb-md-0 d-flex align-items-center">
-                  <img src="uploads/{{product.image.[0]}}" alt="{{this.product.name}}" style="max-width: 50px; height: 50px; border-radius: 5px; object-fit: cover; margin-right: 10px;">
-                  <div>
-                    <h5 style="font-size: 0.9em; color: #3a3838; font-weight: bold; margin-bottom: 0;">{{this.product.name}} <mark> × {{this.quantity}} </mark> <small>(qty)</small> </h5>
-                    <p style="color: #4a4a4a; font-size: 0.8em; margin-bottom: 0;">₹{{this.price}}</p>
-                  </div>
-                </div>
+<div class="order-list">
+  {{#each orders}}
+    <div class="order-item mb-3 p-3" style="border: 1px solid #ebebeb; border-radius: 8px; background-color: #f9f9f9; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);">
+      <div class="row align-items-center">
+        {{#each this.items}}
+          <!-- Product image and name -->
+          <div class="col-12 col-md-3 mb-2 mb-md-0 d-flex align-items-center">
+            <img src="uploads/{{product.image.[0]}}" alt="{{this.product.name}}" style="max-width: 50px; height: 50px; border-radius: 5px; object-fit: cover; margin-right: 10px;">
+            <div>
+              <h5 style="font-size: 0.9em; color: #3a3838; font-weight: bold; margin-bottom: 0;">{{this.product.name}} <mark> × {{this.quantity}} </mark> <small>(qty)</small> </h5>
+              <p style="color: #4a4a4a; font-size: 0.8em; margin-bottom: 0;">₹{{this.price}}</p>
+            </div>
+          </div>
 
-                <!-- Order details -->
-                <div class="col-12 col-md-7 mb-2 mb-md-0">
-                  <div class="row">
-                    <div class="col-6 col-md-4">
-                      <p style="font-size: 0.8em; color: #666; margin-bottom: 0;"><strong>Purchased:</strong> {{date ../datePlaced "MMM Do, YYYY"}}</p>
-                    </div>
-                    <div class="col-6 col-md-4">
-                      <p style="font-size: 0.8em; color: #666; margin-bottom: 0;"><strong>Delivery by:</strong> {{date ../deliveryExpectedDate "MMM Do, YYYY"}}</p>
-                    </div>
-                    <div class="col-6 col-md-4">
-                      <p style="font-size: 0.8em; color: #666; margin-bottom: 0;"><strong>Status:</strong> {{../orderStatus}}</p>
-                      {{!-- <p style="font-size: 0.8em; color: #666; margin-bottom: 0;"><strong>Return Status:</strong> {{#if this.return}}Requested ({{this.return}}){{else}}Not Requested{{/if}}</p> --}}
-                    </div>
-                  </div>
-                </div>
+          <!-- Order details -->
+          <div class="col-12 col-md-7 mb-2 mb-md-0">
+            <div class="row">
+              <div class="col-6 col-md-4">
+                <p style="font-size: 0.8em; color: #666; margin-bottom: 0;"><strong>Purchased:</strong> {{date ../datePlaced "MMM Do, YYYY"}}</p>
+              </div>
+              <div class="col-6 col-md-4">
+                <p style="font-size: 0.8em; color: #666; margin-bottom: 0;"><strong>Delivery by:</strong> {{date ../deliveryExpectedDate "MMM Do, YYYY"}}</p>
+              </div>
+              <div class="col-6 col-md-4">
+                <p style="font-size: 0.8em; color: #666; margin-bottom: 0;"><strong>Status:</strong> {{../orderStatus}}</p>
+              </div>
+            </div>
+          </div>
 
-                <!-- Return button -->
-                {{!-- <div class="col-12 col-md-2 text-right">
-                  <button class="btn btn-outline-primary-2 btn-sm" style="width: 80px; height: 30px; padding: 0; display: inline-flex; justify-content: center; align-items: center; border-radius: 4px;"
-                    onclick="openReturnModal('{{../_id}}', '{{this.product._id}}', '{{this.return}}')">
-                    Return
-                  </button>
-                </div> --}}
-
-                          <!-- Cancel or Return button -->
+          <!-- Cancel or Return button -->
           <div class="col-12 col-md-2 text-right">
             {{#if (or (eq ../orderStatus "Processing") (eq ../orderStatus "Shipped"))}}
-              <!-- Show 'Cancel' button if the order is still processing or shipped -->
-              <button class="btn btn-outline-danger btn-sm" style="width: 80px; height: 30px; padding: 0; display: inline-flex; justify-content: center; align-items: center; border-radius: 4px;"
-                onclick="cancelOrder('{{../_id}}', '{{this.product._id}}')">
-                Cancel
-              </button>
+              {{#if @first}}
+                <!-- Show 'Cancel' button if the order is still processing or shipped -->
+                <button class="btn btn-outline-danger btn-sm" style="width: 80px; height: 30px; padding: 0; display: inline-flex; justify-content: center; align-items: center; border-radius: 4px;"
+                  onclick="cancelOrder('{{../_id}}')">
+                  Cancel
+                </button>
+              {{/if}}
             {{else if (eq ../orderStatus "Delivered")}}
-              <!-- If order is delivered -->
+              <!-- If the order is delivered -->
               {{#if this.return}}
                 <!-- If a return is requested, show the current return status -->
                 <button class="btn btn-outline-success btn-sm" style="width: 120px; height: 30px; padding: 0; display: inline-flex; justify-content: center; align-items: center; border-radius: 4px;" disabled>
@@ -150,13 +143,27 @@
                 </button>
               {{/if}}
             {{/if}}
-          </div>
 
-              {{/each}}
-            </div>
+            <!-- Cancelled or Refund Completed based on payment type using a single warning button -->
+            {{#if (or (eq ../orderStatus "Cancelled") (eq ../orderStatus "Refund Completed"))}}
+             {{#if @first}}
+              <button class="btn btn-outline-danger btn-sm" style="width: 140px; height: 30px; padding: 0; display: inline-flex; justify-content: center; align-items: center; border-radius: 4px;" disabled>
+                {{#if (eq ../paymentType "Stripe Payment")}}
+                  Cancelled&Refunded
+                {{else if (eq ../paymentType "Cash on Delivery")}}
+                  Cancell successfull
+                {{/if}}
+              </button>
+              {{/if}}
+            {{/if}}
+
           </div>
         {{/each}}
       </div>
+    </div>
+  {{/each}}
+</div>
+
 
       <!-- Go shop button -->
       <a href="/shop" class="btn btn-outline-primary-2 mt-3" style="border-radius: 0; padding: 10px 15px;">
@@ -352,8 +359,52 @@ document.addEventListener("DOMContentLoaded", function () {
 
 </script>
 
-
 <script>
+  function cancelOrder(orderId) {
+    // Show confirmation dialog before cancelling
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to cancel this order?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, cancel it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Send a Fetch request to cancel the order
+        fetch('/cancelOrder', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') // For security (if applicable)
+          },
+          body: JSON.stringify({
+            orderId: orderId
+          })
+        })
+        .then(response => response.json()) // Parse JSON response
+        .then(data => {
+          if (data.success) {
+            Swal.fire('Cancelled!', data.message, 'success')
+              .then(() => {
+                // Reload the page or update the UI to reflect the change
+                window.location.reload();
+              });
+          } else {
+            Swal.fire('Error!', data.message, 'error');
+          }
+        })
+        .catch(error => {
+          Swal.fire('Error!', 'Failed to cancel the order', 'error');
+        });
+      }
+    });
+  }
+</script>
+
+
+{{!-- <script>
   function cancelOrder(orderId, productId) {
     const confirmation = confirm("Are you sure you want to cancel this order?");
     if (confirmation) {
@@ -381,125 +432,9 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
   }
-</script>
-
-{{!-- below is hbs --}}
-{{!-- <div class="order-list"> 
-  {{#each orders}}
-    <div class="order-item mb-3 p-3" style="border: 1px solid #ebebeb; border-radius: 8px; background-color: #f9f9f9; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);">
-      <div class="row align-items-center">
-        
-        <!-- Loop through each product in the order -->
-        {{#each this.items}}
-          <!-- Product image and name -->
-          <div class="col-12 col-md-3 mb-2 mb-md-0 d-flex align-items-center">
-            <img src="uploads/{{product.image.[0]}}" alt="{{this.product.name}}" style="max-width: 50px; height: 50px; border-radius: 5px; object-fit: cover; margin-right: 10px;">
-            <div>
-              <h5 style="font-size: 0.9em; color: #3a3838; font-weight: bold; margin-bottom: 0;">{{this.product.name}} <mark> × {{this.quantity}} </mark> <small>(qty)</small> </h5>
-              <p style="color: #4a4a4a; font-size: 0.8em; margin-bottom: 0;">₹{{this.price}}</p>
-            </div>
-          </div>
-
-          <!-- Order details -->
-          <div class="col-12 col-md-7 mb-2 mb-md-0">
-            <div class="row">
-              <div class="col-6 col-md-4">
-                <p style="font-size: 0.8em; color: #666; margin-bottom: 0;"><strong>Purchased:</strong> {{date ../datePlaced "MMM Do, YYYY"}}</p>
-              </div>
-              <div class="col-6 col-md-4">
-                <p style="font-size: 0.8em; color: #666; margin-bottom: 0;"><strong>Delivery by:</strong> {{date ../deliveryExpectedDate "MMM Do, YYYY"}}</p>
-              </div>
-              <div class="col-6 col-md-4">
-                <p style="font-size: 0.8em; color: #666; margin-bottom: 0;"><strong>Status:</strong> {{../orderStatus}}</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Return button for each product -->
-          <div class="col-12 col-md-2 text-right">
-            {{#if (eq ../orderStatus "Delivered")}}
-              <!-- If product is delivered and return is available -->
-              {{#if this.return}}
-                <button class="btn btn-outline-success btn-sm" style="width: 120px; height: 30px; padding: 0; display: inline-flex; justify-content: center; align-items: center; border-radius: 4px;" disabled>
-                  {{#if (eq this.returnStatus "Approved")}}
-                    Refund Completed
-                  {{else}}
-                    Refund {{this.returnStatus}}
-                  {{/if}}
-                </button>
-              {{else}}
-                <button class="btn btn-outline-primary-2 btn-sm" style="width: 80px; height: 30px; padding: 0; display: inline-flex; justify-content: center; align-items: center; border-radius: 4px;" 
-                  onclick="openReturnModal('{{../_id}}', '{{this.product._id}}', '{{this.return}}')">
-                  Return
-                </button>
-              {{/if}}
-            {{/if}}
-          </div>
-
-        {{/each}}
-
-        <!-- Single Cancel button for entire order (aligned right in the same row) -->
-        <div class="col-12 col-md-12 text-right ">
-          {{#if (or (eq orderStatus "Processing") (eq orderStatus "Shipped"))}}
-            <button class="btn btn-outline-danger btn-sm" style="width: 80px; height: 30px; padding: 0; display: inline-flex; justify-content: center; align-items: center; border-radius: 4px; float: right;"
-              onclick="cancelOrder('{{../_id}}')">
-              Cancel 
-            </button>
-          {{else if (eq ../orderStatus "Cancelled")}}
-            {{#if (eq ../paymentType "Stripe Payment")}}
-              <span class="text-success">Refund Completed</span>
-            {{else if (eq ../paymentType "Cash on Delivery")}}
-              <span class="text-danger">Cancelled</span>
-            {{/if}}
-          {{/if}}
-        </div>
-
-      </div>
-    </div>
-  {{/each}}
-</div> --}}
-
-{{!-- ajax --}}
-{{!-- <script>
-  function cancelOrder(orderId) {
-  // Show confirmation dialog before cancelling
-  Swal.fire({
-    title: 'Are you sure?',
-    text: "Do you want to cancel this order?",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6',
-    confirmButtonText: 'Yes, cancel it!'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      // Send an AJAX request to cancel the order
-      $.ajax({
-        url: '/cancel-order', // Ensure the route matches your backend
-        method: 'POST',
-        data: {
-          orderId: orderId,
-        },
-        success: (response) => {
-          if (response.success) {
-            Swal.fire('Cancelled!', response.message, 'success')
-              .then(() => {
-                // Reload the page or update the UI to reflect the change
-                window.location.reload();
-              });
-          } else {
-            Swal.fire('Error!', response.message, 'error');
-          }
-        },
-        error: () => {
-          Swal.fire('Error!', 'Failed to cancel the order', 'error');
-        }
-      });
-    }
-  });
-}
-
 </script> --}}
+
+
 
 {{!-- controlr --}}
 {{!-- <script>
@@ -592,5 +527,83 @@ const cancelOrder = async (orderId, productId) => {
 module.exports = {
   cancelOrder,
 };
+
+</script> --}}
+
+                <!-- Return button only -->
+                {{!-- <div class="col-12 col-md-2 text-right">
+                  <button class="btn btn-outline-primary-2 btn-sm" style="width: 80px; height: 30px; padding: 0; display: inline-flex; justify-content: center; align-items: center; border-radius: 4px;"
+                    onclick="openReturnModal('{{../_id}}', '{{this.product._id}}', '{{this.return}}')">
+                    Return
+                  </button>
+                </div> --}}
+
+{{!-- old working order area --}}
+{{!-- <script>
+  
+      <div class="order-list">
+        {{#each orders}}
+          <div class="order-item mb-3 p-3" style="border: 1px solid #ebebeb; border-radius: 8px; background-color: #f9f9f9; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);">
+            <div class="row align-items-center">
+              {{#each this.items}}
+                <!-- Product image and name -->
+                <div class="col-12 col-md-3 mb-2 mb-md-0 d-flex align-items-center">
+                  <img src="uploads/{{product.image.[0]}}" alt="{{this.product.name}}" style="max-width: 50px; height: 50px; border-radius: 5px; object-fit: cover; margin-right: 10px;">
+                  <div>
+                    <h5 style="font-size: 0.9em; color: #3a3838; font-weight: bold; margin-bottom: 0;">{{this.product.name}} <mark> × {{this.quantity}} </mark> <small>(qty)</small> </h5>
+                    <p style="color: #4a4a4a; font-size: 0.8em; margin-bottom: 0;">₹{{this.price}}</p>
+                  </div>
+                </div>
+
+                <!-- Order details -->
+                <div class="col-12 col-md-7 mb-2 mb-md-0">
+                  <div class="row">
+                    <div class="col-6 col-md-4">
+                      <p style="font-size: 0.8em; color: #666; margin-bottom: 0;"><strong>Purchased:</strong> {{date ../datePlaced "MMM Do, YYYY"}}</p>
+                    </div>
+                    <div class="col-6 col-md-4">
+                      <p style="font-size: 0.8em; color: #666; margin-bottom: 0;"><strong>Delivery by:</strong> {{date ../deliveryExpectedDate "MMM Do, YYYY"}}</p>
+                    </div>
+                    <div class="col-6 col-md-4">
+                      <p style="font-size: 0.8em; color: #666; margin-bottom: 0;"><strong>Status:</strong> {{../orderStatus}}</p>
+                      <p style="font-size: 0.8em; color: #666; margin-bottom: 0;"><strong>Return Status:</strong> {{#if this.return}}Requested ({{this.return}}){{else}}Not Requested{{/if}}</p>
+                    </div>
+                  </div>
+                </div>
+
+                          <!-- Cancel or Return button -->
+          <div class="col-12 col-md-2 text-right">
+            {{#if (or (eq ../orderStatus "Processing") (eq ../orderStatus "Shipped"))}}
+              <!-- Show 'Cancel' button if the order is still processing or shipped -->
+              <button class="btn btn-outline-danger btn-sm" style="width: 80px; height: 30px; padding: 0; display: inline-flex; justify-content: center; align-items: center; border-radius: 4px;"
+                onclick="cancelOrder('{{../_id}}', '{{this.product._id}}')">
+                Cancel
+              </button>
+            {{else if (eq ../orderStatus "Delivered")}}
+              <!-- If order is delivered -->
+              {{#if this.return}}
+                <!-- If a return is requested, show the current return status -->
+                <button class="btn btn-outline-success btn-sm" style="width: 120px; height: 30px; padding: 0; display: inline-flex; justify-content: center; align-items: center; border-radius: 4px;" disabled>
+                  {{#if (eq this.returnStatus "Approved")}}
+                    Refund Completed
+                  {{else}}
+                    Refund {{this.returnStatus}}
+                  {{/if}}
+                </button>
+              {{else}}
+                <!-- If no return requested, show the 'Return' button -->
+                <button class="btn btn-outline-primary-2 btn-sm" style="width: 80px; height: 30px; padding: 0; display: inline-flex; justify-content: center; align-items: center; border-radius: 4px;"
+                  onclick="openReturnModal('{{../_id}}', '{{this.product._id}}', '{{this.return}}')">
+                  Return
+                </button>
+              {{/if}}
+            {{/if}}
+          </div>
+
+              {{/each}}
+            </div>
+          </div>
+        {{/each}}
+      </div>
 
 </script> --}}
