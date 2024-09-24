@@ -162,7 +162,7 @@
                       </div>
                     </div><!-- End .col-lg-7 -->
 
-                    <aside class="col-lg-4 ml-5 mr-2">
+                    {{!-- <aside class="col-lg-4 ml-5 mr-2">
                         <div class="summary">
                             <h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
 
@@ -227,7 +227,96 @@
                                 <span class="btn-hover-text">Proceed to Checkout</span>
                             </button>
                         </div><!-- End .summary -->
-                    </aside><!-- End .col-lg-5 -->
+                    </aside><!-- End .col-lg-5 --> --}}
+
+<aside class="col-lg-4 ml-5 mr-2">
+    <div class="summary">
+        <h3 class="summary-title">Your Order</h3>
+
+        <table class="table table-summary">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each userCart.items}}
+                <tr>
+                    <td><a href="#">{{this.productId.name}} x {{this.quantity}}</a></td>
+                    <td>{{this.price}}</td>
+                    <td>{{this.total}}</td>
+                </tr>
+                {{/each}}
+                <tr>
+                    <td>Shipping:</td>
+                    <td></td>
+                    <td>Free</td>
+                </tr>
+                <tr class="discount">
+                    <td>Discount:</td>
+                    <td></td>
+                    <td id="discountValue">0</td>
+                </tr>
+                <tr class="summary-total">
+                    <td>Total:</td>
+                    <td></td>
+                    <td id="orderTotal">{{totalCartValue}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="accordion-summary" id="accordion-payment">
+            <div class="card mb-1">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <input type="radio" name="paymentMethod" value="Cash on Delivery" id="cashOnDelivery" checked>
+                        <label for="cashOnDelivery"><strong>Cash on Delivery</strong></label>
+                    </h2>
+                </div>
+            </div>
+
+            <div class="card mb-1">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <input type="radio" name="paymentMethod" value="Stripe Payment" id="stripePayment">
+                        <label for="stripePayment"><strong>Stripe Payment</strong></label>
+                    </h2>
+                </div>
+            </div>
+
+            <!-- Wallet Payment Option -->
+            {{#if (lte totalCartValue user.wallet)}}
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <input type="radio" name="paymentMethod" value="Wallet Payment" id="walletPayment">
+                        <label for="walletPayment"><strong>Wallet Payment : <strong class="text-success"> {{user.wallet}}</strong></strong></label>
+                    </h2>
+                </div>
+            </div>
+            {{else}}
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <label for="walletPayment" class="text-muted">
+                        </label>
+                    </h2>
+                    <p class="text-danger">wallet balance{{#if user.wallet}}(₹{{user.wallet}}){{else}} (₹00.00) {{/if}}:is less than the total amount</p>
+                </div>
+            </div>
+            {{/if}}
+        </div>
+
+        <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block" id="place-order-btn">
+            <span class="btn-text">Place Order</span>
+            <span class="btn-hover-text">Proceed to Checkout</span>
+        </button>
+    </div>
+</aside>
+
+
                 </div><!-- End .row -->
             </div><!-- End .container -->
         </div><!-- End .checkout -->

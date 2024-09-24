@@ -79,7 +79,7 @@
                               <p>Qty: {{this.quantity}}</p>
                             </div>
                           </div> --}}
-                          {{this.product.name}} ,Qty: {{this.quantity}}
+                          {{this.product.name}} - Qty: {{this.quantity}},
                           {{/each}}
                         </td>
                         <td>{{this.address.streetAddress}}, {{this.address.city}}, {{this.address.country}}</td>
@@ -150,8 +150,8 @@
 
 </script> --}}
 
-{{!-- current working code --}}
-<script>
+{{!-- previous working code --}}
+{{!-- <script>
   document.querySelectorAll('.status-select').forEach(function(selectElement) {
   selectElement.addEventListener('change', function() {
     const orderId = this.getAttribute('data-order-id');
@@ -197,6 +197,101 @@
         this.value = previousStatus;
       }
     });
+  });
+});
+
+</script> --}}
+
+
+<script>
+  document.querySelectorAll('.status-select').forEach(function(selectElement) {
+  selectElement.addEventListener('change', function() {
+    const orderId = this.getAttribute('data-order-id');
+    const newStatus = this.value;
+    const previousStatus = this.querySelector('option[selected]').value; 
+
+    if (newStatus === 'Cancelled') {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "Do you want to cancel this order?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, cancel it!',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Send a request to the cancelOrder route
+          fetch(`/cancelOrder`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ orderId: orderId }),
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              Swal.fire('Cancelled!', 'Order has been cancelled.', 'success')
+              .then(() => {
+                location.reload(); // Reload the page to reflect changes
+              });
+            } else {
+              Swal.fire('Error', 'Failed to cancel the order.', 'error');
+              this.value = previousStatus; // Revert status back
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            Swal.fire('Error', 'There was an error cancelling the order.', 'error');
+            this.value = previousStatus; // Revert status back
+          });
+        } else {
+          this.value = previousStatus; // Revert the select dropdown
+        }
+      });
+    } else {
+      // Existing logic for updating the status (Processing, Shipped, Delivered)
+      Swal.fire({
+        title: 'Are you sure?',
+        text: `You are about to change the order status to ${newStatus}`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, update it!',
+        cancelButtonText: 'Cancel'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          fetch(`/admin/updateOrderStatus/${orderId}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              status: newStatus,
+            }),
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              Swal.fire('Success!', 'Order status updated successfully.', 'success')
+              .then(() => {
+               location.reload();
+              });
+            } else {
+              Swal.fire('Error', 'There was an error updating the order status.', 'error');
+              this.value = previousStatus;
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            Swal.fire('Error', 'There was an error updating the order status.', 'error');
+            this.value = previousStatus;
+          });
+        } else {
+          this.value = previousStatus; // User cancelled, revert status
+        }
+      });
+    }
   });
 });
 

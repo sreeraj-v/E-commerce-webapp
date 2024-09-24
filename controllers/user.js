@@ -519,19 +519,45 @@ async function processOrder(req, res) {
       deliveryExpectedDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),  
     });
 
+    // if (paymentType === 'Stripe Payment') {
+    //   // Create Stripe session for payment
+    //   session = await stripe.checkout.sessions.create({
+    //     payment_method_types: ['card'],
+    //     mode: 'payment',
+    //     line_items: cart.items.map(item => ({
+    //       price_data: {
+    //         currency: 'inr',
+    //         product_data: { name: item.productId.name },
+    //         unit_amount: item.price * 100,
+    //       },
+    //       quantity: item.quantity,
+    //     })),
+    //     success_url: `${req.protocol}://${req.get('host')}/orderSuccess?session_id={CHECKOUT_SESSION_ID}`,
+    //     cancel_url: `${req.protocol}://${req.get('host')}/checkout`,
+    //     metadata: {
+    //       orderId: order._id.toString(),
+    //       userId: userId.toString(),
+    //       addressId: address._id.toString(),
+    //     },
+    //   });
+
+    //   order.stripeIntentId = session.id;
+    //   await order.save();
+    // }
+
     if (paymentType === 'Stripe Payment') {
-      // Create Stripe session for payment
+      // Create Stripe session for payment, considering the discount amount
       session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         mode: 'payment',
-        line_items: cart.items.map(item => ({
+        line_items: [{
           price_data: {
             currency: 'inr',
-            product_data: { name: item.productId.name },
-            unit_amount: item.price * 100,
+            product_data: { name: 'Order Total' },  // Simplifying to show the total price
+            unit_amount: finalAmount * 100,  // Stripe expects the amount in the smallest currency unit (e.g., paise for INR)
           },
-          quantity: item.quantity,
-        })),
+          quantity: 1,
+        }],
         success_url: `${req.protocol}://${req.get('host')}/orderSuccess?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${req.protocol}://${req.get('host')}/checkout`,
         metadata: {
@@ -540,10 +566,11 @@ async function processOrder(req, res) {
           addressId: address._id.toString(),
         },
       });
-
+    
       order.stripeIntentId = session.id;
       await order.save();
     }
+    
 
     await cartHelper.deleteCart(userId);
 
@@ -636,7 +663,7 @@ async function confirmOrderPayment(req, res) {
     }
 
     order = order.toObject()
-    console.log(order)
+    console.log('confirm orderpage area:',order)
     // if no orderId/stripe sessionId available redirect to home for only showing orderSucces page one time only
     if (!order) {
       return res.redirect('/');
