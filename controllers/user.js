@@ -777,7 +777,7 @@ const cancelOrder = async (req, res) => {
     console.error('Cancel Order Error:', error);
     return res.status(500).json({ success: false, message: "Internal Server Error" });
   }
-};
+}
 
 
 

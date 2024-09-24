@@ -168,6 +168,10 @@ const orderSchema = new mongoose.Schema({
   },
   deliveryExpectedDate: {
     type: Date,
+  },
+  completeOrderReturn: {
+    type: Boolean,
+    default: false,
   }
 });
 
