@@ -22,36 +22,38 @@
 					<table class="table table-wishlist table-mobile">
 						<thead>
 							<tr>
-								<th>Product</th>
-								<th>Price</th>
-								<th>Stock Status</th>
+								<th><strong>Product</strong></th>
+								<th><strong>Price</strong></th>
+								<th><strong>Stock Status</strong></th>
 								<th></th>
 								<th></th>
 							</tr>
 						</thead>
 
 						<tbody>
+                            {{#each userWishlist.products}}
 							<tr>
 								<td class="product-col">
 									<div class="product">
 										<figure class="product-media">
-											<a href="#">
-												<img src="assets/images/products/table/product-2.jpg" alt="Product image">
+											<a href="/productView?q={{this._id}}">
+												<img src="/uploads/{{this.image.[0]}}" alt="Product image">
 											</a>
 										</figure>
 
 										<h3 class="product-title">
-											<a href="#">Blue utility pinafore denim dress</a>
+											<a href="/productView?q={{this._id}}">{{this.name}}</a>
 										</h3><!-- End .product-title -->
 									</div><!-- End .product -->
 								</td>
-								<td class="price-col">$76.00</td>
+								<td class="price-col">{{this.price}}</td>
 								<td class="stock-col"><span class="in-stock">In stock</span></td>
 								<td class="action-col">
 									<button class="btn btn-block btn-outline-primary-2"><i class="icon-cart-plus"></i>Add to Cart</button>
 								</td>
 								<td class="remove-col"><button class="btn-remove"><i class="icon-close"></i></button></td>
 							</tr>
+                            {{/each}}
 						</tbody>
 					</table><!-- End .table table-wishlist -->
             	</div><!-- End .container -->

@@ -158,6 +158,7 @@ const loginPage = async (req,res)=>{
 // home page getting route
 
 const home = async (req, res) => {
+  const user = req.session.user? true:false  
   const userId = req.session.user ? req.session.user._id : null
   try {
     const products = await productHelper.shopProducts();
@@ -177,13 +178,14 @@ const home = async (req, res) => {
       return { ...product, isInCart }; // Add isInCart to each  product
     });
 
-    res.render("user/index", { products: IsProductInCart });
+    res.render("user/index", { products: IsProductInCart,user });
   } catch (error) {
     console.log(error);
   }
 };
 
 const productView = async (req, res) => {
+  const user = req.session.user? true:false  
   const productId = req.query.q
   console.log("prodctView area id", productId)
   const userId = req.session.user ? req.session.user._id : null;
@@ -214,7 +216,7 @@ const productView = async (req, res) => {
       const isInCart = cart.items.some(item => String(item.productId._id || item.productId) === String(relatedProduct._id));
       return { ...relatedProduct, isInCart }; // Add isInCart to each related product
     });
-    res.render("user/productView", { product, isInCart,relatedProducts:isRelatedProductsInCart });
+    res.render("user/productView", { product, isInCart,relatedProducts:isRelatedProductsInCart,user });
   } catch (error) {
     console.log(error);
     res.redirect("/500error");
@@ -246,6 +248,7 @@ const productView = async (req, res) => {
 // }
 
 const shop = async (req, res) => {
+  const user = req.session.user? true:false  
   const userId = req.session.user ? req.session.user._id : null;
 
   try {
@@ -274,7 +277,7 @@ const shop = async (req, res) => {
       isInCart: cart.items.some((item) => String(item.productId._id || item.productId) === String(product._id)),
     }));
 
-    res.render("user/shop", { products: IsProductInCart });
+    res.render("user/shop", { products: IsProductInCart,user });
   } catch (error) {
     console.log(error);
     res.status(500).send("Server Error");
@@ -851,6 +854,8 @@ const addToWishlist = async (req, res) => {
 const getWishlist = async (req,res)=>{
   const user = req.session.user._id;
   const userWishlist = await wishlistHelper.findWishlist(user)
+  console.log(userWishlist);
+  
   res.render("user/wishlist",{userWishlist})
 }
 

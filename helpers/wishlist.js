@@ -25,7 +25,7 @@ module.exports = {
  },
 
  findWishlist: async(user)=>{
-  return await Wishlist.findOne({user}).populate(products).lean()
+  return await Wishlist.findOne({user}).populate("products").lean()
  }
 
 }

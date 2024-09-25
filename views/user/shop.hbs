@@ -54,7 +54,11 @@
                                         </a>
 
                                         <div class="product-action-vertical">
+                                            {{#if ../user}}
                                             <a href="#" class="btn-product-icon btn-wishlist btn-expandable" data-id="{{this._id}}"><span>add to wishlist</span></a>
+                                            {{else}}
+                                            <a href="#" class="btn-product-icon btn-wishlist btn-expandable" ><span>add to wishlist</span></a>
+                                            {{/if}}
                                         </div><!-- End .product-action -->
 
                                         {{!-- <div class="product-action action-icon-top"> use it as reference if need in below --}}
@@ -358,6 +362,18 @@
         button.addEventListener('click', async function(event) {
             event.preventDefault();
             const productId = this.getAttribute('data-id');
+            const user = {{user}}
+
+            if (!user) {
+            return Swal.fire({
+                text: 'Please login to add products to wishlist!',
+                icon: 'error',
+                toast: true,
+                position: 'top-end',
+                timer: 3000,
+                showConfirmButton: false
+            })
+         }
             
             try {
                 const response = await fetch('/addToWishlist', {
@@ -382,7 +398,7 @@
                 } else {
                     Swal.fire({
                         title: result.message,
-                        icon: 'success',
+                        icon: 'warning',
                         toast: true,
                         position: 'top-end',
                         timer: 3000,

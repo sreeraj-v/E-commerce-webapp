@@ -104,7 +104,11 @@
                                         <a href="/addToCart?q={{product._id}}" class="btn-product btn-cart"><span>add to cart</span></a>
                                         {{/if}}
                                         <div class="details-action-wrapper">
+                                            {{#if user}}
                                             <a href="#" class="btn-product btn-wishlist" title="Wishlist" data-id="{{product._id}}"><span>Add to Wishlist</span></a>
+                                            {{else}}
+                                            <a href="#" class="btn-product btn-wishlist" title="Wishlist" ><span>Add to Wishlist</span></a>
+                                            {{/if}}
                                         </div><!-- End .details-action-wrapper -->
                                     </div><!-- End .product-details-action -->
 
@@ -278,7 +282,11 @@
                                 </a>
 
                                 <div class="product-action-vertical">
+                                    {{#if ../user}}
                                     <a href="#" class="btn-product-icon btn-wishlist btn-expandable" data-id="{{this._id}}"><span>add to wishlist</span></a>
+                                    {{else}}
+                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable" ><span>add to wishlist</span></a>
+                                    {{/if}}
                                     {{!-- <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
                                     <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a> --}}
                                 </div><!-- End .product-action-vertical -->
@@ -336,9 +344,9 @@
                     <div class="product-price">
                         ₹{{product.price}}
                     </div><!-- End .product-price -->
-                    <div class="product-details-quantity">
+                    {{!-- <div class="product-details-quantity">
                         <input type="number" id="sticky-cart-qty" class="form-control" value="1" min="1" max="10" step="1" data-decimals="0" required>
-                    </div><!-- End .product-details-quantity -->
+                    </div><!-- End .product-details-quantity --> --}}
 
                     <div class="product-details-action">
                         {{#if isInCart}}
@@ -346,7 +354,14 @@
                         {{else}}
                         <a href="/addToCart?q={{product._id}}" class="btn-product btn-cart"><span>add to cart</span></a>
                         {{/if}}
-                        <a href="#" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
+                        
+                        {{!-- <div>
+                        {{#if ../user}}
+                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable" data-id="{{product._id}}"><span>add towishlist</span></a>
+                        {{else}}
+                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                        {{/if}}
+                        </div> --}}
                     </div><!-- End .product-details-action -->
                 </div><!-- End .col-6 -->
             </div><!-- End .row -->
@@ -377,11 +392,23 @@
     })
 </script>
 
-<script>
+    <script>
     document.querySelectorAll('.btn-wishlist').forEach(button => {
         button.addEventListener('click', async function(event) {
             event.preventDefault();
             const productId = this.getAttribute('data-id');
+            const user = {{user}}
+
+            if (!user) {
+            return Swal.fire({
+                text: 'Please login to add products to wishlist!',
+                icon: 'error',
+                toast: true,
+                position: 'top-end',
+                timer: 3000,
+                showConfirmButton: false
+            })
+         }
             
             try {
                 const response = await fetch('/addToWishlist', {
@@ -406,7 +433,7 @@
                 } else {
                     Swal.fire({
                         title: result.message,
-                        icon: 'success',
+                        icon: 'warning',
                         toast: true,
                         position: 'top-end',
                         timer: 3000,
@@ -427,7 +454,6 @@
         });
     });
 </script>
-
 
     {{!-- <script src="assets/js/bootstrap-input-spinner.js"></script>
     <script src="assets/js/jquery.elevateZoom.min.js"></script>
