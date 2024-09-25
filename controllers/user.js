@@ -8,7 +8,9 @@ const couponHelper = require("../helpers/coupon")
 const orderHelper = require("../helpers/order")
 const returnHelper = require("../helpers/return");
 const { User } = require("../models/userSchema");
-const cancelHelper = require("../helpers/cancel")
+const cancelHelper = require("../helpers/cancel");
+const wishlistHelper = require('../helpers/wishlist');
+
 
 const Stripe = require("stripe")
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY)
@@ -502,6 +504,19 @@ async function processOrder(req, res) {
     let session;
     let order;
 
+     // Handle different payment methods
+    if (paymentType === 'Wallet Payment') {
+      const user = await User.findOne(userId);  // Assuming there's a method to find a user by ID
+      if (user.wallet < finalAmount) {
+        return res.status(400).json({ error: 'Insufficient wallet balance for this order.' });
+      }
+
+      // Deduct wallet balance
+      user.wallet -= finalAmount;
+      await user.save();
+    }
+
+
     order = await orderHelper.createOrder({
       user: userId,
       address: address._id,
@@ -604,10 +619,17 @@ async function processOrder(req, res) {
       }
     })
 
+    // if (paymentType === 'Stripe Payment') {
+    //   return res.status(200).json({ url: session.url });
+    // } else {
+    //   // COD Payment success
+    //   return res.status(200).json({ message: 'Order placed successfully with Cash on Delivery', orderId: order.orderId });
+    // }
     if (paymentType === 'Stripe Payment') {
       return res.status(200).json({ url: session.url });
+    } else if (paymentType === 'Wallet Payment') {
+      return res.status(200).json({ message: 'Order placed successfully with Wallet Payment', orderId: order.orderId });
     } else {
-      // COD Payment success
       return res.status(200).json({ message: 'Order placed successfully with Cash on Delivery', orderId: order.orderId });
     }
   } catch (error) {
@@ -650,7 +672,7 @@ async function confirmOrderPayment(req, res) {
 
       await order.save();
     } else if (orderId) {
-      // Handle Cash on Delivery (COD) flow
+      // Handle Cash on Delivery (COD) &wallet
       order = await orderHelper.findOrderByOrderId(orderId);
 
       // Ensure stock is updated for COD orders
@@ -806,6 +828,25 @@ const cancelOrder = async (req, res) => {
   }
 }
 
+// wishlist getting &adding    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+const addToWishlist = async (req, res) => {
+  try {
+      const userId = req.session.user._id;
+      const { productId } = req.body;
+
+      const result = await wishlistHelper.addProductToWishlist(userId, productId);
+
+      if (result) {
+          return res.status(200).json({ success: true, message: 'Product added to wishlist.' });
+      } else {
+          return res.status(400).json({ success: false, message: 'Product already in wishlist.' });
+      }
+  } catch (error) {
+      console.error('Error adding to wishlist:', error);
+      return res.status(500).json({ success: false, message: 'Server error. Please try again.' });
+  }
+};
 
 
 // logout    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -838,7 +879,8 @@ module.exports = {
   logout,
   myaccount,
   returnProduct,
-  cancelOrder
+  cancelOrder,
+  addToWishlist
 };
 
 

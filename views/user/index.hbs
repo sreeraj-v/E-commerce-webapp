@@ -530,7 +530,7 @@
                                             </a>
 
                                             <div class="product-action-vertical">
-                                                <a href="#" class="btn-product-icon btn-wishlist" title="Add to wishlist"><span>add to wishlist</span></a>
+                                                <a href="#" class="btn-product-icon btn-wishlist" title="Add to wishlist" data-id="{{this._id}}"><span>add to wishlist</span></a>
                                             </div><!-- End .product-action -->
 
                                             <div class="product-action product-action-transparent">
@@ -1078,3 +1078,56 @@
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
     <script src="assets/js/demos/demo-5.js"></script> --}}
+
+    <script>
+    document.querySelectorAll('.btn-wishlist').forEach(button => {
+        button.addEventListener('click', async function(event) {
+            event.preventDefault();
+            const productId = this.getAttribute('data-id');
+            
+            try {
+                const response = await fetch('/addToWishlist', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ productId })
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    // Show success toaster notification
+                    Swal.fire({
+                        title: 'Added to wishlist!',
+                        text: 'The product has been added to your wishlist.',
+                        icon: 'success',
+                        toast: true,
+                        position: 'top-end',
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Failed to add to wishlist',
+                        text: result.message,
+                        icon: 'error',
+                        toast: true,
+                        position: 'top-end',
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                }
+            } catch (error) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred while adding to the wishlist.',
+                    icon: 'error',
+                    toast: true,
+                    position: 'top-end',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            }
+        });
+    });
+</script>

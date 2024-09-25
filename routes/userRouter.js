@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { registeration, verifyEmail, registerPage, home, loginPage, userLogin, logout, productView, shop, addToCart, cart, removeFromCart, updateQuantity, checkOut, addNewAddress, applyCoupon, confirmOrderPayment, processOrder, downloadInvoice, myaccount, returnProduct, cancelOrder,  } = require("../controllers/user")
+const { registeration, verifyEmail, registerPage, home, loginPage, userLogin, logout, productView, shop, addToCart, cart, removeFromCart, updateQuantity, checkOut, addNewAddress, applyCoupon, confirmOrderPayment, processOrder, downloadInvoice, myaccount, returnProduct, cancelOrder, addToWishlist,  } = require("../controllers/user")
 const userAuth = require("../middleware/userAuth")
 
 router.get("/login",loginPage)
@@ -23,7 +23,7 @@ router.get("/download-invoice/:orderId",userAuth,downloadInvoice);
 router.get("/myaccount",userAuth,myaccount);
 router.post("/return", returnProduct);
 router.post('/cancelOrder',cancelOrder )
-
+router.get("/wishlist", addToWishlist);
 
 
 

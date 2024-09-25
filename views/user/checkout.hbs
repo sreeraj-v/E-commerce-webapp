@@ -339,7 +339,7 @@
 
 <script src="https://js.stripe.com/v3/"></script>
 
-<script>
+{{!-- <script>
     const stripe = Stripe('pk_test_51Ptt5WCsHv5xvAVbuFRE7PPgkMe9Qh3iUcmALvTsfNyIirpmoAmzmTZ8xdCUo4iGGt2xDx9pHssGSazWIDBqKnrf00HR3DExzR');
 
     document.getElementById('place-order-btn').addEventListener('click', async function (event) {
@@ -405,8 +405,93 @@
             });
         }
     });
-</script>
+</script> --}}
 
+<script>
+    const stripe = Stripe('pk_test_51Ptt5WCsHv5xvAVbuFRE7PPgkMe9Qh3iUcmALvTsfNyIirpmoAmzmTZ8xdCUo4iGGt2xDx9pHssGSazWIDBqKnrf00HR3DExzR');
+
+    document.getElementById('place-order-btn').addEventListener('click', async function (event) {
+        event.preventDefault();
+
+        const selectedAddressId = document.getElementById('existing-address').value;
+        const totalCheckOutValue = parseFloat(document.getElementById('orderTotal').textContent);
+        const paymentType = document.querySelector('input[name="paymentMethod"]:checked')?.value;
+
+        if (selectedAddressId === 'Select an Address' || selectedAddressId === 'No addresses found. Add a new one') {
+            return Swal.fire({
+                title: 'Address not selected',
+                text: 'Please select an address before placing the order.',
+                icon: 'error',
+                confirmButtonText: 'Try Again'
+            });
+        }
+
+        try {
+            const response = await fetch('/processOrder', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ addressId: selectedAddressId, paymentType, totalCheckOutValue })
+            });
+
+            const data = await response.json();
+
+            if (paymentType === 'Stripe Payment') {
+                if (data.url) {
+                    return window.location.href = data.url;  // Redirect to Stripe checkout
+                }
+                return Swal.fire({
+                    title: 'Failed to create Stripe session.',
+                    text: data.error,
+                    icon: 'error',
+                    confirmButtonText: 'Try Again'
+                });
+            } else if (paymentType === 'Wallet Payment') {
+                if (data.orderId) {
+                    return Swal.fire({
+                        title: 'Order placed successfully with Wallet Payment!',
+                        text: data.message,
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        window.location.href = `/orderSuccess?orderId=${data.orderId}`;
+                    });
+                } else {
+                    return Swal.fire({
+                        title: 'Failed to place order with Wallet Payment.',
+                        text: data.error,
+                        icon: 'error',
+                        confirmButtonText: 'Try Again'
+                    });
+                }
+            } else {
+                if (data.orderId) {
+                    return Swal.fire({
+                        title: 'Order placed successfully!',
+                        text: data.message,
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        window.location.href = `/orderSuccess?orderId=${data.orderId}`;
+                    });
+                }
+                return Swal.fire({
+                    title: 'Failed to place order.',
+                    text: data.error,
+                    icon: 'error',
+                    confirmButtonText: 'Try Again'
+                });
+            }
+        } catch (error) {
+            console.error('Order placement error:', error);
+            Swal.fire({
+                title: 'Error',
+                text: 'An error occurred while placing the order.',
+                icon: 'error',
+                confirmButtonText: 'Try Again'
+            });
+        }
+    });
+</script>
 
 
 
