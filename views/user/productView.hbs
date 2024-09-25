@@ -104,7 +104,7 @@
                                         <a href="/addToCart?q={{product._id}}" class="btn-product btn-cart"><span>add to cart</span></a>
                                         {{/if}}
                                         <div class="details-action-wrapper">
-                                            <a href="#" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
+                                            <a href="#" class="btn-product btn-wishlist" title="Wishlist" data-id="{{product._id}}"><span>Add to Wishlist</span></a>
                                         </div><!-- End .details-action-wrapper -->
                                     </div><!-- End .product-details-action -->
 
@@ -278,7 +278,7 @@
                                 </a>
 
                                 <div class="product-action-vertical">
-                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable" data-id="{{this._id}}"><span>add to wishlist</span></a>
                                     {{!-- <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
                                     <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a> --}}
                                 </div><!-- End .product-action-vertical -->
@@ -377,6 +377,56 @@
     })
 </script>
 
+<script>
+    document.querySelectorAll('.btn-wishlist').forEach(button => {
+        button.addEventListener('click', async function(event) {
+            event.preventDefault();
+            const productId = this.getAttribute('data-id');
+            
+            try {
+                const response = await fetch('/addToWishlist', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ productId })
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    Swal.fire({
+                        title: 'Added to wishlist!',
+                        text: 'The product has been added to your wishlist.',
+                        icon: 'success',
+                        toast: true,
+                        position: 'top-end',
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                } else {
+                    Swal.fire({
+                        title: result.message,
+                        icon: 'success',
+                        toast: true,
+                        position: 'top-end',
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                }
+            } catch (error) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred while adding to the wishlist.',
+                    icon: 'error',
+                    toast: true,
+                    position: 'top-end',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            }
+        });
+    });
+</script>
 
 
     {{!-- <script src="assets/js/bootstrap-input-spinner.js"></script>

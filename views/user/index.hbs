@@ -1096,7 +1096,6 @@
                 
                 const result = await response.json();
                 if (result.success) {
-                    // Show success toaster notification
                     Swal.fire({
                         title: 'Added to wishlist!',
                         text: 'The product has been added to your wishlist.',
@@ -1108,9 +1107,8 @@
                     });
                 } else {
                     Swal.fire({
-                        title: 'Failed to add to wishlist',
-                        text: result.message,
-                        icon: 'error',
+                        title: result.message,
+                        icon: 'success',
                         toast: true,
                         position: 'top-end',
                         timer: 3000,

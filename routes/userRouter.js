@@ -23,7 +23,8 @@ router.get("/download-invoice/:orderId",userAuth,downloadInvoice);
 router.get("/myaccount",userAuth,myaccount);
 router.post("/return", returnProduct);
 router.post('/cancelOrder',cancelOrder )
-router.get("/wishlist", addToWishlist);
+router.post('/addToWishlist', addToWishlist);
+router.get("/wishlist",)
 
 
 

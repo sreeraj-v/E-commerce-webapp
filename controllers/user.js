@@ -848,6 +848,11 @@ const addToWishlist = async (req, res) => {
   }
 };
 
+const getWishlist = async (req,res)=>{
+  const user = req.session.user._id;
+  const userWishlist = await wishlistHelper.findWishlist(user)
+  res.render("user/wishlist",{userWishlist})
+}
 
 // logout    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -880,7 +885,8 @@ module.exports = {
   myaccount,
   returnProduct,
   cancelOrder,
-  addToWishlist
+  addToWishlist,
+  getWishlist
 };
 
 
