@@ -52,7 +52,7 @@
 													<label class="custom-control-label" for="signin-remember-2">Remember Me</label>
 												</div><!-- End .custom-checkbox --> --}}
 											
-												<a href="#" class="forgot-link">Forgot Your Password?</a>
+												<a href="#" class="forgot-link" data-toggle="modal" data-target="#forgotPasswordModal">Forgot Your Password?</a>
 											</div><!-- End .form-footer -->
 							    	</form>
 							    	<div class="form-choice">
@@ -79,6 +79,37 @@
             		</div><!-- End .form-box -->
             	</div><!-- End .container -->
             </div><!-- End .login-page section-bg -->
+
+<!-- Forgot Password Modal -->
+<div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-white">
+        <h5 class="modal-title " id="forgotPasswordModalLabel">Forgot Password</h5>
+        <button type="button" class="close " data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="padding: 20px 20px;">
+        <form id="forgot-password-form">
+          <div class="form-group">
+            <label for="email">Enter your email address</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="your-email@example.com" required>
+          </div>
+
+          <div id="forgot-password-messages"></div> <!-- Place for success/error messages -->
+
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-block mt-3" style="max-width: 200px; margin: 0 auto;">SUBMIT</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+						
         </main><!-- End .main -->
 
 {{>allPageFooter}}
@@ -87,4 +118,47 @@
     <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
 
 {{>mobileView}}
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const forgotPasswordForm = document.getElementById('forgot-password-form');
+    
+    forgotPasswordForm.addEventListener('submit', async function (e) {
+      e.preventDefault(); // Prevent the default form submission
+
+      const emailInput = document.getElementById('email');
+      const email = emailInput.value;
+
+      const messagesDiv = document.getElementById('forgot-password-messages');
+      messagesDiv.innerHTML = ''; // Clear previous messages
+
+      try {
+        // Make the fetch request to send the email
+        const response = await fetch('/forgot-password', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email })
+        });
+
+        // Handle response
+        const result = await response.json();
+
+        if (response.ok) {
+          // Success message
+          messagesDiv.innerHTML = '<p class="text-success">Password reset email sent successfully.</p>';
+        } else {
+          // Error message
+          messagesDiv.innerHTML = `<p class="text-danger">${result.errorMsg || 'Error sending reset email.'}</p>`;
+        }
+      } catch (error) {
+        // Handle error in fetch request
+        messagesDiv.innerHTML = '<p class="text-danger">An unexpected error occurred. Please try again later.</p>';
+      }
+    });
+  });
+</script>
+
 

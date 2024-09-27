@@ -155,6 +155,59 @@ const loginPage = async (req,res)=>{
    return res.render('user/login')
   }}
 
+
+// forget password
+
+async function forgotPassword(req, res) {
+  try {
+    const { email } = req.body;
+    
+    if (!email) {
+      return res.json({ errorMsg: "Email is required" });
+    }
+
+    const user = await User.findOne({ email });
+    
+    if (!user) {
+      return res.json({ errorMsg: "No account with that email found." });
+    }
+
+    // Generate reset token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const tokenExpiry = Date.now() + 3600000; // Token valid for 1 hour
+
+    user.verifyToken = resetToken;
+    user.tokenExpiry = tokenExpiry;
+    await user.save();
+
+    console.log(email);
+    
+    // Send reset email
+    const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Password Reset',
+      html: `<p>You requested a password reset. Click <a href="${resetLink}">here</a> to reset your password.</p>`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log('Email sent: ' + info.response);
+        return res.json({ errorMsg: "Error sending reset email" });
+      }
+      return res.json({ successMsg: "Password reset email sent." });
+    });
+    
+  } catch (error) {
+    console.log("Error in forgotPassword:", error);
+    res.json({ errorMsg: "An error occurred." });
+  }
+}
+
+
+
+
 // home page getting route
 
 const home = async (req, res) => {
@@ -930,7 +983,8 @@ module.exports = {
   cancelOrder,
   addToWishlist,
   getWishlist,
-  removeFromWishlist
+  removeFromWishlist,
+  forgotPassword
 };
 
 
