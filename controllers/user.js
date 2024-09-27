@@ -853,12 +853,50 @@ const addToWishlist = async (req, res) => {
 
 const getWishlist = async (req,res)=>{
   const user = req.session.user._id;
+  try{
   const userWishlist = await wishlistHelper.findWishlist(user)
-  console.log(userWishlist);
-  
-  res.render("user/wishlist",{userWishlist})
+
+  let cart = { items: [] };
+
+  if (user) {
+    cart = await cartHelper.getCart(user);
+
+    if (!cart) {
+      cart = { items: [] };
+    } else if (!cart.items) {
+      cart.items = [];
+    }
+  } else if (req.session.cart) {
+    cart = req.session.cart;
+
+    if (!cart.items) {
+      cart.items = [];
+    }
+  }
+
+  const IsProductInCart = userWishlist.products.map((product) => ({
+    ...product,
+    isInCart: cart.items.some((item) => String(item.productId._id || item.productId) === String(product._id)),
+  }));
+
+  res.render("user/wishlist",{userWishlists:IsProductInCart})
+  }catch(error){
+    console.error('Error rendering in wishlist:', error);
+    return res.status(500).send('Server error. Please try again.');    
+  }
 }
 
+async function removeFromWishlist(req,res){
+  try{
+  const user = req.session.user._id
+  const productId = req.query.q
+  
+  await wishlistHelper.removeWishlist(user,productId)
+  res.redirect("/wishlist")
+  }catch(error){
+    console.error('Error removing in wishlist:', error);
+  }
+}
 // logout    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 const logout = (req,res)=>{
@@ -891,7 +929,8 @@ module.exports = {
   returnProduct,
   cancelOrder,
   addToWishlist,
-  getWishlist
+  getWishlist,
+  removeFromWishlist
 };
 
 

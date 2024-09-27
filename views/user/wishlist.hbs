@@ -31,9 +31,8 @@
 						</thead>
 
 						<tbody>
-                            {{#each userWishlist.products}}
-							<tr>  
-                                
+                            {{#each userWishlists}}
+							<tr>
 								<td class="product-col">
 									<div class="product">
 										<figure class="product-media">
@@ -50,9 +49,13 @@
 								<td class="price-col">{{this.price}}</td>
 								<td class="stock-col"><span class="in-stock">In stock</span></td>
 								<td class="action-col">
-									<button class="btn btn-block btn-outline-primary-2"><i class="icon-cart-plus"></i>Add to Cart</button>
+                                    {{#if isInCart}}
+									<a href="/cart" class="btn btn-outline-primary-2 btn-order btn-block"><i class="icon-cart-plus"></i> GO TO CART</a>
+                                    {{else}}
+									<a href="/addToCart?q={{this._id}}" class="btn btn-outline-primary-2 btn-order btn-block"><i class="icon-cart-plus"></i> ADD TO CART</a>
+                                    {{/if}}
 								</td>
-								<td class="remove-col"><button class="btn-remove"><i class="icon-close"></i></button></td>
+								<td class="remove-col"><a href="/removeFromWishlist?q={{this._id}}" class="btn-remove"><i class="icon-close"></i></a></td>
 							</tr>
                             {{/each}}
 						</tbody>
