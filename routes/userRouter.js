@@ -31,9 +31,9 @@ router.get("/removeFromWishlist",removeFromWishlist)
 
 
 
-// router.get("/wishlist", (req, res) => {
-//   res.render("user/wishlist");
-// });
+router.get("/reset-password", (req, res) => {
+  res.render("user/resetPasswpord");
+});
 
 // router.get("/wishlist", (req, res) => {
 //   res.render("user/wishlist");
