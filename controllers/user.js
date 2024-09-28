@@ -162,26 +162,26 @@ async function forgotPassword(req, res) {
   try {
     const { email } = req.body;
     
+    // Check if email is provided
     if (!email) {
-      return res.json({ errorMsg: "Email is required" });
+      return res.status(400).json({ errorMsg: "Email is required" });
     }
 
+    // Check if user with the provided email exists
     const user = await User.findOne({ email });
-    
     if (!user) {
-      return res.json({ errorMsg: "No account with that email found." });
+      return res.status(404).json({ errorMsg: "No account with that email found." });
     }
 
-    // Generate reset token
+    // Generate reset token and token expiry time
     const resetToken = crypto.randomBytes(32).toString('hex');
     const tokenExpiry = Date.now() + 3600000; // Token valid for 1 hour
 
+    // Update the user's token fields
     user.verifyToken = resetToken;
     user.tokenExpiry = tokenExpiry;
     await user.save();
 
-    console.log(email);
-    
     // Send reset email
     const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
     const mailOptions = {
@@ -193,15 +193,17 @@ async function forgotPassword(req, res) {
 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        console.log('Email sent: ' + info.response);
-        return res.json({ errorMsg: "Error sending reset email" });
+        console.error('Error sending email:', error);
+        return res.status(500).json({ errorMsg: "Error sending reset email." });
       }
-      return res.json({ successMsg: "Password reset email sent." });
+      console.log('Email sent: ' + info.response);
+
+      return res.status(200).json({ successMsg: "Password reset email sent successfully." });
     });
-    
+
   } catch (error) {
-    console.log("Error in forgotPassword:", error);
-    res.json({ errorMsg: "An error occurred." });
+    console.error("Error in forgotPassword:", error);
+    return res.status(500).json({ errorMsg: "An internal error occurred. Please try again later." });
   }
 }
 

@@ -148,17 +148,18 @@
 
         if (response.ok) {
           // Success message
-          messagesDiv.innerHTML = '<p class="text-success">Password reset email sent successfully.</p>';
+          messagesDiv.innerHTML = `<p class="text-success">${result.successMsg}</p>`;
         } else {
-          // Error message
+          // Error message from the server
           messagesDiv.innerHTML = `<p class="text-danger">${result.errorMsg || 'Error sending reset email.'}</p>`;
         }
       } catch (error) {
-        // Handle error in fetch request
+        // Handle network or fetch request errors
         messagesDiv.innerHTML = '<p class="text-danger">An unexpected error occurred. Please try again later.</p>';
       }
     });
   });
 </script>
+
 
 
