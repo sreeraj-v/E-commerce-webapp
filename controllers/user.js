@@ -156,18 +156,12 @@ const loginPage = async (req,res)=>{
   }}
 
 
-// forget password
+// forget password post route for sending email with link
 
 async function forgotPassword(req, res) {
   try {
     const { email } = req.body;
-    
-    // Check if email is provided
-    if (!email) {
-      return res.status(400).json({ errorMsg: "Email is required" });
-    }
 
-    // Check if user with the provided email exists
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ errorMsg: "No account with that email found." });
@@ -177,7 +171,6 @@ async function forgotPassword(req, res) {
     const resetToken = crypto.randomBytes(32).toString('hex');
     const tokenExpiry = Date.now() + 3600000; // Token valid for 1 hour
 
-    // Update the user's token fields
     user.verifyToken = resetToken;
     user.tokenExpiry = tokenExpiry;
     await user.save();
@@ -207,7 +200,55 @@ async function forgotPassword(req, res) {
   }
 }
 
+// reset password get 
 
+const resetPassword = async (req,res)=>{
+  try{
+  const token = req.query.token
+  if(!token){
+    res.redirect("/login")
+  }
+  res.render("user/resetPassword",{token});
+  }catch(error){
+    console.error("Error in getting resetPassword page:", error);
+  }
+}
+
+// submit reset Password
+
+const submitResetPassword = async(req,res)=>{
+  try {
+    const { token } = req.query;
+    const { password, confirmPassword } = req.body;
+
+    if (!password || !confirmPassword) {
+      return res.render("user/resetPassword", { errorMsg: "All fields are required" });
+    }
+    
+    if (password !== confirmPassword) {
+      return res.render("user/resetPassword", { errorMsg: "Passwords do not match" });
+    }
+
+    const user = await User.findOne({ verifyToken: token, tokenExpiry: { $gt: Date.now() } });
+    
+    if (!user) {
+      return res.render("user/resetPassword", { errorMsg: "Invalid or expired token" });
+    }
+
+    user.password = password; 
+    user.verifyToken = undefined;
+    user.tokenExpiry = undefined;
+    
+    await user.save();
+    
+    return res.redirect("/login");
+    
+  } catch (error) {
+    console.log("Error in resetPassword:", error);
+    res.render("user/reset-password", { errorMsg: "An error occurred." });
+  }
+
+}
 
 
 // home page getting route
@@ -986,7 +1027,9 @@ module.exports = {
   addToWishlist,
   getWishlist,
   removeFromWishlist,
-  forgotPassword
+  forgotPassword,
+  resetPassword,
+  submitResetPassword
 };
 
 
