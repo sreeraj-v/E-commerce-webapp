@@ -5,16 +5,16 @@
     <!-- Tabs -->
     <ul class="nav nav-tabs mb-3" id="bannerTabs" role="tablist">
       <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="main-tab" data-bs-toggle="tab" data-bs-target="#main" type="button" role="tab" aria-controls="main" aria-selected="true">Main Banner</button>
+        <button class="nav-link active fw-bold" id="main-tab" data-bs-toggle="tab" data-bs-target="#main" type="button" role="tab" aria-controls="main" aria-selected="true">Main Banner</button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link" id="brand-tab" data-bs-toggle="tab" data-bs-target="#brand" type="button" role="tab" aria-controls="brand" aria-selected="false">Brand Banner</button>
+        <button class="nav-link fw-bold" id="brand-tab" data-bs-toggle="tab" data-bs-target="#brand" type="button" role="tab" aria-controls="brand" aria-selected="false">Brand Banner</button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link" id="mid-tab" data-bs-toggle="tab" data-bs-target="#mid" type="button" role="tab" aria-controls="mid" aria-selected="false">Mid Banner</button>
+        <button class="nav-link fw-bold" id="mid-tab" data-bs-toggle="tab" data-bs-target="#mid" type="button" role="tab" aria-controls="mid" aria-selected="false">Mid Banner</button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link" id="bottom-tab" data-bs-toggle="tab" data-bs-target="#bottom" type="button" role="tab" aria-controls="bottom" aria-selected="false">Bottom Banner</button>
+        <button class="nav-link fw-bold" id="bottom-tab" data-bs-toggle="tab" data-bs-target="#bottom" type="button" role="tab" aria-controls="bottom" aria-selected="false">Bottom Banner</button>
       </li>
     </ul>
 
@@ -22,121 +22,243 @@
     <div class="tab-content" id="bannerTabsContent">
       <!-- Main Banner Tab -->
       <div class="tab-pane fade show active" id="main" role="tabpanel" aria-labelledby="main-tab">
-        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addMainBannerModal">
-          Add Main Banner
-        </button>
-        {{> bannerTable banners=mainBanners}}
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4 class="fw-bold">Main Banners</h4>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMainBannerModal">
+            Add Main Banner
+          </button>
+        </div>
+        <div class="table-responsive">
+          <table class="table text-start align-middle table-bordered table-hover mb-0">
+            <thead>
+              <tr class="text-dark">
+                <th scope="col"><input class="form-check-input" type="checkbox"></th>
+                <th scope="col">Type</th>
+                <th scope="col">Title</th>
+                <th scope="col">Subtitle</th>
+                <th scope="col">Description</th>
+                <th scope="col">Image</th>
+                <th scope="col">Link</th>
+                <th scope="col">Display Order</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each mainBanners}}
+              <tr>
+                <td><input class="form-check-input" type="checkbox"></td>
+                <td>{{this.type}}</td>
+                <td>{{this.title}}</td>
+                <td>{{this.subtitle}}</td>
+                <td>{{this.description}}</td>
+                <td><img src="{{this.image}}" alt="Banner Image" style="max-width: 100px; max-height: 60px;"></td>
+                <td>{{this.link}}</td>
+                <td>{{this.displayOrder}}</td>
+                <td>
+                  <div class="d-flex justify-content-start">
+                    <a class="btn btn-sm btn-primary" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#editBannerModal"
+                      data-banner='{{json this}}'>
+                      <i class="fa fa-edit"></i>
+                    </a> 
+                    <a class="btn btn-sm btn-danger ms-2" href="/admin/deleteBanner?id={{this._id}}"><i class="fa fa-trash"></i></a>
+                  </div>
+                </td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <!-- Brand Banner Tab -->
       <div class="tab-pane fade" id="brand" role="tabpanel" aria-labelledby="brand-tab">
-        <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addBrandBannerModal">
-          Add Brand Banner
-        </button>
-        {{> bannerTable banners=brandBanners}}
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4 class="fw-bold">Brand Banners</h4>
+          <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addBrandBannerModal">
+            Add Brand Banner
+          </button>
+        </div>
+        <div class="table-responsive">
+          <table class="table text-start align-middle table-bordered table-hover mb-0">
+            <thead>
+              <tr class="text-dark">
+                <th scope="col"><input class="form-check-input" type="checkbox"></th>
+                <th scope="col">Type</th>
+                <th scope="col">Title</th>
+                <th scope="col">Subtitle</th>
+                <th scope="col">Description</th>
+                <th scope="col">Image</th>
+                <th scope="col">Link</th>
+                <th scope="col">Display Order</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each brandBanners}}
+              <tr>
+                <td><input class="form-check-input" type="checkbox"></td>
+                <td>{{this.type}}</td>
+                <td>{{this.title}}</td>
+                <td>{{this.subtitle}}</td>
+                <td>{{this.description}}</td>
+                <td><img src="{{this.image}}" alt="Banner Image" style="max-width: 100px; max-height: 60px;"></td>
+                <td>{{this.link}}</td>
+                <td>{{this.displayOrder}}</td>
+                <td>
+                  <div class="d-flex justify-content-start">
+                    <a class="btn btn-sm btn-primary" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#editBannerModal"
+                      data-banner='{{json this}}'>
+                      <i class="fa fa-edit"></i>
+                    </a> 
+                    <a class="btn btn-sm btn-danger ms-2" href="/admin/deleteBanner?id={{this._id}}"><i class="fa fa-trash"></i></a>
+                  </div>
+                </td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <!-- Mid Banner Tab -->
       <div class="tab-pane fade" id="mid" role="tabpanel" aria-labelledby="mid-tab">
-        <button type="button" class="btn btn-info mb-3" data-bs-toggle="modal" data-bs-target="#addMidBannerModal">
-          Add Mid Banner
-        </button>
-        {{> bannerTable banners=midBanners}}
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4 class="fw-bold">Mid Banners</h4>
+          <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#addMidBannerModal">
+            Add Mid Banner
+          </button>
+        </div>
+        <div class="table-responsive">
+          <table class="table text-start align-middle table-bordered table-hover mb-0">
+            <thead>
+              <tr class="text-dark">
+                <th scope="col"><input class="form-check-input" type="checkbox"></th>
+                <th scope="col">Type</th>
+                <th scope="col">Title</th>
+                <th scope="col">Subtitle</th>
+                <th scope="col">Description</th>
+                <th scope="col">Image</th>
+                <th scope="col">Link</th>
+                <th scope="col">Display Order</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each midBanners}}
+              <tr>
+                <td><input class="form-check-input" type="checkbox"></td>
+                <td>{{this.type}}</td>
+                <td>{{this.title}}</td>
+                <td>{{this.subtitle}}</td>
+                <td>{{this.description}}</td>
+                <td><img src="{{this.image}}" alt="Banner Image" style="max-width: 100px; max-height: 60px;"></td>
+                <td>{{this.link}}</td>
+                <td>{{this.displayOrder}}</td>
+                <td>
+                  <div class="d-flex justify-content-start">
+                    <a class="btn btn-sm btn-primary" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#editBannerModal"
+                      data-banner='{{json this}}'>
+                      <i class="fa fa-edit"></i>
+                    </a> 
+                    <a class="btn btn-sm btn-danger ms-2" href="/admin/deleteBanner?id={{this._id}}"><i class="fa fa-trash"></i></a>
+                  </div>
+                </td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <!-- Bottom Banner Tab -->
       <div class="tab-pane fade" id="bottom" role="tabpanel" aria-labelledby="bottom-tab">
-        <button type="button" class="btn btn-warning mb-3" data-bs-toggle="modal" data-bs-target="#addBottomBannerModal">
-          Add Bottom Banner
-        </button>
-        {{> bannerTable banners=bottomBanners}}
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h3 class="fw-bold">Bottom Banners</h3>
+          <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#addBottomBannerModal">
+            Add Bottom Banner
+          </button>
+        </div>
+        <div class="table-responsive">
+          <table class="table text-start align-middle table-bordered table-hover mb-0">
+            <thead>
+              <tr class="text-dark">
+                <th scope="col"><input class="form-check-input" type="checkbox"></th>
+                <th scope="col">Type</th>
+                <th scope="col">Title</th>
+                <th scope="col">Subtitle</th>
+                <th scope="col">Description</th>
+                <th scope="col">Image</th>
+                <th scope="col">Link</th>
+                <th scope="col">Display Order</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each bottomBanners}}
+              <tr>
+                <td><input class="form-check-input" type="checkbox"></td>
+                <td>{{this.type}}</td>
+                <td>{{this.title}}</td>
+                <td>{{this.subtitle}}</td>
+                <td>{{this.description}}</td>
+                <td><img src="{{this.image}}" alt="Banner Image" style="max-width: 100px; max-height: 60px;"></td>
+                <td>{{this.link}}</td>
+                <td>{{this.displayOrder}}</td>
+                <td>
+                  <div class="d-flex justify-content-start">
+                    <a class="btn btn-sm btn-primary" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#editBannerModal"
+                      data-banner='{{json this}}'>
+                      <i class="fa fa-edit"></i>
+                    </a> 
+                    <a class="btn btn-sm btn-danger ms-2" href="/admin/deleteBanner?id={{this._id}}"><i class="fa fa-trash"></i></a>
+                  </div>
+                </td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
 </div>
-
-<!-- Banner Table Partial -->
-{{#*inline "bannerTable"}}
-<div class="table-responsive">
-  <table class="table text-start align-middle table-bordered table-hover mb-0">
-    <thead>
-      <tr class="text-dark">
-        <th scope="col"><input class="form-check-input" type="checkbox"></th>
-        <th scope="col">Type</th>
-        <th scope="col">Title</th>
-        <th scope="col">Subtitle</th>
-        <th scope="col">Description</th>
-        <th scope="col">Image</th>
-        <th scope="col">Link</th>
-        <th scope="col">Display Order</th>
-        <th scope="col">Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each banners}}
-      <tr>
-        <td><input class="form-check-input" type="checkbox"></td>
-        <td>{{this.type}}</td>
-        <td>{{this.title}}</td>
-        <td>{{this.subtitle}}</td>
-        <td>{{this.description}}</td>
-        <td><img src="{{this.image}}" alt="Banner Image" style="max-width: 100px; max-height: 60px;"></td>
-        <td>{{this.link}}</td>
-        <td>{{this.displayOrder}}</td>
-        <td>
-          <div class="d-flex justify-content-start">
-            <a class="btn btn-sm btn-primary" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#editBannerModal"
-              data-banner='{{json this}}'>
-              <i class="fa fa-edit"></i>
-            </a> 
-            <a class="btn btn-sm btn-danger ms-2" href="/admin/deleteBanner?id={{this._id}}"><i class="fa fa-trash"></i></a>
-          </div>
-        </td>
-      </tr>
-      {{/each}}
-    </tbody>
-  </table>
-</div>
-{{/inline}}
-
-<!-- Add Banner Modals (unchanged) -->
-<!-- ... (Keep your existing modal code here) ... -->
 
 <!-- Add Main Banner Modal -->
 <div class="modal fade" id="addMainBannerModal" tabindex="-1" aria-labelledby="addMainBannerModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="addBannerModalLabel">Add Banner</h5>
+        <h5 class="modal-title" id="addMainBannerModalLabel">Add Main Banner</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="addBannerForm" action="/admin/addBanner" method="post" enctype="multipart/form-data">
+        <form id="addMainBannerForm" action="/admin/addBanner" method="post" enctype="multipart/form-data">
+          <input type="hidden" name="type" value="main">
           <div class="mb-3">
-            <label for="title" class="form-label">Title</label>
-            <input type="text" class="form-control" id="title" name="title" required>
+            <label for="mainTitle" class="form-label">Title</label>
+            <input type="text" class="form-control" id="mainTitle" name="title" required>
           </div>
           <div class="mb-3">
-            <label for="subtitle" class="form-label">Subtitle</label>
-            <input type="text" class="form-control" id="subtitle" name="subtitle" required>
+            <label for="mainSubtitle" class="form-label">Subtitle</label>
+            <input type="text" class="form-control" id="mainSubtitle" name="subtitle" required>
           </div>
           <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
-            <textarea class="form-control" id="description" name="description" required></textarea>
+            <label for="mainDescription" class="form-label">Description</label>
+            <textarea class="form-control" id="mainDescription" name="description" required></textarea>
           </div>
           <div class="mb-3">
-            <label for="image" class="form-label">Image</label>
-            <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+            <label for="mainImage" class="form-label">Image</label>
+            <input type="file" class="form-control" id="mainImage" name="image" accept="image/*" required>
           </div>
           <div class="mb-3">
-            <label for="link" class="form-label">Link</label>
-            <input type="url" class="form-control" id="link" name="link" required>
+            <label for="mainLink" class="form-label">Link</label>
+            <input type="url" class="form-control" id="mainLink" name="link" required>
           </div>
           <div class="mb-3">
-            <label for="displayOrder" class="form-label">Display Order</label>
-            <input type="number" class="form-control" id="displayOrder" name="displayOrder" required>
+            <label for="mainDisplayOrder" class="form-label">Display Order</label>
+            <input type="number" class="form-control" id="mainDisplayOrder" name="displayOrder" required>
           </div>
-          <button type="submit" class="btn btn-primary">Add Banner</button>
+          <button type="submit" class="btn btn-primary">Add Main Banner</button>
         </form>
       </div>
     </div>
@@ -148,41 +270,41 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="addBannerModalLabel">Add Banner</h5>
+        <h5 class="modal-title" id="addBrandBannerModalLabel">Add Brand Banner</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="addBannerForm" action="/admin/addBanner" method="post" enctype="multipart/form-data">
+        <form id="addBrandBannerForm" action="/admin/addBanner" method="post" enctype="multipart/form-data">
+          <input type="hidden" name="type" value="brand">
           <div class="mb-3">
-            <label for="title" class="form-label">Title</label>
-            <input type="text" class="form-control" id="title" name="title" required>
+            <label for="brandTitle" class="form-label">Title</label>
+            <input type="text" class="form-control" id="brandTitle" name="title" required>
           </div>
           <div class="mb-3">
-            <label for="subtitle" class="form-label">Subtitle</label>
-            <input type="text" class="form-control" id="subtitle" name="subtitle" required>
+            <label for="brandSubtitle" class="form-label">Subtitle</label>
+            <input type="text" class="form-control" id="brandSubtitle" name="subtitle" required>
           </div>
           <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
-            <textarea class="form-control" id="description" name="description" required></textarea>
+            <label for="brandDescription" class="form-label">Description</label>
+            <textarea class="form-control" id="brandDescription" name="description" required></textarea>
           </div>
           <div class="mb-3">
-            <label for="image" class="form-label">Image</label>
-            <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+            <label for="brandImage" class="form-label">Image</label>
+            <input type="file" class="form-control" id="brandImage" name="image" accept="image/*" required>
           </div>
           <div class="mb-3">
-            <label for="link" class="form-label">Link</label>
-            <input type="url" class="form-control" id="link" name="link" required>
+            <label for="brandLink" class="form-label">Link</label>
+            <input type="url" class="form-control" id="brandLink" name="link" required>
           </div>
           <div class="mb-3">
-            <label for="displayOrder" class="form-label">Display Order</label>
-            <input type="number" class="form-control" id="displayOrder" name="displayOrder" required>
+            <label for="brandDisplayOrder" class="form-label">Display Order</label>
+            <input type="number" class="form-control" id="brandDisplayOrder" name="displayOrder" required>
           </div>
-          <button type="submit" class="btn btn-primary">Add Banner</button>
+          <button type="submit" class="btn btn-success">Add Brand Banner</button>
         </form>
       </div>
     </div>
   </div>
-
 </div>
 
 <!-- Add Mid Banner Modal -->
@@ -190,41 +312,41 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="addBannerModalLabel">Add Banner</h5>
+        <h5 class="modal-title" id="addMidBannerModalLabel">Add Mid Banner</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="addBannerForm" action="/admin/addBanner" method="post" enctype="multipart/form-data">
+        <form id="addMidBannerForm" action="/admin/addBanner" method="post" enctype="multipart/form-data">
+          <input type="hidden" name="type" value="mid">
           <div class="mb-3">
-            <label for="title" class="form-label">Title</label>
-            <input type="text" class="form-control" id="title" name="title" required>
+            <label for="midTitle" class="form-label">Title</label>
+            <input type="text" class="form-control" id="midTitle" name="title" required>
           </div>
           <div class="mb-3">
-            <label for="subtitle" class="form-label">Subtitle</label>
-            <input type="text" class="form-control" id="subtitle" name="subtitle" required>
+            <label for="midSubtitle" class="form-label">Subtitle</label>
+            <input type="text" class="form-control" id="midSubtitle" name="subtitle" required>
           </div>
           <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
-            <textarea class="form-control" id="description" name="description" required></textarea>
+            <label for="midDescription" class="form-label">Description</label>
+            <textarea class="form-control" id="midDescription" name="description" required></textarea>
           </div>
           <div class="mb-3">
-            <label for="image" class="form-label">Image</label>
-            <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+            <label for="midImage" class="form-label">Image</label>
+            <input type="file" class="form-control" id="midImage" name="image" accept="image/*" required>
           </div>
           <div class="mb-3">
-            <label for="link" class="form-label">Link</label>
-            <input type="url" class="form-control" id="link" name="link" required>
+            <label for="midLink" class="form-label">Link</label>
+            <input type="url" class="form-control" id="midLink" name="link" required>
           </div>
           <div class="mb-3">
-            <label for="displayOrder" class="form-label">Display Order</label>
-            <input type="number" class="form-control" id="displayOrder" name="displayOrder" required>
+            <label for="midDisplayOrder" class="form-label">Display Order</label>
+            <input type="number" class="form-control" id="midDisplayOrder" name="displayOrder" required>
           </div>
-          <button type="submit" class="btn btn-primary">Add Banner</button>
+          <button type="submit" class="btn btn-info">Add Mid Banner</button>
         </form>
       </div>
     </div>
   </div>
-
 </div>
 
 <!-- Add Bottom Banner Modal -->
@@ -232,41 +354,41 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="addBannerModalLabel">Add Banner</h5>
+        <h5 class="modal-title" id="addBottomBannerModalLabel">Add Bottom Banner</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="addBannerForm" action="/admin/addBanner" method="post" enctype="multipart/form-data">
+        <form id="addBottomBannerForm" action="/admin/addBanner" method="post" enctype="multipart/form-data">
+          <input type="hidden" name="type" value="bottom">
           <div class="mb-3">
-            <label for="title" class="form-label">Title</label>
-            <input type="text" class="form-control" id="title" name="title" required>
+            <label for="bottomTitle" class="form-label">Title</label>
+            <input type="text" class="form-control" id="bottomTitle" name="title" required>
           </div>
           <div class="mb-3">
-            <label for="subtitle" class="form-label">Subtitle</label>
-            <input type="text" class="form-control" id="subtitle" name="subtitle" required>
+            <label for="bottomSubtitle" class="form-label">Subtitle</label>
+            <input type="text" class="form-control" id="bottomSubtitle" name="subtitle" required>
           </div>
           <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
-            <textarea class="form-control" id="description" name="description" required></textarea>
+            <label for="bottomDescription" class="form-label">Description</label>
+            <textarea class="form-control" id="bottomDescription" name="description" required></textarea>
           </div>
           <div class="mb-3">
-            <label for="image" class="form-label">Image</label>
-            <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+            <label for="bottomImage" class="form-label">Image</label>
+            <input type="file" class="form-control" id="bottomImage" name="image" accept="image/*" required>
           </div>
           <div class="mb-3">
-            <label for="link" class="form-label">Link</label>
-            <input type="url" class="form-control" id="link" name="link" required>
+            <label for="bottomLink" class="form-label">Link</label>
+            <input type="url" class="form-control" id="bottomLink" name="link" required>
           </div>
           <div class="mb-3">
-            <label for="displayOrder" class="form-label">Display Order</label>
-            <input type="number" class="form-control" id="displayOrder" name="displayOrder" required>
+            <label for="bottomDisplayOrder" class="form-label">Display Order</label>
+            <input type="number" class="form-control" id="bottomDisplayOrder" name="displayOrder" required>
           </div>
-          <button type="submit" class="btn btn-primary">Add Banner</button>
+          <button type="submit" class="btn btn-warning">Add Bottom Banner</button>
         </form>
       </div>
     </div>
   </div>
-
 </div>
 
 {{> adminFooter}}
