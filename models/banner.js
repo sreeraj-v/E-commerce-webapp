@@ -14,5 +14,5 @@ const mainBannerSchema = mongoose.Schema(
 
 const MainBanner = mongoose.model('MainBanner', mainBannerSchema);
 
-module.exports = MainBanner;
+module.exports = {MainBanner};
 

@@ -1,5 +1,6 @@
 const { default: mongoose } = require("mongoose")
 const upload = require("../middleware/multer")
+const bannerUpload = require("../middleware/multerBanner")
 const productHelper = require("../helpers/product")
 const userHelper = require("../helpers/users")
 const adminHelper = require("../helpers/admin")
@@ -7,6 +8,8 @@ const couponHelper = require("../helpers/coupon")
 const orderHelper = require("../helpers/order")
 const returnHelper = require("../helpers/return")
 const cancelHelper = require("../helpers/cancel")
+const bannerHelper = require("../helpers/banner")
+
 
 // const { compare } = require("bcrypt")
 
@@ -414,7 +417,31 @@ const cancellations = async (req,res)=>{
 // banner section  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 const banners = async(req,res)=>{
+  const mainBanner = await bannerHelper.findMainBanner()
   res.render("admin/banners")
+}
+
+const addMainBanner = async (req,res)=>{
+  const uploadMiddleware = bannerUpload.single("image");
+  
+  uploadMiddleware(req, res, async (err) => {
+    if (err) {
+      return res.status(500).json({ success: false, message: "Error in uploading images" });
+    }
+    try {
+      const image = req.file ? `/uploads/banners/${req.file.filename}` : null;
+
+      await bannerHelper.addMainBanners(req.body, image)
+
+      res.redirect('/admin/banners');  // Redirect after successful addition
+
+      // res.status(200).json({ success: true, message: 'Product uploaded successfully' });
+
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ success: false, message: "Error in uploading product" })
+    }
+  })
 }
 
 // 404 not found page >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -455,7 +482,8 @@ module.exports = {
   returnOrders,
   updateReturnStatus,
   cancellations,
-  banners
+  banners,
+  addMainBanner
 };
 
 
