@@ -411,6 +411,12 @@ const cancellations = async (req,res)=>{
   }
 }
 
+// banner section  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+const banners = async(req,res)=>{
+  res.render("admin/banners")
+}
+
 // 404 not found page >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 const notFound = (req, res) => {
   res.render("admin/404")
@@ -448,7 +454,8 @@ module.exports = {
   filterOrders,
   returnOrders,
   updateReturnStatus,
-  cancellations
+  cancellations,
+  banners
 };
 
 
