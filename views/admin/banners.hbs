@@ -232,7 +232,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="addMainBannerForm" action="/admin/addBanner" method="post" enctype="multipart/form-data">
+        <form id="addMainBannerForm" action="/admin/addMainBanner" method="post" enctype="multipart/form-data">
           <input type="hidden" name="type" value="main">
           <div class="mb-3">
             <label for="mainTitle" class="form-label">Title</label>
@@ -252,7 +252,7 @@
           </div>
           <div class="mb-3">
             <label for="mainLink" class="form-label">Link</label>
-            <input type="url" class="form-control" id="mainLink" name="link" required>
+            <input type="text" class="form-control" id="mainLink" name="link" required>
           </div>
           <div class="mb-3">
             <label for="mainDisplayOrder" class="form-label">Display Order</label>
