@@ -30,5 +30,10 @@ module.exports = {
 
   findBrandBanner: async()=>{
     return await BrandBanner.find().sort({displayOrder:1}).lean()
+  },
+
+  addMidBanners: async(body,image)=>{
+    const {title,subtitle,link,displayOrder} = body
+
   }
 }

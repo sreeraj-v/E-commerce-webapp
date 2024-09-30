@@ -59,6 +59,9 @@ router.get("/banners",adminAuth,banners);
 router.post("/addMainBanner",addMainBanner);
 // adding BrandBanner
 router.post("/addBrandBanner",addBrandBanner);
+// adding addMidBanner
+router.post("/addMidBanner",);
+
 
 
 

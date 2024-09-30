@@ -418,8 +418,8 @@ const cancellations = async (req,res)=>{
 
 const banners = async(req,res)=>{
   const mainBanners = await bannerHelper.findMainBanner()
-  cons
-  res.render("admin/banners",{mainBanners})
+  const brandBanners = await bannerHelper.findBrandBanner()
+  res.render("admin/banners",{mainBanners,brandBanners})
 }
 
 const addMainBanner = async (req,res)=>{
@@ -460,6 +460,20 @@ const addBrandBanner = async (req,res)=>{
     }catch(error){
       console.log(error);
       // res.status(500).json({ success: false, message: "Error in uploading product" })      
+    }
+  })
+}
+
+const addMidBanner = async (req,res)=>{
+  const uploadMiddleware = bannerUpload.single("image")
+
+  uploadMiddleware(req,res ,async(err)=>{
+    if(err){
+      return res.status(500).json({ success: false, message: "Error in uploading images" });
+    }
+    try{
+      const image = req.file ? `/uploads/banners${req.file.filename}` :null
+      await bannerHelper.addMidBanners(req.body ,image)
     }
   })
 }
