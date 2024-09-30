@@ -12,7 +12,17 @@ const mainBannerSchema = mongoose.Schema(
   { timestamps: true }
 );
 
+const brandBannerSchema = mongoose.Schema(
+  {
+    image:{type:String,required:true},
+    displayOrder: { type: Number, required: true },
+  },
+  { timestamps : true }
+)
+
+
+const BrandBanner = mongoose.model('BrandBanner',brandBannerSchema)
 const MainBanner = mongoose.model('MainBanner', mainBannerSchema);
 
-module.exports = {MainBanner};
+module.exports = {MainBanner,BrandBanner};
 

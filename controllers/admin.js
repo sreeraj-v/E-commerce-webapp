@@ -417,8 +417,9 @@ const cancellations = async (req,res)=>{
 // banner section  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 const banners = async(req,res)=>{
-  const mainBanner = await bannerHelper.findMainBanner()
-  res.render("admin/banners")
+  const mainBanners = await bannerHelper.findMainBanner()
+  cons
+  res.render("admin/banners",{mainBanners})
 }
 
 const addMainBanner = async (req,res)=>{
@@ -433,13 +434,32 @@ const addMainBanner = async (req,res)=>{
 
       await bannerHelper.addMainBanners(req.body, image)
 
-      res.redirect('/admin/banners');  // Redirect after successful addition
-
+      res.redirect('/admin/banners');
       // res.status(200).json({ success: true, message: 'Product uploaded successfully' });
 
     } catch (error) {
       console.log(error);
-      res.status(500).json({ success: false, message: "Error in uploading product" })
+      // res.status(500).json({ success: false, message: "Error in uploading product" })
+    }
+  })
+}
+
+const addBrandBanner = async (req,res)=>{
+  const uploadMiddleware = bannerUpload.single("image")
+
+  uploadMiddleware(req,res ,async (err)=>{
+    if (err) {
+      return res.status(500).json({ success: false, message: "Error in uploading images" });
+    }
+    try{
+      const image = req.file ? `/uploads/banners/${req.file.filename}` :null
+
+      await bannerHelper.addBrandBanners(req.body.displayOrder,image)
+
+      res.redirect('/admin/banners')
+    }catch(error){
+      console.log(error);
+      // res.status(500).json({ success: false, message: "Error in uploading product" })      
     }
   })
 }
@@ -483,7 +503,8 @@ module.exports = {
   updateReturnStatus,
   cancellations,
   banners,
-  addMainBanner
+  addMainBanner,
+  addBrandBanner
 };
 
 

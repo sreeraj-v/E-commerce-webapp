@@ -33,11 +33,10 @@
             <thead>
               <tr class="text-dark">
                 <th scope="col"><input class="form-check-input" type="checkbox"></th>
-                <th scope="col">Type</th>
+                <th scope="col">Image</th>
                 <th scope="col">Title</th>
                 <th scope="col">Subtitle</th>
                 <th scope="col">Description</th>
-                <th scope="col">Image</th>
                 <th scope="col">Link</th>
                 <th scope="col">Display Order</th>
                 <th scope="col">Action</th>
@@ -47,11 +46,10 @@
               {{#each mainBanners}}
               <tr>
                 <td><input class="form-check-input" type="checkbox"></td>
-                <td>{{this.type}}</td>
+                <td><img src="{{this.image}}" alt="Banner Image" style="max-width: 100px; max-height: 60px;"></td>
                 <td>{{this.title}}</td>
                 <td>{{this.subtitle}}</td>
                 <td>{{this.description}}</td>
-                <td><img src="{{this.image}}" alt="Banner Image" style="max-width: 100px; max-height: 60px;"></td>
                 <td>{{this.link}}</td>
                 <td>{{this.displayOrder}}</td>
                 <td>
@@ -83,12 +81,7 @@
             <thead>
               <tr class="text-dark">
                 <th scope="col"><input class="form-check-input" type="checkbox"></th>
-                <th scope="col">Type</th>
-                <th scope="col">Title</th>
-                <th scope="col">Subtitle</th>
-                <th scope="col">Description</th>
                 <th scope="col">Image</th>
-                <th scope="col">Link</th>
                 <th scope="col">Display Order</th>
                 <th scope="col">Action</th>
               </tr>
@@ -97,12 +90,7 @@
               {{#each brandBanners}}
               <tr>
                 <td><input class="form-check-input" type="checkbox"></td>
-                <td>{{this.type}}</td>
-                <td>{{this.title}}</td>
-                <td>{{this.subtitle}}</td>
-                <td>{{this.description}}</td>
                 <td><img src="{{this.image}}" alt="Banner Image" style="max-width: 100px; max-height: 60px;"></td>
-                <td>{{this.link}}</td>
                 <td>{{this.displayOrder}}</td>
                 <td>
                   <div class="d-flex justify-content-start">
@@ -274,27 +262,11 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="addBrandBannerForm" action="/admin/addBanner" method="post" enctype="multipart/form-data">
+        <form id="addBrandBannerForm" action="/admin/addBrandBanner" method="post" enctype="multipart/form-data">
           <input type="hidden" name="type" value="brand">
-          <div class="mb-3">
-            <label for="brandTitle" class="form-label">Title</label>
-            <input type="text" class="form-control" id="brandTitle" name="title" required>
-          </div>
-          <div class="mb-3">
-            <label for="brandSubtitle" class="form-label">Subtitle</label>
-            <input type="text" class="form-control" id="brandSubtitle" name="subtitle" required>
-          </div>
-          <div class="mb-3">
-            <label for="brandDescription" class="form-label">Description</label>
-            <textarea class="form-control" id="brandDescription" name="description" required></textarea>
-          </div>
           <div class="mb-3">
             <label for="brandImage" class="form-label">Image</label>
             <input type="file" class="form-control" id="brandImage" name="image" accept="image/*" required>
-          </div>
-          <div class="mb-3">
-            <label for="brandLink" class="form-label">Link</label>
-            <input type="url" class="form-control" id="brandLink" name="link" required>
           </div>
           <div class="mb-3">
             <label for="brandDisplayOrder" class="form-label">Display Order</label>
