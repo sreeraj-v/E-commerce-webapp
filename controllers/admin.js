@@ -419,7 +419,9 @@ const cancellations = async (req,res)=>{
 const banners = async(req,res)=>{
   const mainBanners = await bannerHelper.findMainBanner()
   const brandBanners = await bannerHelper.findBrandBanner()
-  res.render("admin/banners",{mainBanners,brandBanners})
+  const midBanners = await bannerHelper.findMidBanner()
+
+  res.render("admin/banners",{mainBanners,brandBanners,midBanners})
 }
 
 const addMainBanner = async (req,res)=>{
@@ -472,8 +474,11 @@ const addMidBanner = async (req,res)=>{
       return res.status(500).json({ success: false, message: "Error in uploading images" });
     }
     try{
-      const image = req.file ? `/uploads/banners${req.file.filename}` :null
+      const image = req.file ? `/uploads/banners/${req.file.filename}` :null
       await bannerHelper.addMidBanners(req.body ,image)
+      res.redirect("/admin/banners")
+    }catch(error){
+      console.log(error);
     }
   })
 }
@@ -518,7 +523,8 @@ module.exports = {
   cancellations,
   banners,
   addMainBanner,
-  addBrandBanner
+  addBrandBanner,
+  addMidBanner
 };
 
 

@@ -18,11 +18,24 @@ const brandBannerSchema = mongoose.Schema(
     displayOrder: { type: Number, required: true },
   },
   { timestamps : true }
-)
+);
 
 
+const midBannerSchema = mongoose.Schema(
+  {
+    title: { type: String, required: true },
+    subtitle: { type: String, required: true },
+    image: { type: String, required: true },
+    link: { type: String, required: true },
+    displayOrder: { type: Number, required: true },
+  },
+  { timestamps: true }
+);
+
+
+const MidBanner = mongoose.model('MidBanner', midBannerSchema);
 const BrandBanner = mongoose.model('BrandBanner',brandBannerSchema)
 const MainBanner = mongoose.model('MainBanner', mainBannerSchema);
 
-module.exports = {MainBanner,BrandBanner};
+module.exports = {MainBanner,BrandBanner,MidBanner};
 
