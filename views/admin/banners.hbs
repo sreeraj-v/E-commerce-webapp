@@ -167,9 +167,9 @@
             <thead>
               <tr class="text-dark">
                 <th scope="col"><input class="form-check-input" type="checkbox"></th>
+                <th scope="col">Image</th>
                 <th scope="col">Title</th>
                 <th scope="col">Subtitle</th>
-                <th scope="col">Image</th>
                 <th scope="col">Link</th>
                 <th scope="col">Display Order</th>
                 <th scope="col">Action</th>
@@ -179,9 +179,9 @@
               {{#each bottomBanners}}
               <tr>
                 <td><input class="form-check-input" type="checkbox"></td>
+                <td><img src="{{this.image}}" alt="Banner Image" style="max-width: 100px; max-height: 60px;"></td>
                 <td>{{this.title}}</td>
                 <td>{{this.subtitle}}</td>
-                <td><img src="{{this.image}}" alt="Banner Image" style="max-width: 100px; max-height: 60px;"></td>
                 <td>{{this.link}}</td>
                 <td>{{this.displayOrder}}</td>
                 <td>
@@ -334,7 +334,7 @@
           </div>
           <div class="mb-3">
             <label for="bottomLink" class="form-label">Link</label>
-            <input type="url" class="form-control" id="bottomLink" name="link" required>
+            <input type="text" class="form-control" id="bottomLink" name="link" required>
           </div>
           <div class="mb-3">
             <label for="bottomDisplayOrder" class="form-label">Display Order</label>

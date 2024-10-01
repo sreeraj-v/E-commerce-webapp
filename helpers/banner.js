@@ -1,4 +1,4 @@
-const {MainBanner,BrandBanner, MidBanner} = require("../models/banner")
+const {MainBanner,BrandBanner, MidBanner, BottomBanner} = require("../models/banner")
 
 module.exports = {
   addMainBanners: async (body,image)=>{
@@ -47,5 +47,21 @@ module.exports = {
 
   findMidBanner: async ()=>{
     return await MidBanner.find().sort({displayOrder:1}).lean()
+  },
+
+  addBottomBanners: async (body,image)=>{
+    const {title,subtitle,link,displayOrder} = body
+    const newBanner = new BottomBanner({
+      title,
+      subtitle,
+      link,
+      displayOrder,
+      image
+    })
+    await newBanner.save()
+  },
+
+  findBottomBanner: async()=>{
+    return await BottomBanner.find().sort({displayOrder:1}).lean()
   }
 }

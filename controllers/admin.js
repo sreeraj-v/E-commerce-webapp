@@ -420,8 +420,9 @@ const banners = async(req,res)=>{
   const mainBanners = await bannerHelper.findMainBanner()
   const brandBanners = await bannerHelper.findBrandBanner()
   const midBanners = await bannerHelper.findMidBanner()
+  const bottomBanners = await bannerHelper.findBottomBanner()
 
-  res.render("admin/banners",{mainBanners,brandBanners,midBanners})
+  res.render("admin/banners",{mainBanners,brandBanners,midBanners,bottomBanners})
 }
 
 const addMainBanner = async (req,res)=>{
@@ -483,6 +484,24 @@ const addMidBanner = async (req,res)=>{
   })
 }
 
+
+const addBottomBanner = async (req,res)=>{
+  const uploadMiddleware = bannerUpload.single("image")
+
+  uploadMiddleware(req,res ,async(err)=>{
+    if(err){
+      return res.status(500).json({ success: false, message: "Error in uploading images" });
+    }
+    try{
+      const image = req.file ? `/uploads/banners/${req.file.filename}` :null
+      await bannerHelper.addBottomBanners(req.body ,image)
+      res.redirect("/admin/banners")
+    }catch(error){
+      console.log(error);
+    }
+  })
+}
+
 // 404 not found page >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 const notFound = (req, res) => {
   res.render("admin/404")
@@ -524,7 +543,8 @@ module.exports = {
   banners,
   addMainBanner,
   addBrandBanner,
-  addMidBanner
+  addMidBanner,
+  addBottomBanner
 };
 
 

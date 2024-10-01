@@ -1,6 +1,6 @@
 const router = require("express").Router()
 
-const { index, addProductPage, addProduct, viewProducts, productActive, productInactive, notFound, editProductPage, editProduct, searchProducts, allUsers, userStatus, searchUser, deleteUser, loginPage, login, logout, couponPage, addCoupon, editCoupon, deleteCoupon, viewOrders, updateStatus, filterOrders, returnOrders, updateReturnStatus, cancellations, banners, addMainBanner, addBrandBanner, addMidBanner, } = require("../controllers/admin");
+const { index, addProductPage, addProduct, viewProducts, productActive, productInactive, notFound, editProductPage, editProduct, searchProducts, allUsers, userStatus, searchUser, deleteUser, loginPage, login, logout, couponPage, addCoupon, editCoupon, deleteCoupon, viewOrders, updateStatus, filterOrders, returnOrders, updateReturnStatus, cancellations, banners, addMainBanner, addBrandBanner, addMidBanner, addBottomBanner, } = require("../controllers/admin");
 const adminAuth = require("../middleware/adminAuth");
 
 // admin login get
@@ -62,7 +62,7 @@ router.post("/addBrandBanner",addBrandBanner);
 // adding MidBanner
 router.post("/addMidBanner",addMidBanner);
 // adding BottomBanner
-router.post("/addBottomBanner",);
+router.post("/addBottomBanner",addBottomBanner);
 
 
 
