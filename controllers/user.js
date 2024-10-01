@@ -10,6 +10,7 @@ const returnHelper = require("../helpers/return");
 const { User } = require("../models/userSchema");
 const cancelHelper = require("../helpers/cancel");
 const wishlistHelper = require('../helpers/wishlist');
+const bannerHelper = require("../helpers/banner")
 
 
 const Stripe = require("stripe")
@@ -274,7 +275,11 @@ const home = async (req, res) => {
       return { ...product, isInCart }; // Add isInCart to each  product
     });
 
-    res.render("user/index", { products: IsProductInCart,user });
+    const mainBanners = await bannerHelper.findMainBanner() 
+    const brandBanners = await bannerHelper.findBrandBanner() 
+    const midBanners = await bannerHelper.findMidBanner() 
+
+    res.render("user/index", { products: IsProductInCart,user,mainBanners,brandBanners,midBanners });
   } catch (error) {
     console.log(error);
   }

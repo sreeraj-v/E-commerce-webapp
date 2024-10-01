@@ -6,7 +6,7 @@
  {{>homeHeader}}
         <main class="main">
             <div class="intro-slider-container mb-0">
-                <div class="intro-slider owl-carousel owl-theme owl-nav-inside owl-light" data-toggle="owl" data-owl-options='{"nav": false, "dots": false}'>
+                {{!-- <div class="intro-slider owl-carousel owl-theme owl-nav-inside owl-light" data-toggle="owl" data-owl-options='{"nav": false, "dots": false}'>
                     <div class="intro-slide" style="background-image: url(assets/images/demos/demo-5/slider/slide-1.jpg);">
                         <div class="container intro-content text-center">
                             <h3 class="intro-subtitle text-white">Don’t Miss</h3><!-- End .h3 intro-subtitle -->
@@ -26,12 +26,12 @@
                     </div><!-- End .intro-slide -->
                 </div><!-- End .intro-slider owl-carousel owl-theme -->
 
-                <span class="slider-loader text-white"></span><!-- End .slider-loader -->
+                <span class="slider-loader text-white"></span><!-- End .slider-loader --> --}}
 
-  {{!-- <div class="intro-slider owl-carousel owl-theme owl-nav-inside owl-light" data-toggle="owl" data-owl-options='{"nav": true, "dots": true, "autoplay": true, "autoplayTimeout": 5000}'>
+  <div class="intro-slider owl-carousel owl-theme owl-nav-inside owl-light" data-toggle="owl" data-owl-options='{"nav": true, "dots": true, "autoplay": true, "autoplayTimeout": 5000}'>
 
-    {{#each banners}}
-    <div class="intro-slide" style="background-image: url({{this.imageUrl}});">
+    {{#each mainBanners}}
+    <div class="intro-slide" style="background-image: url({{this.image}});">
       <div class="container intro-content text-center">
         <h3 class="intro-subtitle text-white">{{this.subtitle}}</h3>
         <h1 class="intro-title text-white">{{this.title}}</h1>
@@ -42,7 +42,7 @@
     {{/each}}
     
   </div>
-  <span class="slider-loader text-white"></span> --}}
+  <span class="slider-loader text-white"></span>
 
 
             </div><!-- End .intro-slider-container -->
@@ -74,36 +74,14 @@
                         }
                     }
                 }'>
+                {{#each brandBanners}}
                 <a href="#" class="brand">
-                    <img src="assets/images/brands/1.png" alt="Brand Name">
+                    <img src="{{this.image}}" alt="Brand Name" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                 </a>
-
-                <a href="#" class="brand">
-                    <img src="assets/images/brands/2.png" alt="Brand Name">
-                </a>
-
-                <a href="#" class="brand">
-                    <img src="assets/images/brands/3.png" alt="Brand Name">
-                </a>
-
-                <a href="#" class="brand">
-                    <img src="assets/images/brands/4.png" alt="Brand Name">
-                </a>
-
-                <a href="#" class="brand">
-                    <img src="assets/images/brands/5.png" alt="Brand Name">
-                </a>
-
-                <a href="#" class="brand">
-                    <img src="assets/images/brands/6.png" alt="Brand Name">
-                </a>
-
-                <a href="#" class="brand">
-                    <img src="assets/images/brands/7.png" alt="Brand Name">
-                </a>
+                {{/each}}    
             </div><!-- End .owl-carousel -->
 
-            <div class="container">
+            {{!-- <div class="container">
                 <div class="banner-group">
                     <div class="row">
                         <div class="col-md-6">
@@ -147,7 +125,30 @@
                         </div><!-- End .col-md-6 -->
                     </div><!-- End .row -->
                 </div><!-- End .banner-group -->
-            </div><!-- End .container -->
+            </div><!-- End .container --> --}}
+
+            <div class="container">
+    <div class="banner-group">
+        <div class="row">
+            {{#each midBanners}}
+            <div class="col-md-6">
+                <div class="banner banner-border{{#if @first}}-hover{{/if}}">
+                    <a href="{{this.link}}">
+                        <img src="{{this.image}}" alt="Banner">
+                    </a>
+
+                    <div class="banner-content">
+                        <h4 class="banner-subtitle"><a href="{{this.link}}">{{this.subtitle}}</a></h4><!-- End .banner-subtitle -->
+                        <h3 class="banner-title"><a href="{{this.link}}"><span>{{this.title}}</span></a></h3><!-- End .banner-title -->
+                        <a href="{{this.link}}" class="btn btn-outline-primary-2 banner-link">Discover Now<i class="icon-long-arrow-right"></i></a>
+                    </div><!-- End .banner-content -->
+                </div><!-- End .banner -->
+            </div><!-- End .col-md-6-->
+            {{/each}}
+        </div><!-- End .row -->
+    </div><!-- End .banner-group -->
+</div><!-- End .container -->
+
 
             <div class="mb-4"></div><!-- End .mb-6 -->
 
