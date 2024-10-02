@@ -278,8 +278,9 @@ const home = async (req, res) => {
     const mainBanners = await bannerHelper.findMainBanner() 
     const brandBanners = await bannerHelper.findBrandBanner() 
     const midBanners = await bannerHelper.findMidBanner() 
+    const bottomBanners = await bannerHelper.findBottomBanner() 
 
-    res.render("user/index", { products: IsProductInCart,user,mainBanners,brandBanners,midBanners });
+    res.render("user/index", { products: IsProductInCart,user,mainBanners,brandBanners,midBanners,bottomBanners });
   } catch (error) {
     console.log(error);
   }

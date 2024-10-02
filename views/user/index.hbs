@@ -128,28 +128,64 @@
             </div><!-- End .container --> --}}
 
             <div class="container">
-    <div class="banner-group">
-        <div class="row">
-            {{#each midBanners}}
-            <div class="col-md-6">
-                <div class="banner banner-border{{#if @first}}-hover{{/if}}">
-                    <a href="{{this.link}}">
-                        <img src="{{this.image}}" alt="Banner">
-                    </a>
-
-                    <div class="banner-content">
-                        <h4 class="banner-subtitle"><a href="{{this.link}}">{{this.subtitle}}</a></h4><!-- End .banner-subtitle -->
-                        <h3 class="banner-title"><a href="{{this.link}}"><span>{{this.title}}</span></a></h3><!-- End .banner-title -->
-                        <a href="{{this.link}}" class="btn btn-outline-primary-2 banner-link">Discover Now<i class="icon-long-arrow-right"></i></a>
-                    </div><!-- End .banner-content -->
-                </div><!-- End .banner -->
-            </div><!-- End .col-md-6-->
-            {{/each}}
-        </div><!-- End .row -->
-    </div><!-- End .banner-group -->
-</div><!-- End .container -->
-
-
+                <div class="banner-group">
+                    <div class="row">
+                        <!-- Left side: Single banner when displayOrder is 1 -->
+                        {{#each midBanners}}
+                        {{#if (eq this.displayOrder 1)}}
+                        <div class="col-md-6">
+                            <div class="banner banner-border">
+                                <a href="{{this.link}}">
+                                    <img src="{{this.image}}" alt="Banner">
+                                </a>
+                                <div class="banner-content">
+                                    <h4 class="banner-subtitle"><a href="{{this.link}}" >{{this.subtitle}}</a></h4>
+                                    <h3 class="banner-title"><a href="{{this.link}}"><span>This Week's<br>Most Wanted</span></a></h3>
+                                    <a href="{{this.link}}" class="btn btn-outline-primary-2 banner-link">Discover Now<i
+                                            class="icon-long-arrow-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        {{/if}}
+                        {{/each}}
+            
+                        <!-- Right side: Two banners with displayOrder 2 and 3 -->
+                        <div class="col-md-6">
+                            {{#each midBanners}}
+                            {{#if (eq this.displayOrder 2)}}
+                            <div class="banner banner-border-hover mb-3">
+                                <a href="{{this.link}}">
+                                    <img src="{{this.image}}" alt="Banner">
+                                </a>
+                                <div class="banner-content">
+                                    <h4 class="banner-subtitle"><a href="{{this.link}}" style="color: white;">{{this.subtitle}}</a></h4>
+                                    <h3 class="banner-title"><a href="{{this.link}}"><span style="color: white;">Trainers & Sportwear<br>Sale Up to 70% off</span></a></h3>
+                                    <a href="{{this.link}}" class="btn btn-outline-primary-2 banner-link" style="color: white;">Shop Now<i
+                                            class="icon-long-arrow-right"></i></a>
+                                </div>
+                            </div>
+                            {{/if}}
+                            {{/each}}
+            
+                            {{#each midBanners}}
+                            {{#if (eq this.displayOrder 3)}}
+                            <div class="banner banner-border-hover">
+                                <a href="{{this.link}}">
+                                    <img src="{{this.image}}" alt="Banner">
+                                </a>
+                                <div class="banner-content" style="color: white;">
+                                    <h4 class="banner-subtitle"><a href="{{this.link}}" style="color: white;">{{this.subtitle}}</a></h4>
+                                    <h3 class="banner-title"><a href="{{this.link}}"><span style="color: white;">Womens <br>Holiday shoes</span></a></h3>
+                                    <a href="{{this.link}}" class="btn btn-outline-primary-2 banner-link" style="color: white;">Discover Now<i
+                                            class="icon-long-arrow-right"></i></a>
+                                </div>
+                            </div>
+                            {{/if}}
+                            {{/each}}
+                        </div>
+                    </div><!-- End .row -->
+                </div><!-- End .banner-group -->
+            </div><!-- End .container -->
             <div class="mb-4"></div><!-- End .mb-6 -->
 
          {{!-- iigg   <div class="container">
@@ -433,13 +469,14 @@
             </div><!-- End .container --> --}}
 
             <div class="mb-5"></div><!-- End .mb-5 -->
-
-            <div class="video-banner video-banner-bg bg-image text-center" style="background-image: url(assets/images/demos/demo-5/bg-2.jpg)">
+            {{#each bottomBanners}}
+            <div class="video-banner video-banner-bg bg-image text-center" style="background-image: url({{this.image}})">
                 <div class="container">
                     <h3 class="video-banner-title h1 text-white"><span>New Collection</span><strong>Winter’19 <i>/</i> Spring’20</strong></h3><!-- End .video-banner-title -->
-                    <a href="https://www.youtube.com/watch?v=vBPgmASQ1A0" class="btn-video btn-iframe"><i class="icon-play"></i></a>
+                    <a href="{{this.link}}" class="btn-video btn-iframe"><i class="icon-play"></i></a>
                 </div><!-- End .container -->
             </div><!-- End .video-banner bg-image -->
+            {{/each}}
 
             {{!-- <div class="pt-6 pb-6" style="background-color: #fff;">
                 <div class="container">
@@ -854,8 +891,9 @@
                     </div><!-- .End .tab-pane -->
                 </div><!-- End .tab-content -->
 
+{{!-- load more button pagination --}}
                 <div class="more-container text-center mt-1 mb-3">
-                    <a href="#" class="btn btn-outline-primary-2 btn-round btn-more">Load more</a>
+                    <a href="/shop" class="btn btn-outline-primary-2 btn-round btn-more">Go to Shop</a>
                 </div><!-- End .more-container -->
             </div><!-- End .container -->
                 
@@ -867,22 +905,22 @@
                         <div class="col-lg-6">
                             <div class="cta-wrapper cta-text text-center">
                                 <h3 class="cta-title">Shop Social</h3><!-- End .cta-title -->
-                                <p class="cta-desc">Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. </p><!-- End .cta-desc -->
+                                <p class="cta-desc"> we believe that shopping should be more than just a transaction; it should be an experience. </p><!-- End .cta-desc -->
                         
-                                <div class="social-icons social-icons-colored justify-content-center">
+                                {{!-- <div class="social-icons social-icons-colored justify-content-center">
                                     <a href="#" class="social-icon social-facebook" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a>
                                     <a href="#" class="social-icon social-twitter" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>
                                     <a href="#" class="social-icon social-instagram" title="Instagram" target="_blank"><i class="icon-instagram"></i></a>
                                     <a href="#" class="social-icon social-youtube" title="Youtube" target="_blank"><i class="icon-youtube"></i></a>
                                     <a href="#" class="social-icon social-pinterest" title="Pinterest" target="_blank"><i class="icon-pinterest"></i></a>
-                                </div><!-- End .soial-icons -->
+                                </div><!-- End .soial-icons --> --}}
                             </div><!-- End .cta-wrapper -->
                         </div><!-- End .col-lg-6 -->
 
                         <div class="col-lg-6">
                             <div class="cta-wrapper text-center">
                                 <h3 class="cta-title">Get the Latest Deals</h3><!-- End .cta-title -->
-                                <p class="cta-desc">and <br>receive <span class="text-primary">$20 coupon</span> for first shopping</p><!-- End .cta-desc -->
+                                <p class="cta-desc">and <br>receive <span class="text-primary">flat 15% off coupon</span> for first shopping</p><!-- End .cta-desc -->
                         
                                 {{!-- <form action="#">
                                     <div class="input-group">
@@ -1021,7 +1059,7 @@
 
                                 <div class="icon-box-content">
                                     <h3 class="icon-box-title">Payment & Delivery</h3><!-- End .icon-box-title -->
-                                    <p>Free shipping for orders over $50</p>
+                                    <p>Free shipping on all the orders </p>
                                 </div><!-- End .icon-box-content -->
                             </div><!-- End .icon-box -->
                         </div><!-- End .col-sm-6 col-lg-4 -->
