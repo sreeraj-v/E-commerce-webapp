@@ -1092,6 +1092,32 @@
                     </div><!-- End .row -->
                 </div><!-- End .container -->
             </div><!-- End .bg-lighter pt-5 pb-5 -->
+
+
+<div style="position: fixed; bottom: 30px; right: 30px; z-index: 9999;">
+  <div id="chat-tooltip" style="position: absolute; bottom: 50px; right: 0; background-color: #333; color: white; padding: 5px 10px; border-radius: 5px; display: none; white-space: nowrap;">
+    Ask your doubts?
+  </div>
+  <button id="chat-button" style="width: 50px; height: 50px; border-radius: 50%; background-color: #d63031; color: white; border: none; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; overflow: hidden;">
+    <div style="width: 36px; height: 36px; background-color: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+      <i class="fas fa-robot" style="font-size: 20px;"></i>
+    </div>
+  </button>
+  
+  <div id="chat-window" style="display: none; position: fixed; bottom: 85px; right: 30px; width: 280px; height: 330px; background-color: white; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.1); overflow: hidden;">
+    <div style="background-color: #000; color: white; padding: 2px 15px; display: flex; justify-content: space-between; align-items: center;">
+      <h5 style="margin: 0;">Chat with us</h5>
+      <button id="close-chat" style="background: none; border: none; color: white; font-size: 18px; cursor: pointer;">×</button>
+    </div>
+    <div id="chat-messages" style="height: 230px; overflow-y: auto; padding: 10px;">
+      <!-- Chat messages will appear here -->
+    </div>
+    <div style="display: flex; padding: 10px 15px 15px; border-top: 1px solid #eee;">
+      <input id="chat-input" type="text" placeholder="Ask your questions?" style="flex-grow: 1; padding: 6px; border: 1px solid #ddd; border-radius: 3px; background-color: #f5f5f5; color: #333; margin-right: 5px;">
+      <button id="send-button" style="background-color: #000; color: white; border: none; padding: 8px 12px; border-radius: 3px; cursor: pointer;">Send</button>
+    </div>
+  </div>
+</div>            
         </main><!-- End .main -->
 
 {{>allPageFooter}}
@@ -1131,6 +1157,37 @@
             </div>
         </div>
     </div>
+
+{{!-- chat bot related script --}}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const chatButton = document.getElementById('chat-button');
+    const chatWindow = document.getElementById('chat-window');
+    const closeChat = document.getElementById('close-chat');
+    const chatTooltip = document.getElementById('chat-tooltip');
+
+    chatButton.addEventListener('mouseover', function() {
+      chatTooltip.style.display = 'block';
+    });
+
+    chatButton.addEventListener('mouseout', function() {
+      chatTooltip.style.display = 'none';
+    });
+
+    chatButton.addEventListener('click', function() {
+      chatWindow.style.display = chatWindow.style.display === 'none' ? 'block' : 'none';
+    });
+
+    closeChat.addEventListener('click', function() {
+      chatWindow.style.display = 'none';
+    });
+
+    // Removed the function that adds messages to the chat window
+  });
+</script>
+
+
 {{!-- 
     <script src="assets/js/jquery.magnific-popup.min.js"></script>
     <script src="assets/js/jquery.plugin.min.js"></script>
