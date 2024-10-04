@@ -1,4 +1,8 @@
 const express = require("express")
+
+const http = require("http"); // Add this for Socket.IO
+const socketio = require("socket.io"); // Add Socket.IO
+
 const hbs = require("express-handlebars")
 const path = require("path")
 const cookieParser = require('cookie-parser')
@@ -16,6 +20,8 @@ const adminRouter = require("./routes/adminRouter")
 
 
 const app = express()
+const server = http.createServer(app); // Create an HTTP server
+const io = socketio(server); // Initialize Socket.IO
 
 app.use(clearCache)
 // session setup 
@@ -60,9 +66,40 @@ app.use("/",userRouter)
 app.use("/admin",adminLayoutActive, adminRouter);
 
 
+// Add Socket.IO logic for real-time chat
+io.on("connection", (socket) => {
+  console.log("A user connected");
+  
+  // Listen for incoming messages from the client
+  socket.on("userMessage", (message) => {
+    console.log("Message received from user:", message);
+    
+    // Predefined responses
+    const responses = {
+      "hi": "Hello! How can I assist you?",
+      "shipping": "Our shipping times are 5-7 business days.",
+      "payment": "We accept payments via Stripe, PayPal, and credit cards.",
+      "return": "You can return items within 30 days of purchase."
+    };
+    
+    // Check for a response, otherwise return a default message
+    const botResponse = responses[message.toLowerCase()] || "Sorry, I don't understand that question.";
+    
+    // Send the response back to the client
+    socket.emit("botResponse", botResponse);
+  });
+
+  // Handle disconnection
+  socket.on("disconnect", () => {
+    console.log("A user disconnected");
+  });
+});
+
+
+
 // port setup
 const PORT = process.env.PORT||3001
-app.listen(PORT, () =>
+server.listen(PORT, () =>
   console.log(`Server is Listening on http://localhost:${PORT}`)
 );
 

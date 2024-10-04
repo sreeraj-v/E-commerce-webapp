@@ -1160,6 +1160,8 @@
 
 {{!-- chat bot related script --}}
 
+<script src="/socket.io/socket.io.js"></script> <!-- Load Socket.IO -->
+
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const chatButton = document.getElementById('chat-button');
@@ -1167,6 +1169,7 @@
     const closeChat = document.getElementById('close-chat');
     const chatTooltip = document.getElementById('chat-tooltip');
 
+    // Toggle chat tooltip on hover
     chatButton.addEventListener('mouseover', function() {
       chatTooltip.style.display = 'block';
     });
@@ -1175,17 +1178,48 @@
       chatTooltip.style.display = 'none';
     });
 
+    // Toggle chat window on click
     chatButton.addEventListener('click', function() {
       chatWindow.style.display = chatWindow.style.display === 'none' ? 'block' : 'none';
     });
 
+    // Close chat window on clicking close button
     closeChat.addEventListener('click', function() {
       chatWindow.style.display = 'none';
     });
 
-    // Removed the function that adds messages to the chat window
+    // Connect to the server using Socket.IO
+    const socket = io();
+
+    // Handle sending a message when the user clicks the "Send" button
+    document.getElementById("send-button").addEventListener("click", function() {
+      const userInput = document.getElementById("chat-input").value;
+
+      if (userInput.trim() === "") {
+        return; // Prevent sending empty messages
+      }
+
+      // Emit the user's message to the server
+      socket.emit("userMessage", userInput);
+
+      // Clear the input field
+      document.getElementById("chat-input").value = "";
+
+      // Display the user's message in the chat window
+      const userMessageElement = document.createElement("div");
+      userMessageElement.textContent = `You: ${userInput}`;
+      document.getElementById("chat-messages").appendChild(userMessageElement);
+    });
+
+    // Listen for the bot's response from the server
+    socket.on("botResponse", function(message) {
+      const botMessageElement = document.createElement("div");
+      botMessageElement.textContent = `Bot: ${message}`;
+      document.getElementById("chat-messages").appendChild(botMessageElement);
+    });
   });
 </script>
+
 
 
 {{!-- 
