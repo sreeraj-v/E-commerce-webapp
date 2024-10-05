@@ -16,7 +16,8 @@ const connectDb = require("./config/db/cofig")
 const adminLayoutActive = require("./middleware/adminLayoutActive")
 const clearCache = require("./middleware/clearCache")
 const userRouter = require("./routes/userRouter")
-const adminRouter = require("./routes/adminRouter") 
+const adminRouter = require("./routes/adminRouter")
+const initializeChatSocket = require('./utils/chatsocket');
 
 
 const app = express()
@@ -65,36 +66,7 @@ app.use("/",userRouter)
 // setting the layout to adminLayout & active sidebar elements for admin routes
 app.use("/admin",adminLayoutActive, adminRouter);
 
-
-// Add Socket.IO logic for real-time chat
-io.on("connection", (socket) => {
-  console.log("A user connected");
-  
-  // Listen for incoming messages from the client
-  socket.on("userMessage", (message) => {
-    console.log("Message received from user:", message);
-    
-    // Predefined responses
-    const responses = {
-      "hi": "Hello! How can I assist you?",
-      "shipping": "Our shipping times are 5-7 business days.",
-      "payment": "We accept payments via Stripe, PayPal, and credit cards.",
-      "return": "You can return items within 30 days of purchase."
-    };
-    
-    // Check for a response, otherwise return a default message
-    const botResponse = responses[message.toLowerCase()] || "Sorry, I don't understand that question.";
-    
-    // Send the response back to the client
-    socket.emit("botResponse", botResponse);
-  });
-
-  // Handle disconnection
-  socket.on("disconnect", () => {
-    console.log("A user disconnected");
-  });
-});
-
+initializeChatSocket(io); 
 
 
 // port setup

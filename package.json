@@ -16,6 +16,7 @@
     "express": "^4.19.2",
     "express-handlebars": "^7.1.2",
     "express-session": "^1.18.0",
+    "fuse.js": "^7.0.0",
     "handlebars-helpers": "^0.10.0",
     "hbs": "^4.2.0",
     "mongoose": "^8.4.1",
