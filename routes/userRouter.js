@@ -28,7 +28,7 @@ router.get("/myaccount",userAuth,myaccount);
 router.post("/return", returnProduct);
 router.post('/cancelOrder',cancelOrder )
 router.post('/addToWishlist', addToWishlist);
-router.get("/wishlist",getWishlist)
+router.get("/wishlist",userAuth,getWishlist)
 router.get("/removeFromWishlist",removeFromWishlist)
 
 
