@@ -1,3 +1,55 @@
+<style>
+  /* Styles for the chat window */
+  #chat-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    height: 230px;
+    overflow-y: auto;
+  }
+
+  /* Style for user's message */
+  .user-message {
+    background-color: #d1ecf1; /* Light blue background */
+    color: #004085;
+    align-self: flex-end; /* Align to the right */
+    padding: 10px;
+    border-radius: 15px;
+    max-width: 70%;
+    word-wrap: break-word;
+  }
+
+  /* Style for bot's message */
+  .bot-message {
+    background-color: #f8f9fa; /* Light grey background */
+    color: #343a40;
+    align-self: flex-start; /* Align to the left */
+    padding: 10px;
+    border-radius: 15px;
+    max-width: 70%;
+    word-wrap: break-word;
+  }
+
+  /* Custom scrollbar */
+  #chat-messages::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  #chat-messages::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  #chat-messages::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+  }
+
+  #chat-messages::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+</style>
+
 <div style="position: fixed; bottom: 30px; right: 30px; z-index: 9999;">
   <div id="chat-tooltip" style="position: absolute; bottom: 50px; right: 0; background-color: #333; color: white; padding: 5px 10px; border-radius: 5px; display: none; white-space: nowrap;">
     Ask your doubts?
@@ -31,6 +83,7 @@
     const chatWindow = document.getElementById('chat-window');
     const closeChat = document.getElementById('close-chat');
     const chatTooltip = document.getElementById('chat-tooltip');
+    const chatMessages = document.getElementById("chat-messages");
 
     // Toggle chat tooltip on hover
     chatButton.addEventListener('mouseover', function() {
@@ -54,6 +107,34 @@
     // Connect to the server using Socket.IO
     const socket = io();
 
+    // Function to scroll to the bottom
+    function scrollToBottom() {
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Function to render chat history
+    function renderChatHistory(chatHistory) {
+      chatHistory.forEach(chat => {
+        const userMessageElement = document.createElement("div");
+        userMessageElement.classList.add("user-message");
+        userMessageElement.textContent = chat.question;
+        chatMessages.appendChild(userMessageElement);
+
+        const botMessageElement = document.createElement("div");
+        botMessageElement.classList.add("bot-message");
+        botMessageElement.textContent = chat.answer;
+        chatMessages.appendChild(botMessageElement);
+      });
+      scrollToBottom();
+    }
+
+    // Listen for chat history event from the server
+    socket.on("chatHistory", function(chatHistory) {
+      if (chatHistory && chatHistory.length > 0) {
+        renderChatHistory(chatHistory);
+      }
+    });
+
     // Handle sending a message when the user clicks the "Send" button
     document.getElementById("send-button").addEventListener("click", function() {
       const userInput = document.getElementById("chat-input").value;
@@ -70,15 +151,23 @@
 
       // Display the user's message in the chat window
       const userMessageElement = document.createElement("div");
-      userMessageElement.textContent = `You: ${userInput}`;
-      document.getElementById("chat-messages").appendChild(userMessageElement);
+      userMessageElement.classList.add("user-message"); // Add the user message class
+      userMessageElement.textContent = userInput;
+      chatMessages.appendChild(userMessageElement);
+
+      // Scroll to the bottom of the chat
+      scrollToBottom();
     });
 
     // Listen for the bot's response from the server
     socket.on("botResponse", function(message) {
       const botMessageElement = document.createElement("div");
-      botMessageElement.textContent = `Bot: ${message}`;
-      document.getElementById("chat-messages").appendChild(botMessageElement);
+      botMessageElement.classList.add("bot-message"); // Add the bot message class
+      botMessageElement.textContent = message;
+      chatMessages.appendChild(botMessageElement);
+
+      // Scroll to the bottom of the chat
+      scrollToBottom();
     });
   });
 </script>

@@ -27,7 +27,7 @@ router.get("/download-invoice/:orderId",userAuth,downloadInvoice);
 router.get("/myaccount",userAuth,myaccount);
 router.post("/return", returnProduct);
 router.post('/cancelOrder',cancelOrder )
-router.post('/addToWishlist', addToWishlist);
+router.post('/addToWishlist', userAuth,addToWishlist);
 router.get("/wishlist",userAuth,getWishlist)
 router.get("/removeFromWishlist",removeFromWishlist)
 
