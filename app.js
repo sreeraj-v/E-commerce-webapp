@@ -21,18 +21,20 @@ const initializeChatSocket = require('./utils/chatsocket');
 
 
 const app = express()
-const server = http.createServer(app); // Create an HTTP server
+const server = http.createServer(app); // Create an HTTP server for socket.IO
 const io = socketio(server); // Initialize Socket.IO
 
 app.use(clearCache)
 // session setup 
-app.use(session({
+const sessionMiddleware = session({
   secret:SECRET_KEY,
   resave:false,
   saveUninitialized:false,
   cookie:{maxAge:600000 * 24},
   store:new mongoDbStore({mongooseConnection:connectDb})  
-}))
+})
+
+app.use(sessionMiddleware)
 
 // view engine setting
 app.set("views",path.join(__dirname,"views"));
@@ -65,8 +67,8 @@ app.use(cookieParser());
 app.use("/",userRouter)
 // setting the layout to adminLayout & active sidebar elements for admin routes
 app.use("/admin",adminLayoutActive, adminRouter);
-
-initializeChatSocket(io); 
+// setting up socket 
+initializeChatSocket(io, sessionMiddleware); 
 
 
 // port setup
@@ -78,4 +80,6 @@ server.listen(PORT, () =>
 
 module.exports = app
 
-// doubts:
+// new changes due to socket:
+// 1.added session object to sessionMiddleware variable &it is passed to app.use middleware .before directly passed to app.use
+// 2.passed sessionMiddleware to initializeChatSocket() function.
