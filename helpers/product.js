@@ -17,8 +17,8 @@ module.exports={
     return relatedProducts;
   },
 
-  shopProducts: async()=>{
-    const products = await Product.find({isActive:true}).lean()
+  shopProducts: async(filterCriteria = {})=>{
+    const products = await Product.find({ isActive: true, ...filterCriteria }).lean();
     return products;
   },
 

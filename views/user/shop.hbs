@@ -7,10 +7,8 @@
             <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
                 <div class="container">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Shop</a></li>
-                        <li class="breadcrumb-item"><a href="#">No Sidebar</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Boxed</li>
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Shop</li>
                     </ol>
                 </div><!-- End .container -->
             </nav><!-- End .breadcrumb-nav -->
@@ -24,7 +22,7 @@
 
                         <div class="toolbox-center">
                             <div class="toolbox-info">
-                                Showing <span>12 of 56</span> Products
+                                {{!-- Showing <span>12 of 56</span> Products --}}
                             </div><!-- End .toolbox-info -->
                         </div><!-- End .toolbox-center -->
 
@@ -92,16 +90,17 @@
                         </div><!-- End .row -->
 
                         <div class="load-more-container text-center">
-                            <a href="#" class="btn btn-outline-darker btn-load-more">More Products <i class="icon-refresh"></i></a>
+                            <a href="/" class="btn btn-outline-darker btn-load-more">Go to Home <i class="icon-refresh"></i></a>
                         </div><!-- End .load-more-container -->
                     </div><!-- End .products -->
 
                     <div class="sidebar-filter-overlay"></div><!-- End .sidebar-filter-overlay -->
                     <aside class="sidebar-shop sidebar-filter">
+                      <form id="filter-form" action="/shop" method="GET">
                         <div class="sidebar-filter-wrapper">
                             <div class="widget widget-clean">
-                                <label><i class="icon-close"></i>Filters</label>
-                                <a href="#" class="sidebar-filter-clear">Clean All</a>
+                                <label><i class="icon-close" id="close-filter"></i>Filters</label>
+                                <a href="#" id="reset-filters" class="sidebar-filter-clear">Clean All</a>
                             </div><!-- End .widget -->
                             <div class="widget widget-collapsible">
                                 <h3 class="widget-title">
@@ -115,73 +114,45 @@
                                         <div class="filter-items filter-items-count">
                                             <div class="filter-item">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="cat-1">
-                                                    <label class="custom-control-label" for="cat-1">Dresses</label>
+                                                    <input type="checkbox" name="category" value="mens" class="custom-control-input" id="cat-1">
+                                                    <label class="custom-control-label" for="cat-1">mens</label>
                                                 </div><!-- End .custom-checkbox -->
-                                                <span class="item-count">3</span>
+                                                {{!-- <span class="item-count">3</span> --}}
                                             </div><!-- End .filter-item -->
-
                                             <div class="filter-item">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="cat-2">
-                                                    <label class="custom-control-label" for="cat-2">T-shirts</label>
+                                                    <input type="checkbox" name="category" value="womens" class="custom-control-input" id="cat-2">
+                                                    <label class="custom-control-label" for="cat-2">womens</label>
                                                 </div><!-- End .custom-checkbox -->
-                                                <span class="item-count">0</span>
+                                                {{!-- <span class="item-count">3</span> --}}
                                             </div><!-- End .filter-item -->
-
                                             <div class="filter-item">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="cat-3">
-                                                    <label class="custom-control-label" for="cat-3">Bags</label>
+                                                    <input type="checkbox" name="category" value="premium" class="custom-control-input" id="cat-3">
+                                                    <label class="custom-control-label" for="cat-3">premium</label>
                                                 </div><!-- End .custom-checkbox -->
-                                                <span class="item-count">4</span>
+                                                {{!-- <span class="item-count">3</span> --}}
                                             </div><!-- End .filter-item -->
-
                                             <div class="filter-item">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="cat-4">
-                                                    <label class="custom-control-label" for="cat-4">Jackets</label>
+                                                    <input type="checkbox" name="category" value="popular" class="custom-control-input" id="cat-4">
+                                                    <label class="custom-control-label" for="cat-4">popular</label>
                                                 </div><!-- End .custom-checkbox -->
-                                                <span class="item-count">2</span>
+                                                {{!-- <span class="item-count">3</span> --}}
                                             </div><!-- End .filter-item -->
-
                                             <div class="filter-item">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="cat-5">
-                                                    <label class="custom-control-label" for="cat-5">Shoes</label>
+                                                    <input type="checkbox" name="category" value="New arrival" class="custom-control-input" id="cat-5">
+                                                    <label class="custom-control-label" for="cat-5">New arrival</label>
                                                 </div><!-- End .custom-checkbox -->
-                                                <span class="item-count">2</span>
-                                            </div><!-- End .filter-item -->
-
-                                            <div class="filter-item">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="cat-6">
-                                                    <label class="custom-control-label" for="cat-6">Jumpers</label>
-                                                </div><!-- End .custom-checkbox -->
-                                                <span class="item-count">1</span>
-                                            </div><!-- End .filter-item -->
-
-                                            <div class="filter-item">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="cat-7">
-                                                    <label class="custom-control-label" for="cat-7">Jeans</label>
-                                                </div><!-- End .custom-checkbox -->
-                                                <span class="item-count">1</span>
-                                            </div><!-- End .filter-item -->
-
-                                            <div class="filter-item">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="cat-8">
-                                                    <label class="custom-control-label" for="cat-8">Sportwear</label>
-                                                </div><!-- End .custom-checkbox -->
-                                                <span class="item-count">0</span>
+                                                {{!-- <span class="item-count">3</span> --}}
                                             </div><!-- End .filter-item -->
                                         </div><!-- End .filter-items -->
                                     </div><!-- End .widget-body -->
                                 </div><!-- End .collapse -->
                             </div><!-- End .widget -->
 
-                            <div class="widget widget-collapsible">
+                            {{!-- <div class="widget widget-collapsible">
                                 <h3 class="widget-title">
                                     <a data-toggle="collapse" href="#widget-2" role="button" aria-expanded="true" aria-controls="widget-2">
                                         Size
@@ -197,47 +168,12 @@
                                                     <label class="custom-control-label" for="size-1">XS</label>
                                                 </div><!-- End .custom-checkbox -->
                                             </div><!-- End .filter-item -->
-
-                                            <div class="filter-item">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="size-2">
-                                                    <label class="custom-control-label" for="size-2">S</label>
-                                                </div><!-- End .custom-checkbox -->
-                                            </div><!-- End .filter-item -->
-
-                                            <div class="filter-item">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" checked id="size-3">
-                                                    <label class="custom-control-label" for="size-3">M</label>
-                                                </div><!-- End .custom-checkbox -->
-                                            </div><!-- End .filter-item -->
-
-                                            <div class="filter-item">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" checked id="size-4">
-                                                    <label class="custom-control-label" for="size-4">L</label>
-                                                </div><!-- End .custom-checkbox -->
-                                            </div><!-- End .filter-item -->
-
-                                            <div class="filter-item">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="size-5">
-                                                    <label class="custom-control-label" for="size-5">XL</label>
-                                                </div><!-- End .custom-checkbox -->
-                                            </div><!-- End .filter-item -->
-
-                                            <div class="filter-item">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="size-6">
-                                                    <label class="custom-control-label" for="size-6">XXL</label>
-                                                </div><!-- End .custom-checkbox -->
-                                            </div><!-- End .filter-item -->
                                         </div><!-- End .filter-items -->
                                     </div><!-- End .widget-body -->
                                 </div><!-- End .collapse -->
-                            </div><!-- End .widget -->
+                            </div><!-- End .widget --> --}}
 
-                            <div class="widget widget-collapsible">
+                            {{!-- <div class="widget widget-collapsible">
                                 <h3 class="widget-title">
                                     <a data-toggle="collapse" href="#widget-3" role="button" aria-expanded="true" aria-controls="widget-3">
                                         Colour
@@ -258,7 +194,7 @@
                                         </div><!-- End .filter-colors -->
                                     </div><!-- End .widget-body -->
                                 </div><!-- End .collapse -->
-                            </div><!-- End .widget -->
+                            </div><!-- End .widget --> --}}
 
                             <div class="widget widget-collapsible">
                                 <h3 class="widget-title">
@@ -272,59 +208,40 @@
                                         <div class="filter-items">
                                             <div class="filter-item">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="brand-1">
-                                                    <label class="custom-control-label" for="brand-1">Next</label>
+                                                    <input type="checkbox" name="brand" value="Jordan" class="custom-control-input" id="brand-1">
+                                                    <label class="custom-control-label" for="brand-1">Jordan</label>
                                                 </div><!-- End .custom-checkbox -->
                                             </div><!-- End .filter-item -->
-
                                             <div class="filter-item">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="brand-2">
-                                                    <label class="custom-control-label" for="brand-2">River Island</label>
+                                                    <input type="checkbox" name="brand" value="Nike" class="custom-control-input" id="brand-2">
+                                                    <label class="custom-control-label" for="brand-2">Nike</label>
                                                 </div><!-- End .custom-checkbox -->
                                             </div><!-- End .filter-item -->
-
                                             <div class="filter-item">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="brand-3">
-                                                    <label class="custom-control-label" for="brand-3">Geox</label>
+                                                    <input type="checkbox" name="brand" value="Adidas" class="custom-control-input" id="brand-3">
+                                                    <label class="custom-control-label" for="brand-3">Adidas</label>
                                                 </div><!-- End .custom-checkbox -->
                                             </div><!-- End .filter-item -->
-
                                             <div class="filter-item">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="brand-4">
-                                                    <label class="custom-control-label" for="brand-4">New Balance</label>
+                                                    <input type="checkbox" name="brand" value="Gucci" class="custom-control-input" id="brand-4">
+                                                    <label class="custom-control-label" for="brand-4">Gucci</label>
                                                 </div><!-- End .custom-checkbox -->
                                             </div><!-- End .filter-item -->
-
                                             <div class="filter-item">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="brand-5">
-                                                    <label class="custom-control-label" for="brand-5">UGG</label>
+                                                    <input type="checkbox" name="brand" value="Armani" class="custom-control-input" id="brand-5">
+                                                    <label class="custom-control-label" for="brand-5">Armani</label>
                                                 </div><!-- End .custom-checkbox -->
                                             </div><!-- End .filter-item -->
-
-                                            <div class="filter-item">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="brand-6">
-                                                    <label class="custom-control-label" for="brand-6">F&F</label>
-                                                </div><!-- End .custom-checkbox -->
-                                            </div><!-- End .filter-item -->
-
-                                            <div class="filter-item">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="brand-7">
-                                                    <label class="custom-control-label" for="brand-7">Nike</label>
-                                                </div><!-- End .custom-checkbox -->
-                                            </div><!-- End .filter-item -->
-
                                         </div><!-- End .filter-items -->
                                     </div><!-- End .widget-body -->
                                 </div><!-- End .collapse -->
                             </div><!-- End .widget -->
 
-                            <div class="widget widget-collapsible">
+                            {{!-- <div class="widget widget-collapsible">
                                 <h3 class="widget-title">
                                     <a data-toggle="collapse" href="#widget-5" role="button" aria-expanded="true" aria-controls="widget-5">
                                         Price
@@ -343,8 +260,27 @@
                                         </div><!-- End .filter-price -->
                                     </div><!-- End .widget-body -->
                                 </div><!-- End .collapse -->
-                            </div><!-- End .widget -->
+                            </div><!-- End .widget --> --}}
+        <div class="widget widget-collapsible">
+            <h3 class="widget-title">
+                <a data-toggle="collapse" href="#widget-5" role="button" aria-expanded="true" aria-controls="widget-5">Price</a>
+            </h3>
+            <div class="collapse show" id="widget-5">
+                <div class="widget-body">
+                    <div class="filter-price">
+                        <label for="price-min">Min Price: ₹<span id="price-min-value">0</span></label>
+                        <input type="range" id="price-min" name="price_min" min="0" max="30000" value="0" step="10">
+                        
+                        <label for="price-max">Max Price: ₹<span id="price-max-value">30000</span></label>
+                        <input type="range" id="price-max" name="price_max" min="0" max="30000" value="100000" step="10">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+                           <button type="submit" class="btn btn-primary">Apply Filters</button>
                         </div><!-- End .sidebar-filter-wrapper -->
+                      </form>
                     </aside><!-- End .sidebar-filter -->
                 </div><!-- End .container -->
             </div><!-- End .page-content -->
@@ -356,6 +292,36 @@
     <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
 
 {{>mobileView}}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const minPriceInput = document.getElementById('price-min');
+    const maxPriceInput = document.getElementById('price-max');
+    const minPriceDisplay = document.getElementById('price-min-value');
+    const maxPriceDisplay = document.getElementById('price-max-value');
+    const resetFiltersButton = document.getElementById('reset-filters');
+    const filterForm = document.getElementById('filter-form');
+
+    // Update price min value on slider input
+    minPriceInput.addEventListener('input', function () {
+        minPriceDisplay.textContent = minPriceInput.value;
+    });
+
+    // Update price max value on slider input
+    maxPriceInput.addEventListener('input', function () {
+        maxPriceDisplay.textContent = maxPriceInput.value;
+    });
+
+    // Clean all filters
+    resetFiltersButton.addEventListener('click', function (e) {
+        e.preventDefault();
+        filterForm.reset(); // This resets the form fields
+        minPriceDisplay.textContent = minPriceInput.min; // Reset min price display
+        maxPriceDisplay.textContent = maxPriceInput.max; // Reset max price display
+    });
+});
+
+</script>
 
     <script>
     document.querySelectorAll('.btn-wishlist').forEach(button => {

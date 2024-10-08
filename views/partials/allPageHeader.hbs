@@ -63,11 +63,11 @@
 
                     <div class="header-right">
                         <div class="header-search">
-                            <a href="#" class="search-toggle" role="button" title="Search"><i class="icon-search"></i></a>
-                            <form action="#" method="get">
-                                <div class="header-search-wrapper">
-                                    <label for="q" class="sr-only">Search</label>
-                                    <input type="search" class="form-control" name="q" id="q" placeholder="Search in..." required>
+                             <a href="#" id="search-btn" role="button" title="Search"><i class="icon-search"></i></a>
+                            <form action="/shop" method="get">
+                                <div class="header-search-wrapper" style="display: block !important;">
+                                    <label for="search" class="sr-only">Search</label>
+                                    <input type="search" class="form-control" name="search" id="search" placeholder="Search in..." required>
                                 </div><!-- End .header-search-wrapper -->
                             </form>
                         </div><!-- End .header-search -->
@@ -104,3 +104,24 @@
                 </div><!-- End .container -->
             </div><!-- End .header-middle -->
         </header><!-- End .header -->
+        
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+  const searchBtn = document.getElementById("search-btn");
+  const searchForm = document.getElementById("search-form");
+
+  searchBtn.addEventListener("click", function (e) {
+    e.preventDefault(); // Prevent default anchor behavior
+
+    const searchInput = document.getElementById("search").value.trim();
+
+    if (searchInput) {
+      searchForm.submit(); // Submit the form if input is not empty
+    } else {
+      alert("Please enter a search term!"); // Optional: Show an alert if input is empty
+    }
+  });
+});
+
+</script>

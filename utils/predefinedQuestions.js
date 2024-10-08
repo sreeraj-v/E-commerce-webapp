@@ -1,4 +1,5 @@
 const predefinedQuestions = [
+  { question: "hi?", answer: "welcome,how can i help you." },
   { question: "What is the return policy?", answer: "You can return items within 30 days of purchase." },
   { question: "What payment methods do you accept?", answer: "We accept payments via Stripe, PayPal, and credit cards." },
   { question: "How long does shipping take?", answer: "Shipping takes 5-7 business days." },

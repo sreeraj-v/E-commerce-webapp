@@ -352,9 +352,35 @@ const productView = async (req, res) => {
 const shop = async (req, res) => {
   const user = req.session.user? true:false  
   const userId = req.session.user ? req.session.user._id : null;
+  const { category, brand, price_min, price_max,search } = req.query;
 
   try {
-    const products = await productHelper.shopProducts();
+   // Fetch products based on filters
+   const filterCriteria = {};
+
+   if (category) {
+     filterCriteria.category = { $in: Array.isArray(category) ? category : [category] }; // Handle single or multiple categories
+   }
+
+   if (brand) {
+     filterCriteria.brand = { $in: Array.isArray(brand) ? brand : [brand] }; // Handle single or multiple brands
+   }
+
+   if (price_min || price_max) {
+     filterCriteria.price = {};
+     if (price_min) filterCriteria.price.$gte = parseInt(price_min);
+     if (price_max) filterCriteria.price.$lte = parseInt(price_max);
+   }
+console.log(search);
+
+   if (search) {
+    filterCriteria.$or = [
+      { name: { $regex: search, $options: 'i' } }, // Search by product name
+      { brand: { $regex: search, $options: 'i' } } // Search by product description
+    ];
+  }
+
+    const products = await productHelper.shopProducts(filterCriteria);
 
     let cart = { items: [] };
 
