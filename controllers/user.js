@@ -376,7 +376,7 @@ console.log(search);
    if (search) {
     filterCriteria.$or = [
       { name: { $regex: search, $options: 'i' } }, // Search by product name
-      { brand: { $regex: search, $options: 'i' } } // Search by product description
+      { brand: { $regex: search, $options: 'i' } } // Search by brand
     ];
   }
 
