@@ -371,12 +371,12 @@ const shop = async (req, res) => {
      if (price_min) filterCriteria.price.$gte = parseInt(price_min);
      if (price_max) filterCriteria.price.$lte = parseInt(price_max);
    }
-console.log(search);
+// console.log(search);
 
    if (search) {
     filterCriteria.$or = [
-      { name: { $regex: search, $options: 'i' } }, // Search by product name
-      { brand: { $regex: search, $options: 'i' } } // Search by brand
+      { name: { $regex: search, $options: 'i' } }, 
+      { brand: { $regex: search, $options: 'i' } } 
     ];
   }
 
