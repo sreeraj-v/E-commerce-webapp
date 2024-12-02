@@ -9,6 +9,9 @@ const orderHelper = require("../helpers/order")
 const returnHelper = require("../helpers/return")
 const cancelHelper = require("../helpers/cancel")
 const bannerHelper = require("../helpers/banner")
+const Order = require("../models/order")
+const moment = require('moment'); // To handle dates easily
+
 
 
 // const { compare } = require("bcrypt")
@@ -52,10 +55,138 @@ const login = async(req,res)=>{
 // }
 // insertAdmin()
 
-// view whole admin dashboard 
-const index = (req, res) => {
-  res.render("admin/index")
-}
+// view whole admin dashboard >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+// below is okay it is using agrgation.
+// const index = async (req, res) => {
+//   try {
+//       const todayStart = moment().startOf('day'); // Start of today's date
+//       const todayEnd = moment().endOf('day'); // End of today's date
+
+//       // Fetch all orders
+//       const allOrders = await Order.find();
+
+//       // Fetch today's orders
+//       const todayOrders = await Order.find({
+//           datePlaced: {
+//               $gte: todayStart.toDate(),
+//               $lte: todayEnd.toDate(),
+//           },
+//       });
+
+//       // Calculate Total Sale (total orders count)
+//       const totalSale = allOrders.length;
+
+//       // Calculate Today Sale (today orders count)
+//       const todaySale = todayOrders.length;
+
+//       // Calculate Total Revenue (only include delivered orders )
+//       const totalRevenue = allOrders
+//           .filter(order => order.orderStatus === "Delivered" )
+//           .reduce((sum, order) => sum + order.finalAmount, 0);
+
+//       // Calculate Today Revenue (sum of finalAmount in today’s orders)
+//       const todayRevenue = todayOrders.reduce((sum, order) => sum + order.finalAmount, 0);
+
+//       // Prepare data for the sales and revenue chart (grouped by month)
+//       const salesRevenueData = await Order.aggregate([
+//           {
+//               $match: {
+//                   orderStatus: "Delivered",
+//               }
+//           },
+//           {
+//               $group: {
+//                   _id: { month: { $month: "$datePlaced" } }, // Group by month only
+//                   totalSales: { $sum: 1 }, // Count number of orders
+//                   totalRevenue: { $sum: "$finalAmount" }, // Sum final amounts
+//               },
+//           },
+//           { $sort: { "_id.month": 1 } }, // Sort by month ascending
+//       ]);
+
+//       // Prepare month names, sales, and revenue data for the chart
+//       const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+//       const months = salesRevenueData.map(item => monthNames[item._id.month - 1]);
+//       const salesData = salesRevenueData.map(item => item.totalSales);
+//       const revenueData = salesRevenueData.map(item => item.totalRevenue);
+
+//       // Render the dashboard page, passing calculated data
+//       res.render('admin/index', {
+//           totalSale,
+//           todaySale,
+//           totalRevenue,
+//           todayRevenue,
+//           months, // Pass month names
+//           salesData,
+//           revenueData,
+//       });
+//   } catch (error) {
+//       console.error(error);
+//       res.status(500).send("Server Error");
+//   }
+// };
+
+const index = async (req, res) => {
+  try {
+    const todayStart = moment().startOf('day'); 
+    const todayEnd = moment().endOf('day'); 
+
+    const allOrders = await Order.find();
+
+    const todayOrders = await Order.find({
+      datePlaced: { $gte: todayStart.toDate(), $lte: todayEnd.toDate() },
+    });
+
+    const totalSale = allOrders.length;
+
+    const todaySale = todayOrders.length;
+
+    // Calculate Total Revenue (sum of finalAmount in delivered orders)
+    const totalRevenue = allOrders
+      .filter(order => order.orderStatus === "Delivered")
+      .reduce((sum, order) => sum + order.finalAmount, 0);
+
+    // Calculate Today Revenue (sum of finalAmount in today’s orders)
+    const todayRevenue = todayOrders.reduce((sum, order) => sum + order.finalAmount, 0);
+
+    // Prepare 12 months of data, initializing each month to zero
+    const monthlyData = Array.from({ length: 12 }, (_, i) => ({
+      month: moment().month(i).format("MMM"), 
+      totalSales: 0,
+      totalRevenue: 0,
+    }));
+
+    // Update monthlyData with actual values from orders
+    allOrders.forEach(order => {
+      if (order.orderStatus === "Delivered") {
+        const monthIndex = new Date(order.datePlaced).getMonth();
+        monthlyData[monthIndex].totalSales += 1;
+        monthlyData[monthIndex].totalRevenue += order.finalAmount;
+      }
+    });
+
+    // Prepare months, salesData, and revenueData for the chart
+    const months = monthlyData.map(data => data.month);
+    const salesData = monthlyData.map(data => data.totalSales);
+    const revenueData = monthlyData.map(data => data.totalRevenue);
+
+    // Render the dashboard page, passing calculated data
+    res.render('admin/index', {
+      totalSale,
+      todaySale,
+      totalRevenue,
+      todayRevenue,
+      months,
+      salesData,
+      revenueData,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server Error");
+  }
+};
+
 
 // --------------------------------------product side:
 

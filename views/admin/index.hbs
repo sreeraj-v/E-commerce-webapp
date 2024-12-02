@@ -8,7 +8,7 @@
                             <i class="fa fa-chart-line fa-3x text-primary"></i>
                             <div class="ms-3">
                                 <p class="mb-2">Today Sale</p>
-                                <h6 class="mb-0">$1234</h6>
+                                <h6 class="mb-0">{{todaySale}} </h6>
                             </div>
                         </div>
                     </div>
@@ -17,7 +17,7 @@
                             <i class="fa fa-chart-bar fa-3x text-primary"></i>
                             <div class="ms-3">
                                 <p class="mb-2">Total Sale</p>
-                                <h6 class="mb-0">$1234</h6>
+                                <h6 class="mb-0">{{totalSale}} </h6>
                             </div>
                         </div>
                     </div>
@@ -26,7 +26,7 @@
                             <i class="fa fa-chart-area fa-3x text-primary"></i>
                             <div class="ms-3">
                                 <p class="mb-2">Today Revenue</p>
-                                <h6 class="mb-0">$1234</h6>
+                                <h6 class="mb-0">₹{{todayRevenue}} </h6>
                             </div>
                         </div>
                     </div>
@@ -35,7 +35,7 @@
                             <i class="fa fa-chart-pie fa-3x text-primary"></i>
                             <div class="ms-3">
                                 <p class="mb-2">Total Revenue</p>
-                                <h6 class="mb-0">$1234</h6>
+                                <h6 class="mb-0">₹{{totalRevenue}} </h6>
                             </div>
                         </div>
                     </div>
@@ -59,10 +59,10 @@
                     <div class="col-sm-12 col-xl-6">
                         <div class="bg-light text-center rounded p-4">
                             <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">Salse & Revenue</h6>
-                                <a href="">Show All</a>
+                                <h6 class="mb-0">Sales & Revenue</h6>
+                                {{!-- <a href="">Show All</a> --}}
                             </div>
-                            <canvas id="salse-revenue"></canvas>
+                            <canvas id="sales-revenue-chart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -205,3 +205,47 @@
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx2 = document.getElementById("sales-revenue-chart").getContext("2d");
+
+    // Using the custom json helper to format data for JavaScript
+    var months = {{{json months}}};
+    var salesData = {{{json salesData}}};
+    var revenueData = {{{json revenueData}}};
+
+    var myChart2 = new Chart(ctx2, {
+        type: "line",
+        data: {
+            labels: months, // Dynamic months from backend
+            datasets: [{
+                label: "Sales",
+                data: salesData, // Dynamic sales data from backend
+                backgroundColor: "rgba(0, 156, 255, .5)",
+                fill: true
+            }, {
+                label: "Revenue",
+                data: revenueData, // Dynamic revenue data from backend
+                backgroundColor: "rgba(0, 156, 255, .3)",
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Month'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Amount (₹)'
+                    }
+                }
+            }
+        }
+    });
+</script>
