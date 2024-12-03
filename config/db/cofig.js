@@ -15,8 +15,3 @@ db.on("disconnected", () => {
   
 module.exports=mongoose.connection;
 
-
-
-
-// DOUBTS:
-// var db = mongoose.connection adsh git;

@@ -11,8 +11,8 @@
 					<nav aria-label="breadcrumb" class="breadcrumb-nav">
 						<div class="container">
 							<ol class="breadcrumb">
-								<li class="breadcrumb-item"><a href="index.html">Home</a></li>
-								<li class="breadcrumb-item"><a href="#">Shop</a></li>
+								<li class="breadcrumb-item"><a href="/">Home</a></li>
+								<li class="breadcrumb-item"><a href="/shop">Shop</a></li>
 								<li class="breadcrumb-item active" aria-current="page">Shopping Cart</li>
 							</ol>
 						</div><!-- End .container -->
@@ -40,13 +40,13 @@
 													<td class="product-col">
 														<div class="product">
 															<figure class="product-media">
-																<a href="#">
+																<a href="/productView?q={{this.productId._id}}">
 																	<img src="uploads/{{this.productId.image.[0]}}" alt="Product image">
 																</a>
 															</figure>
 				
 															<h3 class="product-title">
-																<a href="#">{{this.productId.name}}</a>
+																<a href="/productView?q={{this.productId._id}}">{{this.productId.name}}</a>
 															</h3><!-- End .product-title -->
 														</div><!-- End .product -->
 													</td>
@@ -66,10 +66,10 @@
 				
 										<div class="cart-bottom justify-content-between">
 											<div>
-												<a href="category.html" class="btn btn-outline-dark-2  mb-3"><span>CONTINUE SHOPPING</span><i
+												<a href="/shop" class="btn btn-outline-dark-2  mb-3"><span>CONTINUE SHOPPING</span><i
 														class="icon-refresh"></i></a>
 											</div>
-											<a href="#" class="btn btn-outline-dark-2"><span>UPDATE CART</span><i class="icon-refresh"></i></a>
+											<a href="/cart" class="btn btn-outline-dark-2"><span>UPDATE CART</span><i class="icon-refresh"></i></a>
 										</div><!-- End .cart-bottom -->
 									</div><!-- End .col-lg-9 -->
 									<aside class="col-lg-3">

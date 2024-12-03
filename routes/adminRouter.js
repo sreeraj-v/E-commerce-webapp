@@ -64,10 +64,6 @@ router.post("/addMidBanner",addMidBanner);
 // adding BottomBanner
 router.post("/addBottomBanner",addBottomBanner);
 
-
-
-
-
 // logout
 router.get("/logout",logout)
 // 404 not found

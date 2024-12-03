@@ -1,4 +1,3 @@
-const nodemailer = require("nodemailer");
 const crypto = require("crypto")
 const transporter = require("../config/nodemailer/emailer");
 const productHelper = require("../helpers/product")
@@ -325,29 +324,6 @@ const productView = async (req, res) => {
   }
 };
 
-
-
-// const shop = async (req,res) =>{
-//   const userId = req.session.user ? req.session.user._id : null
-//   try{
-//     const products = await productHelper.shopProducts()
-    
-//     let cart = {items : []}
-//     if(userId){
-//       cart = await cartHelper.getCart(userId)
-//     }else if (req.session.cart){
-//       cart = req.session.cart
-//     }
-
-//     const IsProductInCart = products.map(product => (
-//       {...product,isInCart:cart.items.some(item => String(item.productId._id || item.productId) === String(product._id))}
-//   ))
-
-//     res.render("user/shop",{products:IsProductInCart})
-//   }catch(error){
-//     console.log(error)
-//   }
-// }
 
 const shop = async (req, res) => {
   const user = req.session.user? true:false  
@@ -750,12 +726,6 @@ async function processOrder(req, res) {
       }
     })
 
-    // if (paymentType === 'Stripe Payment') {
-    //   return res.status(200).json({ url: session.url });
-    // } else {
-    //   // COD Payment success
-    //   return res.status(200).json({ message: 'Order placed successfully with Cash on Delivery', orderId: order.orderId });
-    // }
     if (paymentType === 'Stripe Payment') {
       return res.status(200).json({ url: session.url });
     } else if (paymentType === 'Wallet Payment') {
@@ -1065,7 +1035,6 @@ module.exports = {
 };
 
 
-// doubts
-// const { error } = require("console");
+
 
 

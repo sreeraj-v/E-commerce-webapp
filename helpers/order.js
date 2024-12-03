@@ -38,24 +38,5 @@ getOrder: async (user)=>{
   return await Order.find({user}).populate("items.product address user").sort({datePlaced:-1}).lean()
 },
 
-//  processReturnRequest: async (orderId, productId, userId) =>{
-//   // Find the order by orderId and userId
-//   const order = await Order.findOne({ _id: orderId, user: userId });
-//   console.log(order)
-
-//   if (order) {
-//       // Mark the specific product as returned
-//       const item = order.items.find(item => item.product.toString() === productId);
-//   console.log(item)
-      
-//       if (item) {
-//           order.return = true;
-//           await order.save();
-//           return order;
-//       }
-//   }
-
-//   return null;
-// }
 
 };

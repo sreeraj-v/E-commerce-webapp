@@ -31,17 +31,6 @@ router.post('/addToWishlist', userAuth,addToWishlist);
 router.get("/wishlist",userAuth,getWishlist)
 router.get("/removeFromWishlist",removeFromWishlist)
 
-
-
-
-
-// router.get("/wishlist", (req, res) => {
-//   res.render("user/wishlist");
-// });
 router.get("/logout",logout)
-
-
-
-// user waste  
- 
+  
 module.exports = router;

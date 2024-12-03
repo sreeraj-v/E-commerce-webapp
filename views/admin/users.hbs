@@ -225,37 +225,3 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 </script>
-
-
-{{!-- below is a working button placed inside DOMContentLoaded above but removed due to non working in filter&search --}}
-{{!-- <script>
-     const toggleButtons = document.querySelectorAll(".toggle-status")
-
-    toggleButtons.forEach(button => {
-      button.addEventListener("click", async () => {
-        const userId = button.dataset.userId
-        const currentStatus = button.textContent.trim() === "Unblock"
-
-        try {
-          const response = await fetch(`/admin/userStatus?id=${userId}`, {
-            method: "POST",
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ isBlocked: !currentStatus })
-          })
-
-          const data = await response.json()
-          if (data.success) {
-            button.classList.toggle('btn-danger', !currentStatus);
-            button.classList.toggle('btn-success', currentStatus);
-            button.textContent = currentStatus ? 'Block' : 'Unblock';
-          } else {
-            console.error('Error toggling user status:', data.error);
-          }
-        } catch (error) {
-          console.error('Error toggling user status:', error);
-        }
-      })
-    })
-</script> --}}
