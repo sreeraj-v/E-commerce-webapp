@@ -132,3 +132,7 @@
 11-12-2024 03:35 [INFO]: A user disconnected
 11-12-2024 03:35 [ERROR]: confirm orderpage area:
 11-12-2024 03:36 [ERROR]: confirm orderpage area:
+11-12-2024 03:38 [INFO]: Server is Listening on http://localhost:3000
+11-12-2024 03:38 [INFO]: A user connected
+11-12-2024 03:38 [INFO]: Connected to Mongoose 
+11-12-2024 03:40 [INFO]: A user connected
