@@ -11,6 +11,8 @@ const cancelHelper = require("../helpers/cancel")
 const bannerHelper = require("../helpers/banner")
 const Order = require("../models/order")
 const moment = require('moment'); // To handle dates easily
+const logger = require("../utils/logger");
+
 
 
 // admin login get >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -40,13 +42,13 @@ const login = async(req,res)=>{
 
     return res.redirect("/admin")
   }catch(error){
-    console.log("error in admin login:"+error)
+    logger.error("error in admin login:"+error)
   }
 }
 
 // function insertAdmin(){
-//   const newad = new Admin({name:"sreeraj" , password:1234})
-//    newad.save().then(response=> {console.log(response)})
+//   const newad = new Admin({name:"srj" , password:fjrt})
+//    newad.save().then(response=> {logger.error(response)})
 // }
 // insertAdmin()
 
@@ -107,7 +109,7 @@ const index = async (req, res) => {
       revenueData,
     });
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     res.status(500).send("Server Error");
   }
 };
@@ -121,7 +123,7 @@ const viewProducts = async (req, res) => {
     const products = await productHelper.viewProduct()
     res.render("admin/product", { products: products })
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 }
 
@@ -142,7 +144,7 @@ const addProduct = async (req, res) => {
       res.status(200).json({ success: true, message: 'Product uploaded successfully' });
 
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       res.status(500).json({ success: false, message: "Error in uploading product" })
     }
   })
@@ -169,7 +171,7 @@ const productActive = async (req, res) => {
     res.json({ product });
 
   } catch (error) {
-    console.error('Error activating product:', error);
+    logger.error('Error activating product:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
@@ -190,7 +192,7 @@ const productInactive = async (req, res) => {
     res.json({ product });
 
   } catch (error) {
-    console.error('Error inactivating product:', error);
+    logger.error('Error inactivating product:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
@@ -225,7 +227,7 @@ const editProduct = async (req, res) => {
       res.json({ success: true, message: "Product updated successfully" });
 
     } catch (error) {
-      console.log("error in updating product")
+      logger.error("error in updating product")
       res.status(500).json({ success: false, message: "Error in updating product" });
     }
   })
@@ -257,7 +259,7 @@ try{
   const products = await productHelper.searchProduct(searchCriteria)
   res.json({ products }); 
 }catch(error){
-    console.log(error)
+    logger.error(error)
     res.status(500).json({success:false,message:"Error searching products"})
   }
 }
@@ -271,7 +273,7 @@ const allUsers = async (req, res) => {
     const users = await userHelper.findUsers();
     res.render("admin/users", { users });
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 };
 
@@ -291,7 +293,7 @@ const userStatus = async(req,res)=>{
     }
     res.json({success:true,user})
   }catch(error){
-    console.error('Error toggling user status:', error);
+    logger.error('Error toggling user status:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 }
@@ -318,7 +320,7 @@ const searchUser = async (req,res)=>{
     }
     res.json({users})
   }catch(error){
-    console.error('Error searching users:', error);
+    logger.error('Error searching users:', error);
     res.status(500).json({error:"internal server error"})
   }
 }
@@ -333,7 +335,7 @@ const deleteUser = async (req ,res) =>{
   }
   res.json({success:true,user})
   }catch(error){
-    console.error('Error in deleting :',error);
+    logger.error('Error in deleting :',error);
     res.status(500).json({error:"internal server error"})
   }
 }
@@ -344,7 +346,7 @@ const couponPage = async (req,res)=>{
     const coupons = await couponHelper.getAllCoupons()    
     res.render("admin/coupon",{coupons})
   }catch(error){
-    console.error('Error in rendering couponPage :',error);
+    logger.error('Error in rendering couponPage :',error);
   }
 }
 
@@ -353,7 +355,7 @@ const addCoupon = async (req, res)=>{
     await couponHelper.addNewCoupons(req.body)
     res.redirect("/admin/coupon")
   }catch(error){
-    console.error('Error in adding coupons :',error);
+    logger.error('Error in adding coupons :',error);
   }
 }
 
@@ -373,7 +375,7 @@ const editCoupon = async(req,res)=>{
   await couponHelper.updateCoupon(couponId,updatedData)
   res.redirect("/admin/coupon")
   }catch(error){
-    console.error("Error on editng coupon :", error)
+    logger.error("Error on editng coupon :", error)
   }
 }
 
@@ -383,7 +385,7 @@ const deleteCoupon = async (req,res)=>{
     await couponHelper.removeCoupon(couponId)
     res.redirect("/admin/coupon")
   }catch(error){
-    console.error("Error on deleting coupon :", error)
+    logger.error("Error on deleting coupon :", error)
   }
 }
 
@@ -401,7 +403,7 @@ const updateStatus = async(req,res)=>{
   await orderHelper.updateOrderStatus(Id,{orderStatus:status})
   res.json({success:true})
   }catch(error){
-    console.error('Error updating order status:', error);
+    logger.error('Error updating order status:', error);
     res.json({success:false})
   }
 }
@@ -427,7 +429,7 @@ const filterOrders = async (req, res) => {
     const orders = await orderHelper.filterOrdersHelper(query);
     res.json({ orders });
   } catch (error) {
-    console.error("Error fetching orders:", error);
+    logger.error("Error fetching orders:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -440,7 +442,7 @@ const returnOrders = async (req,res)=>{
 
     res.render('admin/returns', { orders });
   } catch (error) {
-    console.error('Error fetching return orders:', error);
+    logger.error('Error fetching return orders:', error);
     res.status(500).send('Server error');
   }
 }
@@ -456,7 +458,7 @@ const updateReturnStatus = async (req, res) => {
       res.json({ success: false });
     }
   } catch (error) {
-    console.error('Error updating return status:', error);
+    logger.error('Error updating return status:', error);
     res.status(500).json({ success: false });
   }
 };
@@ -466,7 +468,7 @@ const cancellations = async (req,res)=>{
     const orders = await cancelHelper.getCancelledOrders()
     res.render("admin/cancellations",{orders})
   }catch(error){
-    console.error('Error getting cancellations page:', error);
+    logger.error('Error getting cancellations page:', error);
   }
 }
 
@@ -497,7 +499,7 @@ const addMainBanner = async (req,res)=>{
       // res.status(200).json({ success: true, message: 'Product uploaded successfully' });
 
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       // res.status(500).json({ success: false, message: "Error in uploading product" })
     }
   })
@@ -517,7 +519,7 @@ const addBrandBanner = async (req,res)=>{
 
       res.redirect('/admin/banners')
     }catch(error){
-      console.log(error);
+      logger.error(error);
       // res.status(500).json({ success: false, message: "Error in uploading product" })      
     }
   })
@@ -535,7 +537,7 @@ const addMidBanner = async (req,res)=>{
       await bannerHelper.addMidBanners(req.body ,image)
       res.redirect("/admin/banners")
     }catch(error){
-      console.log(error);
+      logger.error(error);
     }
   })
 }
@@ -553,7 +555,7 @@ const addBottomBanner = async (req,res)=>{
       await bannerHelper.addBottomBanners(req.body ,image)
       res.redirect("/admin/banners")
     }catch(error){
-      console.log(error);
+      logger.error(error);
     }
   })
 }
@@ -609,7 +611,7 @@ module.exports = {
 // function insertP() {
 //   Product.updateMany({}, {
 //    $set: {"isActive": true}
-//   }).then(response=> {console.log(response)})
+//   }).then(response=> {logger.error(response)})
 // }
 // insertP()
 

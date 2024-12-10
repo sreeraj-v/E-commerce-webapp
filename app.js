@@ -1,7 +1,7 @@
 const express = require("express")
 
 const http = require("http"); // Add this for Socket.IO
-const socketio = require("socket.io"); // Add Socket.IO
+const socketio = require("socket.io");
 
 const hbs = require("express-handlebars")
 const path = require("path")
@@ -18,6 +18,7 @@ const clearCache = require("./middleware/clearCache")
 const userRouter = require("./routes/userRouter")
 const adminRouter = require("./routes/adminRouter")
 const initializeChatSocket = require('./utils/chatsocket');
+const logger = require("./utils/logger");
 
 
 const app = express()
@@ -74,7 +75,7 @@ initializeChatSocket(io, sessionMiddleware);
 // port setup
 const PORT = process.env.PORT||3001
 server.listen(PORT, () =>
-  console.log(`Server is Listening on http://localhost:${PORT}`)
+  logger.info(`Server is Listening on http://localhost:${PORT}`)
 );
 
 

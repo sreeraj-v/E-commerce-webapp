@@ -10,6 +10,8 @@ const { User } = require("../models/userSchema");
 const cancelHelper = require("../helpers/cancel");
 const wishlistHelper = require('../helpers/wishlist');
 const bannerHelper = require("../helpers/banner")
+const logger = require("../utils/logger");
+
 
 
 const Stripe = require("stripe")
@@ -60,22 +62,22 @@ async function registeration(req, res) {
         subject: 'Email Verification',
         html: `<p>Welcome to Atherton shop :) ,Click <a href="${verificationLink}">here</a> to verify your email.</p>`
       }
-      console.log('verification send')
+      logger.error('verification send')
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-          console.log(error);
+          logger.error(error);
           return res.render("user/register", { errorMsg: "Error sending verification email" })
         } else {
-          console.log('Email sent: ' + info.response);
+          logger.error('Email sent: ' + info.response);
           return res.render("user/register", { errorMsg: "Verification email sent. Please check your inbox." });
         }
       })
-      console.log('verification send -2')
+      logger.error('verification send -2')
     } else {
       return res.render("user/register", { errorMsg: "user already exists kindly login" })
     }
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     return res.render("user/register", { errorMessage: "An error occurred during registration" });
   }
 }
@@ -83,7 +85,7 @@ async function registeration(req, res) {
 // Email verification route
 
 const verifyEmail = async  (req,res)=>{
-  console.log('verification link clicked')
+  logger.error('verification link clicked')
   try{
     const {token} = req.query
     const user = await User.findOne({verifyToken:token,tokenExpiry:{$gt:Date.now()}})
@@ -98,10 +100,10 @@ const verifyEmail = async  (req,res)=>{
     req.session.user = user
     req.session.loggedIn = true
     req.session.name = user.name
-    console.log("user created and signuped");
+    logger.error("user created and signuped");
     return res.redirect("/");
   }catch(error){
-    console.log(error)
+    logger.error(error)
     return res.render("user/register",{errorMsg:"error verifying in account"})
   }
 }
@@ -124,7 +126,7 @@ async function userLogin(req, res) {
     
     const user = await User.findOne({ email: email, isVerified: true });
     if (!user) {
-      console.log("wrong email or isVerified false ");
+      logger.error("wrong email or isVerified false ");
       return res.render("user/login", { errorMsg: "invalid Email" });
     }
     const isMatch = await user.comparePassword(password);
@@ -133,15 +135,15 @@ async function userLogin(req, res) {
       req.session.loggedIn = true;
       req.session.username = user.name;
       if (req.session.user) {
-        console.log(user.name + " : login successfully");
+        logger.error(user.name + " : login successfully");
         return res.redirect("/");
       }
     } else {
-      console.log("password is wrong");
+      logger.error("password is wrong");
       return res.render("user/login", { errorMsg: "invalid password" });
     }
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 }
 
@@ -186,16 +188,16 @@ async function forgotPassword(req, res) {
 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        console.error('Error sending email:', error);
+        logger.error('Error sending email:', error);
         return res.status(500).json({ errorMsg: "Error sending reset email." });
       }
-      console.log('Email sent: ' + info.response);
+      logger.error('Email sent: ' + info.response);
 
       return res.status(200).json({ successMsg: "Password reset email sent successfully." });
     });
 
   } catch (error) {
-    console.error("Error in forgotPassword:", error);
+    logger.error("Error in forgotPassword:", error);
     return res.status(500).json({ errorMsg: "An internal error occurred. Please try again later." });
   }
 }
@@ -210,7 +212,7 @@ const resetPassword = async (req,res)=>{
   }
   res.render("user/resetPassword",{token});
   }catch(error){
-    console.error("Error in getting resetPassword page:", error);
+    logger.error("Error in getting resetPassword page:", error);
   }
 }
 
@@ -244,7 +246,7 @@ const submitResetPassword = async(req,res)=>{
     return res.redirect("/login");
     
   } catch (error) {
-    console.log("Error in resetPassword:", error);
+    logger.error("Error in resetPassword:", error);
     res.render("user/reset-password", { errorMsg: "An error occurred." });
   }
 
@@ -281,14 +283,14 @@ const home = async (req, res) => {
 
     res.render("user/index", { products: IsProductInCart,user,mainBanners,brandBanners,midBanners,bottomBanners });
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 };
 
 const productView = async (req, res) => {
   const user = req.session.user? true:false  
   const productId = req.query.q
-  console.log("prodctView area id", productId)
+  logger.error("prodctView area id", productId)
   const userId = req.session.user ? req.session.user._id : null;
 
   try {
@@ -308,10 +310,10 @@ const productView = async (req, res) => {
 
     const isInCart = cart.items.some(item => String(item.productId._id || item.productId) === String(productId));
     // cart.items.forEach((item) => {
-      //   console.log(item.productId);
+      //   logger.error(item.productId);
       // });
-      // console.log(productId)
-      // console.log(isInCart)
+      // logger.error(productId)
+      // logger.error(isInCart)
 
     const isRelatedProductsInCart = relatedProducts.map(relatedProduct => {
       const isInCart = cart.items.some(item => String(item.productId._id || item.productId) === String(relatedProduct._id));
@@ -319,7 +321,7 @@ const productView = async (req, res) => {
     });
     res.render("user/productView", { product, isInCart,relatedProducts:isRelatedProductsInCart,user });
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     res.redirect("/500error");
   }
 };
@@ -347,7 +349,7 @@ const shop = async (req, res) => {
      if (price_min) filterCriteria.price.$gte = parseInt(price_min);
      if (price_max) filterCriteria.price.$lte = parseInt(price_max);
    }
-// console.log(search);
+// logger.error(search);
 
    if (search) {
     filterCriteria.$or = [
@@ -383,7 +385,7 @@ const shop = async (req, res) => {
 
     res.render("user/shop", { products: IsProductInCart,user });
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     res.status(500).send("Server Error");
   }
 };
@@ -412,7 +414,7 @@ const addToCart = async (req, res) => {
 
     res.redirect("/cart");
   } catch (error) {
-    console.error('Error adding to cart:', error);
+    logger.error('Error adding to cart:', error);
     res.status(500).send('Internal server error');
   }
 };
@@ -461,7 +463,7 @@ const cart = async (req, res) => {
 
     res.render('user/cart', { products: cartItems ,totalCartValue});
   } catch (error) {
-    console.error('Error fetching cart details:', error);
+    logger.error('Error fetching cart details:', error);
     res.status(500).render('user/cart', { errorMessage: 'Failed to load cart details' });
   }
 };
@@ -471,7 +473,7 @@ const removeFromCart = async(req,res)=>{
   
   try{
     if(req.session.user){
-      console.log(productId);
+      logger.error(productId);
       await cartHelper.removeProduct(productId,req.session.user._id)
     }else{
       const guestCart = req.session.cart || {items:[]}
@@ -479,7 +481,7 @@ const removeFromCart = async(req,res)=>{
     }
     res.redirect("/cart")
   }catch(error){
-    console.error('Error fetching cart details:', error);
+    logger.error('Error fetching cart details:', error);
     res.status(500).send('Internal server error');
   }
 }
@@ -506,7 +508,7 @@ const updateQuantity = async (req,res)=>{
     res.json({ success: true });
 
 } catch (error) {
-    console.error('Error updating cart quantity:', error);
+    logger.error('Error updating cart quantity:', error);
     res.status(500).json({ error: 'Failed to update cart quantity' });
 }
 }
@@ -515,8 +517,8 @@ const updateQuantity = async (req,res)=>{
 
 const checkOut = async (req,res)=>{
   try{
-    const user = req.session.user
-    const userId =user._id
+    const userId =req.session.user._id
+    const user = await User.findById(userId).lean()
     const addresses = await addressHelper.getUserAddresses(userId)
     const coupons = await couponHelper.getCoupon()
     const userCart = await cartHelper.getCart(userId)
@@ -530,7 +532,7 @@ const checkOut = async (req,res)=>{
       res.redirect("/")
     }
   }catch(error){
-    console.error("Error fetching address : ",error)
+    logger.error("Error fetching address : ",error)
     res.status(500).send("internal server error")
   }
 }
@@ -552,7 +554,7 @@ const addNewAddress = async (req, res) => {
     await addressHelper.createAddress(userId, addressData);
     res.status(200).json({ success: true, message: "Address added successfully!" });
   } catch (error) {
-    console.error("Erron adding address :-", error);
+    logger.error("Erron adding address :-", error);
     res.status(500).json({ error: "Error adding address" });  
 }
 };
@@ -581,7 +583,7 @@ const applyCoupon = async (req, res) => {
       res.json({ success: false, message: result.message });
     }
   } catch (error) {
-    console.error("Error applying coupon:", error);
+    logger.error("Error applying coupon:", error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
@@ -720,9 +722,9 @@ async function processOrder(req, res) {
 
     transporter.sendMail(mailOptions,(error,info)=>{
       if(error){
-        console.error('Error sending email:', error);
+        logger.error('Error sending email:', error);
       }else{
-        console.log('Email send:'+ info.response);
+        logger.error('Email send:'+ info.response);
       }
     })
 
@@ -734,7 +736,7 @@ async function processOrder(req, res) {
       return res.status(200).json({ message: 'Order placed successfully with Cash on Delivery', orderId: order.orderId });
     }
   } catch (error) {
-    console.error('Error creating order:', error);
+    logger.error('Error creating order:', error);
     return res.status(500).json({ error: 'An error occurred while creating your order.' });
   }
 }
@@ -786,7 +788,7 @@ async function confirmOrderPayment(req, res) {
     }
 
     order = order.toObject()
-    console.log('confirm orderpage area:',order)
+    // logger.error('confirm orderpage area:',order)
     // if no orderId/stripe sessionId available redirect to home for only showing orderSucces page one time only
     if (!order) {
       return res.redirect('/');
@@ -794,7 +796,7 @@ async function confirmOrderPayment(req, res) {
 
     return res.render('user/orderSuccess', { order });
   } catch (error) {
-    console.error('Error confirming order payment:', error);
+    logger.error('Error confirming order payment:', error);
     return res.status(500).json({ error: 'An error occurred while confirming your order.' });
   }
 }
@@ -871,7 +873,7 @@ async function downloadInvoice(req, res) {
     // End the document
     doc.end();
   } catch (error) {
-    console.error('Error generating invoice:', error);
+    logger.error('Error generating invoice:', error);
     res.status(500).json({ error: 'An error occurred while generating the invoice.' });
   }
 }
@@ -887,7 +889,7 @@ async function myaccount(req,res){
     const orders = await orderHelper.getOrder(userId)
     res.render("user/myaccount",{orders,address,user})
   }catch(error){
-    console.error('Error creating order:', error)
+    logger.error('Error creating order:', error)
   }
 }
 
@@ -905,7 +907,7 @@ async function returnProduct(req, res) {
       return res.status(400).json({ message: returnResult.message });
     }
   } catch (error) {
-    console.error("Error processing return:", error);
+    logger.error("Error processing return:", error);
     return res.status(500).json({ message: "Server error, please try again later." });
   }
 }
@@ -924,7 +926,7 @@ const cancelOrder = async (req, res) => {
 
     return res.status(200).json({ success: true, message: result.message });
   } catch (error) {
-    console.error('Cancel Order Error:', error);
+    logger.error('Cancel Order Error:', error);
     return res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 }
@@ -944,7 +946,7 @@ const addToWishlist = async (req, res) => {
           return res.status(400).json({ success: false, message: 'Product already in wishlist.' });
       }
   } catch (error) {
-      console.error('Error adding to wishlist:', error);
+      logger.error('Error adding to wishlist:', error);
       return res.status(500).json({ success: false, message: 'Server error. Please try again.' });
   }
 };
@@ -979,7 +981,7 @@ const getWishlist = async (req,res)=>{
 
   res.render("user/wishlist",{userWishlists:IsProductInCart})
   }catch(error){
-    console.error('Error rendering in wishlist:', error);
+    logger.error('Error rendering in wishlist:', error);
     return res.status(500).send('Server error. Please try again.');    
   }
 }
@@ -992,7 +994,7 @@ async function removeFromWishlist(req,res){
   await wishlistHelper.removeWishlist(user,productId)
   res.redirect("/wishlist")
   }catch(error){
-    console.error('Error removing in wishlist:', error);
+    logger.error('Error removing in wishlist:', error);
   }
 }
 // logout    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

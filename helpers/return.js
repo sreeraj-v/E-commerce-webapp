@@ -1,6 +1,8 @@
 const Order = require("../models/order")
 const {User} = require("../models/userSchema")
 const Product = require("../models/productSchema");
+const logger = require("../utils/logger");
+
 
 module.exports = {
   // user side helper
@@ -32,7 +34,7 @@ module.exports = {
 
       return { success: true, message: "Return request processed successfully" };
     } catch (error) {
-      console.error("Error in return processing:", error);
+      logger.error("Error in return processing:", error);
       return { success: false, message: "Error processing return." };
     }
   },
@@ -43,7 +45,7 @@ module.exports = {
     try {
       return await Order.find({ "items.return": true }).populate('user', 'name').populate('items.product', 'name').lean();                                 
     } catch (error) {
-      console.error('Error fetching return orders:', error);
+      logger.error('Error fetching return orders:', error);
       throw error;
     }
   },
@@ -89,7 +91,7 @@ module.exports = {
   
       return result.modifiedCount > 0;
     } catch (error) {
-      console.error('Error updating return status:', error);
+      logger.error('Error updating return status:', error);
       return false;
     }
   }

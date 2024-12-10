@@ -1,4 +1,5 @@
 const Coupon = require("../models/coupon")
+const logger = require("../utils/logger");
 
 module.exports = {
 
@@ -17,7 +18,7 @@ module.exports = {
       })
       await newCoupon.save()
     } catch (error) {
-      console.error("Error on adding coupon :", error)
+      logger.error("Error on adding coupon :", error)
     }
   },
 
@@ -25,7 +26,7 @@ module.exports = {
     try{
     return await Coupon.findByIdAndUpdate(couponId,updatedData,{new:true})
     }catch(error){
-      console.error("Error on editng coupon :", error)  
+      logger.error("Error on editng coupon :", error)  
       throw error;   
     }
   },
@@ -48,7 +49,7 @@ module.exports = {
 
         return { valid: true, discount: coupon.discount, discountType: coupon.discountType };
     } catch (error) {
-        console.error("Error validating coupon:", error);
+        logger.error("Error validating coupon:", error);
         throw error;
     }
   },

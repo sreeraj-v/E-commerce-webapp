@@ -35,7 +35,6 @@ module.exports={
     })
     await newProduct.save();
 
-    console.log("product added successfully");
     return newProduct;
   },
 

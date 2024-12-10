@@ -1,4 +1,6 @@
 const Order = require("../models/order")
+const logger = require("../utils/logger");
+
 // const Product = require("../models/productSchema")
 
 module.exports =  {
@@ -8,7 +10,7 @@ module.exports =  {
       await newOrder.save();
       return newOrder;
     } catch (error) {
-      console.error("Error creating order: ", error);
+      logger.error("Error creating order: ", error);
       throw error;
     }
   },

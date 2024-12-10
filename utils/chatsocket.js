@@ -2,6 +2,8 @@ const Fuse = require('fuse.js');
 const predefinedQuestions = require('./predefinedQuestions');
 const Chat = require('../models/chatbot');
 const sharedSession = require("socket.io-express-session");
+const logger = require("../utils/logger");
+
 
 const options = {
   includeScore: true,
@@ -15,7 +17,7 @@ function initializeChatSocket(io, sessionMiddleware) {
   io.use(sharedSession(sessionMiddleware, { autoSave: true }));
 
   io.on('connection', async (socket) => {
-    console.log('A user connected');
+    logger.info('A user connected');
     const session = socket.handshake.session;
     const userId = session.user ? session.user._id : null;
 
@@ -33,7 +35,7 @@ function initializeChatSocket(io, sessionMiddleware) {
     }
 
     socket.on('userMessage', async (message) => {
-      console.log('Message received from user:', message);
+      logger.info('Message received from user:', message);
 
       // Use Fuse.js to find the best match for the user's question
       const result = fuse.search(message);
@@ -55,7 +57,7 @@ function initializeChatSocket(io, sessionMiddleware) {
     });
 
     socket.on('disconnect', () => {
-      console.log('A user disconnected');
+      logger.info('A user disconnected');
     });
   });
 }

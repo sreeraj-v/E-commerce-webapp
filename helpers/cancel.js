@@ -2,6 +2,8 @@ const Order = require("../models/order")
 const {User} = require('../models/userSchema');
 const Product = require('../models/productSchema');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const logger = require("../utils/logger");
+
 
 module.exports={
   
@@ -25,7 +27,7 @@ module.exports={
           user.wallet += order.finalAmount;
           await user.save();
         } catch (error) {
-          console.error('Stripe Error:', error);
+          logger.error('Stripe Error:', error);
           return { success: false, message: "Failed to process the refund", status: 500 };
         }
       }
@@ -45,7 +47,7 @@ module.exports={
   
       return { success: true, message: "Order canceled successfully", status: 200 };
     } catch (error) {
-      console.error('Cancel Order Helper Error:', error);
+      logger.error('Cancel Order Helper Error:', error);
       return { success: false, message: "Internal Server Error", status: 500 };
     }
   },

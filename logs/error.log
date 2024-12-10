@@ -1,0 +1,42 @@
+2024-12-04 13:16:55 [ERROR]: This is an error log
+04-12-2024 20:12 [ERROR]: Server is Listening on http://localhost:3000
+04-12-2024 20:42 [ERROR]: Database connection error: bad auth : authentication failed
+04-12-2024 21:11 [ERROR]: Error: This is a test error!
+    at Object.<anonymous> (C:\Users\gokul\Desktop\E commerce\app.js:82:9)
+    at Module._compile (node:internal/modules/cjs/loader:1376:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:135:12)
+    at node:internal/main/run_main_module:28:49
+05-12-2024 00:09 [ERROR]: password is wrong
+05-12-2024 00:09 [ERROR]: momos : login successfully
+05-12-2024 00:13 [ERROR]: 66abb847d6a6a53f231efda2
+05-12-2024 00:15 [ERROR]: confirm orderpage area:
+05-12-2024 00:15 [ERROR]: Email send:250 2.0.0 OK  1733337928 d9443c01a7336-21521969e95sm115415335ad.156 - gsmtp
+05-12-2024 00:52 [ERROR]: Email send:250 2.0.0 OK  1733340187 98e67ed59e1d1-2ef2708b864sm1791992a91.50 - gsmtp
+05-12-2024 00:53 [ERROR]: confirm orderpage area:
+05-12-2024 00:54 [ERROR]: confirm orderpage area:
+05-12-2024 00:54 [ERROR]: Email send:250 2.0.0 OK  1733340277 41be03b00d2f7-7fc9c385eecsm11734944a12.68 - gsmtp
+05-12-2024 00:54 [ERROR]: confirm orderpage area:
+05-12-2024 00:54 [ERROR]: confirm orderpage area:
+11-12-2024 03:17 [ERROR]: momos : login successfully
+11-12-2024 03:18 [ERROR]: 66abb7e0d6a6a53f231efda0
+11-12-2024 03:22 [ERROR]: Email send:250 2.0.0 OK  1733867573 d9443c01a7336-21638d87ca1sm51488855ad.171 - gsmtp
+11-12-2024 03:23 [ERROR]: confirm orderpage area:
+11-12-2024 03:24 [ERROR]: confirm orderpage area:
+11-12-2024 03:25 [ERROR]: Error: Charge ch_3QUbMYCsHv5xvAVb0UhJ2ss3 has already been refunded.
+    at StripeError.generate (C:\Users\gokul\Desktop\E commerce\node_modules\stripe\cjs\Error.js:10:20)
+    at res.toJSON.then.Error_js_1.StripeAPIError.message (C:\Users\gokul\Desktop\E commerce\node_modules\stripe\cjs\RequestSender.js:105:54)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+11-12-2024 03:27 [ERROR]: Error: Charge ch_3QUbMYCsHv5xvAVb0UhJ2ss3 has already been refunded.
+    at StripeError.generate (C:\Users\gokul\Desktop\E commerce\node_modules\stripe\cjs\Error.js:10:20)
+    at res.toJSON.then.Error_js_1.StripeAPIError.message (C:\Users\gokul\Desktop\E commerce\node_modules\stripe\cjs\RequestSender.js:105:54)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+11-12-2024 03:28 [ERROR]: Error: Charge ch_3QUbMYCsHv5xvAVb0UhJ2ss3 has already been refunded.
+    at StripeError.generate (C:\Users\gokul\Desktop\E commerce\node_modules\stripe\cjs\Error.js:10:20)
+    at res.toJSON.then.Error_js_1.StripeAPIError.message (C:\Users\gokul\Desktop\E commerce\node_modules\stripe\cjs\RequestSender.js:105:54)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+11-12-2024 03:35 [ERROR]: Email send:250 2.0.0 OK  1733868305 41be03b00d2f7-7fd3ec748f9sm5863381a12.48 - gsmtp
+11-12-2024 03:35 [ERROR]: confirm orderpage area:
+11-12-2024 03:36 [ERROR]: confirm orderpage area:

@@ -1,4 +1,5 @@
 const { Address } = require("../models/userSchema");
+const logger = require("../utils/logger");
 
 const addressHelper = {
   createAddress: async (userId, addressData) => {
@@ -10,7 +11,7 @@ const addressHelper = {
       await newAddress.save();
       return newAddress;
     } catch (error) {
-      console.error("Error creating address: ", error);
+      logger.error("Error creating address: ", error);
       throw error;
     }
   },
@@ -19,7 +20,7 @@ const addressHelper = {
     try {
       return await Address.find({ userId }).lean();
     } catch (error) {
-      console.error("Error fetching addresses: ", error);
+      logger.error("Error fetching addresses: ", error);
       throw error;
     }
   },
@@ -28,7 +29,7 @@ const addressHelper = {
     try {
       return await Address.findById(addressId).lean();
     } catch (error) {
-      console.error("Error fetching address by ID: ", error);
+      logger.error("Error fetching address by ID: ", error);
       throw error;
     }
   }
