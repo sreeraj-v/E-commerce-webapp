@@ -136,3 +136,69 @@
 11-12-2024 03:38 [INFO]: A user connected
 11-12-2024 03:38 [INFO]: Connected to Mongoose 
 11-12-2024 03:40 [INFO]: A user connected
+12-12-2024 19:53 [INFO]: Server is Listening on http://localhost:3000
+12-12-2024 19:53 [INFO]: Connected to Mongoose 
+12-12-2024 22:20 [INFO]: Mongoose Disconnected
+12-12-2024 22:25 [INFO]: Mongoose Disconnected
+12-12-2024 22:25 [ERROR]: MongoServerSelectionError: read ECONNRESET
+    at Topology.selectServer (C:\Users\gokul\Desktop\E commerce\node_modules\mongodb\lib\sdam\topology.js:303:38)
+    at async executeOperation (C:\Users\gokul\Desktop\E commerce\node_modules\mongodb\lib\operations\execute_operation.js:101:20)
+    at async FindCursor._initialize (C:\Users\gokul\Desktop\E commerce\node_modules\mongodb\lib\cursor\find_cursor.js:58:26)
+    at async [kInit] (C:\Users\gokul\Desktop\E commerce\node_modules\mongodb\lib\cursor\abstract_cursor.js:463:27)
+    at async next (C:\Users\gokul\Desktop\E commerce\node_modules\mongodb\lib\cursor\abstract_cursor.js:520:13)
+    at async FindCursor.next (C:\Users\gokul\Desktop\E commerce\node_modules\mongodb\lib\cursor\abstract_cursor.js:237:16)
+    at async [Symbol.asyncIterator] (C:\Users\gokul\Desktop\E commerce\node_modules\mongodb\lib\cursor\abstract_cursor.js:162:34)
+    at async FindCursor.toArray (C:\Users\gokul\Desktop\E commerce\node_modules\mongodb\lib\cursor\abstract_cursor.js:280:26)
+    at async model.Query._find (C:\Users\gokul\Desktop\E commerce\node_modules\mongoose\lib\query.js:2263:14)
+    at async model.Query.exec (C:\Users\gokul\Desktop\E commerce\node_modules\mongoose\lib\query.js:4342:63)
+12-12-2024 22:28 [INFO]: Server is Listening on http://localhost:3000
+12-12-2024 22:28 [INFO]: Connected to Mongoose 
+12-12-2024 22:28 [INFO]: A user connected
+12-12-2024 22:28 [INFO]: A user connected
+12-12-2024 22:28 [INFO]: A user disconnected
+12-12-2024 22:41 [INFO]: A user disconnected
+13-12-2024 00:35 [INFO]: Mongoose Disconnected
+13-12-2024 00:41 [INFO]: Mongoose Disconnected
+22-12-2024 01:35 [INFO]: Server is Listening on http://localhost:3000
+22-12-2024 01:35 [INFO]: Connected to Mongoose 
+22-12-2024 01:35 [INFO]: A user connected
+22-12-2024 01:42 [INFO]: Mongoose Disconnected
+22-12-2024 01:47 [INFO]: Mongoose Disconnected
+22-12-2024 02:08 [INFO]: A user disconnected
+22-12-2024 02:08 [INFO]: A user connected
+22-12-2024 02:08 [INFO]: A user disconnected
+22-12-2024 02:08 [INFO]: A user connected
+22-12-2024 02:09 [INFO]: A user disconnected
+22-12-2024 02:09 [INFO]: A user connected
+22-12-2024 02:09 [INFO]: A user disconnected
+22-12-2024 02:09 [INFO]: A user connected
+22-12-2024 02:10 [INFO]: A user disconnected
+22-12-2024 02:10 [INFO]: A user connected
+22-12-2024 02:11 [INFO]: A user disconnected
+22-12-2024 02:11 [INFO]: A user connected
+22-12-2024 02:11 [INFO]: A user disconnected
+22-12-2024 02:11 [INFO]: A user connected
+22-12-2024 02:12 [INFO]: A user disconnected
+22-12-2024 02:12 [INFO]: A user connected
+22-12-2024 02:12 [INFO]: A user disconnected
+22-12-2024 02:12 [INFO]: A user connected
+22-12-2024 02:21 [INFO]: A user disconnected
+22-12-2024 02:21 [INFO]: A user connected
+22-12-2024 02:22 [INFO]: A user disconnected
+22-12-2024 02:22 [INFO]: A user connected
+22-12-2024 02:29 [INFO]: A user disconnected
+22-12-2024 02:29 [INFO]: A user connected
+22-12-2024 02:30 [INFO]: A user disconnected
+22-12-2024 02:30 [INFO]: A user connected
+22-12-2024 02:36 [INFO]: A user disconnected
+22-12-2024 02:36 [INFO]: A user connected
+22-12-2024 02:40 [INFO]: A user disconnected
+22-12-2024 02:40 [INFO]: A user connected
+22-12-2024 02:40 [INFO]: A user disconnected
+22-12-2024 02:40 [INFO]: A user connected
+22-12-2024 02:41 [INFO]: A user disconnected
+22-12-2024 02:41 [INFO]: A user connected
+22-12-2024 02:43 [INFO]: A user disconnected
+22-12-2024 02:43 [INFO]: A user connected
+22-12-2024 02:43 [INFO]: A user disconnected
+22-12-2024 02:43 [INFO]: A user connected

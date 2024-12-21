@@ -1,52 +1,106 @@
    {{!-- below 2 links are from userlayout,removed due to overlapping index page to shop&productView.hbs files --}}
     <link rel="stylesheet" href="assets/css/skins/skin-demo-5.css">
     <link rel="stylesheet" href="assets/css/demos/demo-5.css">
+      <!-- Include Swiper.js Styles -->
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+
+    <!-- Custom Styles -->
+<style>
+  /* Ensure Full Width and Responsiveness */
+  .intro-slider-container {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .swiper-slide {
+    display: flex;
+    align-items: center; /* Vertically center content */
+    justify-content: center; /* Horizontally center content */
+    text-align: center;
+    position: relative;
+  }
+
+  /* Center Content */
+  .intro-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    z-index: 2;
+    margin-top: 160px;
+  }
+
+  .intro-content h3, .intro-content h1, .intro-content div, .intro-content a {
+    margin: 10px 0; /* Add spacing between elements */
+  }
+
+  /* Customize Arrows */
+  .swiper-button-next, .swiper-button-prev {
+    color: white !important; /* Change arrow color to white */
+    width: 30px; /* Reduce arrow size */
+    height: 30px;
+    opacity: 0.1; /* Semi-transparent arrows */
+    transition: opacity 0.3s ease;  }
+  .swiper-button-next:hover, .swiper-button-prev:hover {
+    opacity: 0.5; /* Fully visible on hover */
+  }
+
+  /* Customize Dots */
+  .swiper-pagination-bullet {
+    background-color: white !important; /* Change dots to white */
+    width: 10px; /* Dot size */
+    height: 10px;
+    opacity: 0.7;
+  }
+  .swiper-pagination-bullet-active {
+    opacity: 1; /* Active dot fully visible */
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .swiper-slide {
+      height: 70vh; /* Adjust height for smaller screens */
+    }
+    .swiper-button-next, .swiper-button-prev {
+      width: 25px; /* Smaller arrows for mobile */
+      height: 25px;
+    }
+    .swiper-pagination-bullet {
+      width: 8px; /* Smaller dots for mobile */
+      height: 8px;
+    }
+  }
+</style>
 
     <div class="page-wrapper">
  {{>homeHeader}}
         <main class="main">
-            <div class="intro-slider-container mb-0">
-                {{!-- <div class="intro-slider owl-carousel owl-theme owl-nav-inside owl-light" data-toggle="owl" data-owl-options='{"nav": false, "dots": false}'>
-                    <div class="intro-slide" style="background-image: url(assets/images/demos/demo-5/slider/slide-1.jpg);">
-                        <div class="container intro-content text-center">
-                            <h3 class="intro-subtitle text-white">Don’t Miss</h3><!-- End .h3 intro-subtitle -->
-                            <h1 class="intro-title text-white">Mystery Deals</h1><!-- End .intro-title -->
-                            <div class="intro-text text-white">Online Only</div><!-- End .intro-text -->
-                            <a href="category.html" class="btn btn-primary">Discover NOW</a>
-                        </div><!-- End .intro-content -->
-                    </div><!-- End .intro-slide -->
 
-                    <div class="intro-slide" style="background-image: url(assets/images/demos/demo-5/slider/slide-2.jpg);">
-                        <div class="container intro-content text-center">
-                            <h3 class="intro-subtitle text-white">Limited time only</h3><!-- End .h3 intro-subtitle -->
-                            <h1 class="intro-title text-white">Treat your self</h1><!-- End .intro-title -->
-                            <div class="intro-text text-white">Up to 50% off</div><!-- End .intro-text -->
-                            <a href="category.html" class="btn btn-primary">Shop NOW</a>
-                        </div><!-- End .intro-content -->
-                    </div><!-- End .intro-slide -->
-                </div><!-- End .intro-slider owl-carousel owl-theme -->
-
-                <span class="slider-loader text-white"></span><!-- End .slider-loader --> --}}
-
-  <div class="intro-slider owl-carousel owl-theme owl-nav-inside owl-light" data-toggle="owl" data-owl-options='{"nav": true, "dots": true, "autoplay": true, "autoplayTimeout": 5000}'>
-
-    {{#each mainBanners}}
-    <div class="intro-slide" style="background-image: url({{this.image}});">
-      <div class="container intro-content text-center">
-        <h3 class="intro-subtitle text-white">{{this.subtitle}}</h3>
-        <h1 class="intro-title text-white">{{this.title}}</h1>
-        <div class="intro-text text-white">{{this.description}}</div>
-        <a href="{{this.link}}" class="btn btn-primary">Discover NOW</a>
+<div class="intro-slider-container mb-0">
+  <!-- Slider Wrapper -->
+  <div class="swiper intro-slider" style="width: 100%; height: auto;">
+    <div class="swiper-wrapper">
+      {{#each mainBanners}}
+      <div class="swiper-slide intro-slide" style="background-image: url({{this.image}}); background-size: cover; background-position: center; height: 100vh;">
+        <div class="container intro-content text-center">
+          <h3 class="intro-subtitle text-white">{{this.subtitle}}</h3>
+          <h1 class="intro-title text-white">{{this.title}}</h1>
+          <div class="intro-text text-white">{{this.description}}</div>
+          <a href="{{this.link}}" class="btn btn-primary">Discover NOW</a>
+        </div>
       </div>
+      {{/each}}
     </div>
-    {{/each}}
-    
+    <!-- Navigation Buttons -->
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+    <!-- Pagination -->
+    <div class="swiper-pagination"></div>
   </div>
-  <span class="slider-loader text-white"></span>
-
-
-            </div><!-- End .intro-slider-container -->
-
+</div>
+        
             <div class="brands-border owl-carousel owl-simple mb-5" data-toggle="owl" 
                 data-owl-options='{
                     "nav": false, 
@@ -578,6 +632,32 @@
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
     <script src="assets/js/demos/demo-5.js"></script> --}}
+
+    <!-- Include Swiper.js Script -->
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script>
+  // Initialize Swiper.js
+  const swiper = new Swiper('.intro-slider', {
+    loop: true,
+    autoplay: {
+      delay: 5000,
+      disableOnInteraction: false,
+    },
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    effect: 'fade',
+    fadeEffect: {
+      crossFade: true,
+    },
+    speed: 800,
+  });
+</script>
 
     <script>
     document.querySelectorAll('.btn-wishlist').forEach(button => {
