@@ -55,7 +55,9 @@ async function registeration(req, res) {
       })
       await user.save()
 
-      const verificationLink = `http://localhost:3000/verify-email?token=${verifyToken}`;
+      // const verificationLink = `http://localhost:3000/verify-email?token=${verifyToken}`;
+      const verificationLink = `${req.protocol}://${req.get("host")}/verify-email?token=${verifyToken}`;
+
       const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,
@@ -178,7 +180,9 @@ async function forgotPassword(req, res) {
     await user.save();
 
     // Send reset email
-    const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
+    // const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
+    const resetLink = `${req.protocol}://${req.get("host")}/reset-password?token=${resetToken}`;
+
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,

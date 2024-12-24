@@ -26,14 +26,18 @@ const server = http.createServer(app); // Create an HTTP server for socket.IO
 const io = socketio(server); // Initialize Socket.IO
 
 app.use(clearCache)
-// session setup 
+
+// session setup
 const sessionMiddleware = session({
-  secret:SECRET_KEY,
-  resave:false,
-  saveUninitialized:false,
-  cookie:{maxAge:600000 * 24},
-  store:new mongoDbStore({mongooseConnection:connectDb})  
-})
+  secret: SECRET_KEY,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 600000 * 24 },
+  store: new mongoDbStore({
+    uri: process.env.MONGO_URI, // Pass the MongoDB Atlas URI directly
+    collection: 'sessions', // Name of the session collection in MongoDB
+  }),
+});
 
 app.use(sessionMiddleware)
 
@@ -51,7 +55,6 @@ app.engine("hbs",hbs.engine({
     json: (context) => JSON.stringify(context)
   }
 }))
-
 // public accessible to evryting so to access folders inside public avoid public and  starts from stylesheet or js
 app.use(express.static(path.join(__dirname,"public")))
 // app.use(express.static(path.join(__dirname,"public/assets")))
@@ -68,8 +71,8 @@ app.use(cookieParser());
 app.use("/",userRouter)
 // setting the layout to adminLayout & active sidebar elements for admin routes
 app.use("/admin",adminLayoutActive, adminRouter);
-// setting up socket 
-initializeChatSocket(io, sessionMiddleware); 
+// setting up socket
+initializeChatSocket(io, sessionMiddleware);
 
 
 // port setup
@@ -80,6 +83,9 @@ server.listen(PORT, () =>
 
 
 module.exports = app
+
+
+// module.exports = app
 
 // new changes due to socket:
 // 1.added session object to sessionMiddleware variable &it is passed to app.use middleware .before directly passed to app.use
