@@ -76,7 +76,7 @@ initializeChatSocket(io, sessionMiddleware);
 
 
 // port setup
-const PORT = process.env.PORT||3001
+const PORT = process.env.PORT||3000
 server.listen(PORT, () =>
   logger.info(`Server is Listening on http://localhost:${PORT}`)
 );

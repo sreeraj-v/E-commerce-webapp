@@ -1,0 +1,19 @@
+18-11-2025 18:56 [ERROR]: wrong email or isVerified false 
+18-11-2025 18:56 [ERROR]: wrong email or isVerified false 
+18-11-2025 18:56 [ERROR]: sreerj : login successfully
+18-11-2025 18:57 [ERROR]: prodctView area id
+18-11-2025 18:57 [ERROR]: TypeError: Cannot read properties of null (reading 'products')
+    at getWishlist (C:\Users\gokul\Desktop\E commerce\controllers\user.js:981:40)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+18-11-2025 18:58 [ERROR]: 66abb96dd6a6a53f231efdac
+18-11-2025 18:58 [ERROR]: 66abbba3d6a6a53f231efdb9
+18-11-2025 18:58 [ERROR]: 66abbb64d6a6a53f231efdb7
+18-11-2025 19:00 [ERROR]: Email send:250 2.0.0 OK  1763472606 ffacd0b85a97d-42b53e91f2dsm33057620f8f.19 - gsmtp
+18-11-2025 19:02 [ERROR]: Email send:250 2.0.0 OK  1763472739 ffacd0b85a97d-42b53f19aa0sm32665900f8f.37 - gsmtp
+18-11-2025 19:13 [ERROR]: prodctView area id
+18-11-2025 19:14 [ERROR]: prodctView area id
+18-11-2025 19:17 [ERROR]: verification send
+18-11-2025 19:17 [ERROR]: verification send -2
+18-11-2025 19:17 [ERROR]: Email sent: 250 2.0.0 OK  1763473666 ffacd0b85a97d-42b53e85cc0sm33167992f8f.17 - gsmtp
+18-11-2025 19:18 [ERROR]: verification link clicked
+18-11-2025 19:18 [ERROR]: user created and signuped
