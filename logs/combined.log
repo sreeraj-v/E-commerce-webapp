@@ -73,3 +73,5 @@
 19-11-2025 22:28 [INFO]: Connected to Mongoose 
 19-11-2025 22:31 [INFO]: A user connected
 19-11-2025 22:31 [INFO]: A user disconnected
+19-11-2025 22:32 [INFO]: Server is Listening on http://localhost:3000
+19-11-2025 22:32 [INFO]: Connected to Mongoose 
