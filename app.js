@@ -22,6 +22,8 @@ const logger = require("./utils/logger");
 
 
 const app = express()
+app.set('trust proxy', 1);
+
 const server = http.createServer(app); // Create an HTTP server for socket.IO
 const io = socketio(server); // Initialize Socket.IO
 

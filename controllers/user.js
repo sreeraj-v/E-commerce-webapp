@@ -25,7 +25,9 @@ require('dotenv').config()
 
 async function registeration(req, res) {
   try {
-    const { name, email, phone, password } = req.body
+    const { name, email, phone, password } = req.body;
+
+    // --- VALIDATIONS (Unchanged) ---
     if (!name.trim() || !email.trim() || !password.trim() || !phone.trim()) {
       return res.render("user/register", { errorMsg: "all fields are required" });
     }
@@ -41,48 +43,140 @@ async function registeration(req, res) {
     if (password.length < 4) {
       return res.render("user/register", { errorMsg: "password must be more than 4 characters" })
     }
-    const dbEmail = await User.findOne({ email: email })
-    if (!dbEmail) {
-      const verifyToken = crypto.randomBytes(32).toString('hex');
-      const tokenExpiry = Date.now() + 3600000;
-      const user = new User({
+
+    // --- CHANGED LOGIC STARTS HERE ---
+    
+    // 1. Check if user exists in DB
+    let user = await User.findOne({ email: email });
+
+    // 2. If user exists AND is already verified -> Stop them (Real duplicate)
+    if (user && user.isVerified) {
+      return res.render("user/register", { errorMsg: "User already exists kindly login" });
+    }
+
+    // 3. Generate Token
+    const verifyToken = crypto.randomBytes(32).toString('hex');
+    const tokenExpiry = Date.now() + 3600000;
+
+    // 4. Prepare the user object
+    if (user) {
+      // CASE A: User exists but NOT verified. Update their details.
+      // This fixes the issue where failed registrations block the email.
+      user.name = name;
+      user.phone = phone;
+      user.password = password;
+      user.verifyToken = verifyToken;
+      user.tokenExpiry = tokenExpiry;
+    } else {
+      // CASE B: Brand new user. Create them.
+      user = new User({
         name,
         phone,
         password,
         email,
         verifyToken,
-        tokenExpiry
-      })
-      await user.save()
-
-      // const verificationLink = `http://localhost:3000/verify-email?token=${verifyToken}`;
-      const verificationLink = `${req.protocol}://${req.get("host")}/verify-email?token=${verifyToken}`;
-
-      const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: email,
-        subject: 'Email Verification',
-        html: `<p>Welcome to Atherton shop :) ,Click <a href="${verificationLink}">here</a> to verify your email.</p>`
-      }
-      logger.error('verification send')
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          logger.error(error);
-          return res.render("user/register", { errorMsg: "Error sending verification email" })
-        } else {
-          logger.error('Email sent: ' + info.response);
-          return res.render("user/register", { errorMsg: "Verification email sent. Please check your inbox." });
-        }
-      })
-      logger.error('verification send -2')
-    } else {
-      return res.render("user/register", { errorMsg: "user already exists kindly login" })
+        tokenExpiry,
+        isVerified: false // Important default
+      });
     }
+
+    // 5. Save to Database
+    await user.save();
+
+    // 6. Fix Protocol for Render (Http vs Https)
+    // If we are on localhost, use http. If on Render, force https.
+    const host = req.get("host");
+    const protocol = host.includes("localhost") ? "http" : "https";
+    const verificationLink = `${protocol}://${host}/verify-email?token=${verifyToken}`;
+
+    // 7. Send Email
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Email Verification',
+      html: `<p>Welcome to Atherton shop :) ,Click <a href="${verificationLink}">here</a> to verify your email.</p>`
+    };
+
+    logger.error('verification send');
+    
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        logger.error(error);
+        return res.render("user/register", { errorMsg: "Error sending verification email" });
+      } else {
+        logger.error('Email sent: ' + info.response);
+        return res.render("user/register", { errorMsg: "Verification email sent. Please check your inbox." });
+      }
+    });
+    logger.error('verification send -2');
+
   } catch (error) {
     logger.error(error);
     return res.render("user/register", { errorMessage: "An error occurred during registration" });
   }
 }
+
+// below is old working
+// async function registeration(req, res) {
+//   try {
+//     const { name, email, phone, password } = req.body
+//     if (!name.trim() || !email.trim() || !password.trim() || !phone.trim()) {
+//       return res.render("user/register", { errorMsg: "all fields are required" });
+//     }
+//     if (phone.length < 8 || phone.length > 10) {
+//       return res.render("user/register", { errorMsg: "Phone number must be 10 to 12 digits", });
+//     }
+//     if (name.length < 4 || name.length > 20) {
+//       return res.render("user/register", { errorMsg: "name should not be less than 4 or greater than 20" });
+//     }
+//     if (email.length < 7 || email.length > 100) {
+//       return res.render("user/register", { errorMsg: "email should not be less than 7 or greater than 100" })
+//     }
+//     if (password.length < 4) {
+//       return res.render("user/register", { errorMsg: "password must be more than 4 characters" })
+//     }
+//     const dbEmail = await User.findOne({ email: email })
+//     if (!dbEmail) {
+//       const verifyToken = crypto.randomBytes(32).toString('hex');
+//       const tokenExpiry = Date.now() + 3600000;
+//       const user = new User({
+//         name,
+//         phone,
+//         password,
+//         email,
+//         verifyToken,
+//         tokenExpiry
+//       })
+//       await user.save()
+
+//       // const verificationLink = `http://localhost:3000/verify-email?token=${verifyToken}`;
+//       const verificationLink = `${req.protocol}://${req.get("host")}/verify-email?token=${verifyToken}`;
+
+//       const mailOptions = {
+//         from: process.env.EMAIL_USER,
+//         to: email,
+//         subject: 'Email Verification',
+//         html: `<p>Welcome to Atherton shop :) ,Click <a href="${verificationLink}">here</a> to verify your email.</p>`
+//       }
+//       logger.error('verification send')
+//       transporter.sendMail(mailOptions, (error, info) => {
+//         if (error) {
+//           logger.error(error);
+//           return res.render("user/register", { errorMsg: "Error sending verification email" })
+//         } else {
+//           logger.error('Email sent: ' + info.response);
+//           return res.render("user/register", { errorMsg: "Verification email sent. Please check your inbox." });
+//         }
+//       })
+//       logger.error('verification send -2')
+//     } else {
+//       return res.render("user/register", { errorMsg: "user already exists kindly login" })
+//     }
+//   } catch (error) {
+//     logger.error(error);
+//     return res.render("user/register", { errorMessage: "An error occurred during registration" });
+//   }
+// }
 
 // Email verification route
 

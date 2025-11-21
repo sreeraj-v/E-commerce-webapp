@@ -17,3 +17,11 @@
 18-11-2025 19:17 [ERROR]: Email sent: 250 2.0.0 OK  1763473666 ffacd0b85a97d-42b53e85cc0sm33167992f8f.17 - gsmtp
 18-11-2025 19:18 [ERROR]: verification link clicked
 18-11-2025 19:18 [ERROR]: user created and signuped
+19-11-2025 23:33 [ERROR]: verification send
+19-11-2025 23:33 [ERROR]: verification send -2
+19-11-2025 23:33 [ERROR]: Email sent: 250 2.0.0 OK  1763575418 ffacd0b85a97d-42cb7f2e581sm458808f8f.8 - gsmtp
+19-11-2025 23:33 [ERROR]: verification link clicked
+19-11-2025 23:33 [ERROR]: user created and signuped
+20-11-2025 17:20 [ERROR]: verification send
+20-11-2025 17:20 [ERROR]: verification send -2
+20-11-2025 17:20 [ERROR]: Email sent: 250 2.0.0 OK  1763639417 5b1f17b1804b1-477bd1580cbsm2275355e9.2 - gsmtp
