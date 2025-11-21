@@ -25,3 +25,41 @@
 20-11-2025 17:20 [ERROR]: verification send
 20-11-2025 17:20 [ERROR]: verification send -2
 20-11-2025 17:20 [ERROR]: Email sent: 250 2.0.0 OK  1763639417 5b1f17b1804b1-477bd1580cbsm2275355e9.2 - gsmtp
+21-11-2025 20:08 [ERROR]: TypeError: Cannot read properties of undefined (reading 'trim')
+    at registeration (C:\Users\gokul\Desktop\E commerce\controllers\user.js:31:15)
+    at Layer.handle [as handle_request] (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\index.js:47:12)
+21-11-2025 21:55 [ERROR]: TypeError: Cannot read properties of undefined (reading 'trim')
+    at registeration (C:\Users\gokul\Desktop\E commerce\controllers\user.js:31:15)
+    at Layer.handle [as handle_request] (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\index.js:47:12)
+21-11-2025 21:56 [ERROR]: verification send
+21-11-2025 21:56 [ERROR]: verification send -2
+21-11-2025 21:56 [ERROR]: Email sent: 250 2.0.0 OK  1763742378 5b1f17b1804b1-477bf1df3d5sm51791385e9.2 - gsmtp
+21-11-2025 21:56 [ERROR]: verification link clicked
+21-11-2025 21:56 [ERROR]: user created and signuped
+21-11-2025 21:57 [ERROR]: TypeError: Cannot read properties of undefined (reading 'trim')
+    at registeration (C:\Users\gokul\Desktop\E commerce\controllers\user.js:31:15)
+    at Layer.handle [as handle_request] (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\index.js:47:12)
