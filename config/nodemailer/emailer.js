@@ -9,7 +9,10 @@ const transporter = nodemailer.createTransport({
   auth:{
     user:EMAIL_USER,
     pass:EMAIL_PASS
-  }
+  },
+  connectionTimeout: 10000, // 10 seconds
+  greetingTimeout: 10000,
+  socketTimeout: 10000,  
 })
 
 module.exports = transporter;

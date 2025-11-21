@@ -160,3 +160,26 @@
 21-11-2025 21:58 [INFO]: A user disconnected
 21-11-2025 21:58 [INFO]: A user connected
 21-11-2025 21:58 [INFO]: A user disconnected
+21-11-2025 22:47 [INFO]: A user disconnected
+21-11-2025 22:47 [INFO]: A user connected
+21-11-2025 22:47 [INFO]: A user disconnected
+21-11-2025 22:48 [ERROR]: verification send
+21-11-2025 22:48 [ERROR]: verification send -2
+21-11-2025 22:48 [ERROR]: Email sent: 250 2.0.0 OK  1763745529 5b1f17b1804b1-477bf3607b3sm55310885e9.6 - gsmtp
+21-11-2025 22:49 [ERROR]: verification link clicked
+21-11-2025 22:49 [ERROR]: user created and signuped
+21-11-2025 22:49 [INFO]: A user connected
+21-11-2025 22:49 [INFO]: A user connected
+21-11-2025 22:58 [INFO]: Server is Listening on http://localhost:3000
+21-11-2025 22:58 [INFO]: Connected to Mongoose 
+21-11-2025 22:58 [INFO]: A user connected
+21-11-2025 22:58 [INFO]: A user disconnected
+21-11-2025 23:01 [ERROR]: verification send
+21-11-2025 23:01 [ERROR]: verification send -2
+21-11-2025 23:01 [ERROR]: Email sent: 250 2.0.0 OK  1763746293 ffacd0b85a97d-42cb7f49a7bsm11969009f8f.19 - gsmtp
+21-11-2025 23:01 [ERROR]: verification link clicked
+21-11-2025 23:01 [ERROR]: user created and signuped
+21-11-2025 23:01 [INFO]: A user connected
+21-11-2025 23:01 [INFO]: A user disconnected
+21-11-2025 23:03 [INFO]: A user connected
+21-11-2025 23:03 [INFO]: A user disconnected

@@ -63,3 +63,13 @@
     at next (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\index.js:280:10)
     at Function.handle (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\index.js:175:3)
     at router (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\index.js:47:12)
+21-11-2025 22:48 [ERROR]: verification send
+21-11-2025 22:48 [ERROR]: verification send -2
+21-11-2025 22:48 [ERROR]: Email sent: 250 2.0.0 OK  1763745529 5b1f17b1804b1-477bf3607b3sm55310885e9.6 - gsmtp
+21-11-2025 22:49 [ERROR]: verification link clicked
+21-11-2025 22:49 [ERROR]: user created and signuped
+21-11-2025 23:01 [ERROR]: verification send
+21-11-2025 23:01 [ERROR]: verification send -2
+21-11-2025 23:01 [ERROR]: Email sent: 250 2.0.0 OK  1763746293 ffacd0b85a97d-42cb7f49a7bsm11969009f8f.19 - gsmtp
+21-11-2025 23:01 [ERROR]: verification link clicked
+21-11-2025 23:01 [ERROR]: user created and signuped
