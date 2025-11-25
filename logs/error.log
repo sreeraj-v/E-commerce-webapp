@@ -225,3 +225,8 @@
     at Readable.push (node:internal/streams/readable:392:5)
 25-11-2025 20:58 [ERROR]: verification link clicked
 25-11-2025 20:58 [ERROR]: user created and signuped
+25-11-2025 23:32 [ERROR]: ValidationError: User validation failed: name: Name can't be greater than 20 characters
+    at Document.invalidate (C:\Users\gokul\Desktop\E commerce\node_modules\mongoose\lib\document.js:3307:32)
+    at C:\Users\gokul\Desktop\E commerce\node_modules\mongoose\lib\document.js:3068:17
+    at C:\Users\gokul\Desktop\E commerce\node_modules\mongoose\lib\schemaType.js:1388:9
+    at process.processTicksAndRejections (node:internal/process/task_queues:85:11)

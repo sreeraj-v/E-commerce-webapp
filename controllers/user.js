@@ -11,6 +11,7 @@ const cancelHelper = require("../helpers/cancel");
 const wishlistHelper = require('../helpers/wishlist');
 const bannerHelper = require("../helpers/banner")
 const logger = require("../utils/logger");
+const { sendVerificationEmailBrevo } = require('../config/brevoEmail');
 
 
 
@@ -28,91 +29,108 @@ async function registeration(req, res) {
     const { name, email, phone, password } = req.body;
 
     // --- VALIDATIONS (Unchanged) ---
-    if (!name.trim() || !email.trim() || !password.trim() || !phone.trim()) {
+    if (!name?.trim() || !email?.trim() || !password?.trim() || !phone?.trim()) {
       return res.render("user/register", { errorMsg: "all fields are required" });
     }
+
     if (phone.length < 8 || phone.length > 10) {
-      return res.render("user/register", { errorMsg: "Phone number must be 10 to 12 digits", });
-    }
-    if (name.length < 4 || name.length > 20) {
-      return res.render("user/register", { errorMsg: "name should not be less than 4 or greater than 20" });
-    }
-    if (email.length < 7 || email.length > 100) {
-      return res.render("user/register", { errorMsg: "email should not be less than 7 or greater than 100" })
-    }
-    if (password.length < 4) {
-      return res.render("user/register", { errorMsg: "password must be more than 4 characters" })
-    }
-
-    // --- CHANGED LOGIC STARTS HERE ---
-    
-    // 1. Check if user exists in DB
-    let user = await User.findOne({ email: email });
-
-    // 2. If user exists AND is already verified -> Stop them (Real duplicate)
-    if (user && user.isVerified) {
-      return res.render("user/register", { errorMsg: "User already exists kindly login" });
-    }
-
-    // 3. Generate Token
-    const verifyToken = crypto.randomBytes(32).toString('hex');
-    const tokenExpiry = Date.now() + 3600000;
-
-    // 4. Prepare the user object
-    if (user) {
-      // CASE A: User exists but NOT verified. Update their details.
-      // This fixes the issue where failed registrations block the email.
-      user.name = name;
-      user.phone = phone;
-      user.password = password;
-      user.verifyToken = verifyToken;
-      user.tokenExpiry = tokenExpiry;
-    } else {
-      // CASE B: Brand new user. Create them.
-      user = new User({
-        name,
-        phone,
-        password,
-        email,
-        verifyToken,
-        tokenExpiry,
-        isVerified: false // Important default
+      return res.render("user/register", {
+        errorMsg: "Phone number must be 10 to 12 digits",
       });
     }
 
-    // 5. Save to Database
+    if (name.length < 4 || name.length > 20) {
+      return res.render("user/register", {
+        errorMsg: "name should not be less than 4 or greater than 20",
+      });
+    }
+
+    if (email.length < 7 || email.length > 100) {
+      return res.render("user/register", {
+        errorMsg: "email should not be less than 7 or greater than 100",
+      });
+    }
+
+    if (password.length < 4) {
+      return res.render("user/register", {
+        errorMsg: "password must be more than 4 characters",
+      });
+    }
+
+    // --- MAIN LOGIC ---
+
+    // 1. Check if user exists in DB
+    let user = await User.findOne({ email });
+
+    // 2. If user exists AND is already verified -> Stop them (real duplicate)
+    if (user && user.isVerified) {
+      return res.render("user/register", {
+        errorMsg: "User already exists kindly login",
+      });
+    }
+
+    // 3. Generate verification token + expiry
+    const verifyToken = crypto.randomBytes(32).toString("hex");
+    const tokenExpiry = Date.now() + 3600000; // 1 hour
+
+    // 4. Prepare user object
+    if (user) {
+      // CASE A: User exists but NOT verified → update details
+      user.name = name;
+      user.phone = phone;
+      user.password = password;        // assuming your schema hashes this
+      user.verifyToken = verifyToken;
+      user.tokenExpiry = tokenExpiry;
+      user.isVerified = false;
+    } else {
+      // CASE B: Brand new user
+      user = new User({
+        name,
+        phone,
+        password,                       // assuming hashing in schema
+        email,
+        verifyToken,
+        tokenExpiry,
+        isVerified: false,
+      });
+    }
+
+    // 5. Save to DB
     await user.save();
 
     // 6. Fix Protocol for Render (Http vs Https)
-    // If we are on localhost, use http. If on Render, force https.
     const host = req.get("host");
     const protocol = host.includes("localhost") ? "http" : "https";
     const verificationLink = `${protocol}://${host}/verify-email?token=${verifyToken}`;
 
-    // 7. Send Email
-    const mailOptions = {
-      from: process.env.EMAIL_SENDER,
-      to: email,
-      subject: 'Email Verification',
-      html: `<p>Welcome to Atherton shop :) ,Click <a href="${verificationLink}">here</a> to verify your email.</p>`
-    };
+    // 7. Send verification email via Brevo HTTP API
+    logger.info("verification send");
 
-    logger.info('verification send');
-    
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        logger.error(error);
-        return res.render("user/register", { errorMsg: "Error sending verification email" });
-      } else {
-        logger.info('Email sent: ' + info.response);
-        return res.render("user/register", { errorMsg: "Verification email sent. Please check your inbox." });
-      }
-    });
-    logger.info('verification send -2');
+    try {
+      await sendVerificationEmailBrevo(email, verificationLink);
+      logger.info("verification email sent via Brevo API");
+
+      return res.render("user/register", {
+        errorMsg: "Verification email sent. Please check your inbox.",
+      });
+    } catch (emailErr) {
+      // Brevo-specific error
+      logger.error(
+        "Brevo API email error:",
+        emailErr.response?.data || emailErr.message
+      );
+
+      return res.render("user/register", {
+        errorMsg: "Error sending verification email",
+      });
+    }
 
   } catch (error) {
+    // Any other unexpected error
     logger.error(error);
-    return res.render("user/register", { errorMessage: "An error occurred during registration" });
+    return res.render("user/register", {
+      errorMessage: "An error occurred during registration",
+    });
   }
 }
 

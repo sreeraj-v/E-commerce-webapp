@@ -395,3 +395,63 @@
 25-11-2025 21:03 [INFO]: Server is Listening on http://localhost:3000
 25-11-2025 21:03 [INFO]: Connected to Mongoose 
 25-11-2025 21:03 [INFO]: A user connected
+25-11-2025 23:18 [INFO]: Server is Listening on http://localhost:3000
+25-11-2025 23:18 [INFO]: Connected to Mongoose 
+25-11-2025 23:18 [INFO]: Server is Listening on http://localhost:3000
+25-11-2025 23:18 [INFO]: Connected to Mongoose 
+25-11-2025 23:19 [INFO]: A user connected
+25-11-2025 23:19 [INFO]: A user disconnected
+25-11-2025 23:20 [INFO]: verification send
+25-11-2025 23:20 [INFO]: verification email sent via Brevo API
+25-11-2025 23:22 [INFO]: verification send
+25-11-2025 23:22 [INFO]: verification email sent via Brevo API
+25-11-2025 23:23 [INFO]: verification send
+25-11-2025 23:23 [INFO]: verification email sent via Brevo API
+25-11-2025 23:23 [INFO]: verification send
+25-11-2025 23:23 [INFO]: verification email sent via Brevo API
+25-11-2025 23:24 [INFO]: verification link clicked
+25-11-2025 23:24 [INFO]: user created and signuped
+25-11-2025 23:24 [INFO]: A user connected
+25-11-2025 23:24 [INFO]: A user disconnected
+25-11-2025 23:24 [INFO]: verification link clicked
+25-11-2025 23:25 [INFO]: verification send
+25-11-2025 23:25 [INFO]: verification email sent via Brevo API
+25-11-2025 23:25 [INFO]: A user connected
+25-11-2025 23:26 [INFO]: A user disconnected
+25-11-2025 23:26 [INFO]: A user connected
+25-11-2025 23:26 [INFO]: A user disconnected
+25-11-2025 23:26 [INFO]: A user connected
+25-11-2025 23:26 [INFO]: A user disconnected
+25-11-2025 23:27 [INFO]: verification send
+25-11-2025 23:27 [INFO]: verification email sent via Brevo API
+25-11-2025 23:28 [INFO]: verification send
+25-11-2025 23:28 [INFO]: verification email sent via Brevo API
+25-11-2025 23:28 [INFO]: verification send
+25-11-2025 23:28 [INFO]: verification email sent via Brevo API
+25-11-2025 23:29 [INFO]: verification send
+25-11-2025 23:29 [INFO]: verification email sent via Brevo API
+25-11-2025 23:29 [INFO]: verification send
+25-11-2025 23:29 [INFO]: verification email sent via Brevo API
+25-11-2025 23:30 [INFO]: verification send
+25-11-2025 23:30 [INFO]: verification email sent via Brevo API
+25-11-2025 23:32 [INFO]: Server is Listening on http://localhost:3000
+25-11-2025 23:32 [INFO]: Connected to Mongoose 
+25-11-2025 23:32 [ERROR]: ValidationError: User validation failed: name: Name can't be greater than 20 characters
+    at Document.invalidate (C:\Users\gokul\Desktop\E commerce\node_modules\mongoose\lib\document.js:3307:32)
+    at C:\Users\gokul\Desktop\E commerce\node_modules\mongoose\lib\document.js:3068:17
+    at C:\Users\gokul\Desktop\E commerce\node_modules\mongoose\lib\schemaType.js:1388:9
+    at process.processTicksAndRejections (node:internal/process/task_queues:85:11)
+25-11-2025 23:33 [INFO]: Server is Listening on http://localhost:3000
+25-11-2025 23:33 [INFO]: Connected to Mongoose 
+25-11-2025 23:34 [INFO]: verification send
+25-11-2025 23:34 [INFO]: verification email sent via Brevo API
+25-11-2025 23:34 [INFO]: verification link clicked
+25-11-2025 23:34 [INFO]: user created and signuped
+25-11-2025 23:34 [INFO]: A user connected
+25-11-2025 23:34 [INFO]: A user disconnected
+25-11-2025 23:36 [INFO]: verification send
+25-11-2025 23:36 [INFO]: verification email sent via Brevo API
+25-11-2025 23:36 [INFO]: verification link clicked
+25-11-2025 23:36 [INFO]: user created and signuped
+25-11-2025 23:36 [INFO]: A user connected
+25-11-2025 23:36 [INFO]: A user disconnected
