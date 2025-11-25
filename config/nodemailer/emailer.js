@@ -1,29 +1,22 @@
-require('dotenv').config()
-const nodemailer = require("nodemailer")
-const {EMAIL_USER, EMAIL_PASS} = process.env
+require('dotenv').config();
+const nodemailer = require("nodemailer");
 
-const transporter = nodemailer.createTransport({ 
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
+const transporter = nodemailer.createTransport({
+  host: "smtp-relay.brevo.com",
+  port: 587,
+  secure: false,
   auth: {
-    user: EMAIL_USER,
-    pass: EMAIL_PASS
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
-  // INCREASE TIMEOUTS (Render Free Tier CPU is slow)
-  connectionTimeout: 60000, // 1 minute
-  greetingTimeout: 30000,   // 30 seconds
-  socketTimeout: 60000,     // 1 minute
-  // ALLOW SELF-SIGNED CERTS (Helps on Cloud Proxies)
-  tls: {
-    rejectUnauthorized: false
-  },
-  // ENABLE DEBUG LOGS (To see exactly where it hangs in Render logs)
-  logger: true,
-  debug: true 
-})
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 10000,
+});
+
 
 module.exports = transporter;
+
 
 
 // require('dotenv').config()
