@@ -73,3 +73,155 @@
 21-11-2025 23:01 [ERROR]: Email sent: 250 2.0.0 OK  1763746293 ffacd0b85a97d-42cb7f49a7bsm11969009f8f.19 - gsmtp
 21-11-2025 23:01 [ERROR]: verification link clicked
 21-11-2025 23:01 [ERROR]: user created and signuped
+22-11-2025 18:38 [ERROR]: TypeError: Cannot read properties of undefined (reading 'trim')
+    at registeration (C:\Users\gokul\Desktop\E commerce\controllers\user.js:31:15)
+    at Layer.handle [as handle_request] (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\index.js:47:12)
+22-11-2025 18:39 [ERROR]: verification send
+22-11-2025 18:39 [ERROR]: verification send -2
+22-11-2025 18:39 [ERROR]: Error: Invalid login: 535 5.7.8 Authentication failed
+    at SMTPConnection._formatError (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:798:19)
+    at SMTPConnection._actionAUTHComplete (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:1577:34)
+    at SMTPConnection.<anonymous> (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:554:26)
+    at SMTPConnection._processResponse (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:982:20)
+    at SMTPConnection._onData (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:763:14)
+    at SMTPConnection._onSocketData (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:195:44)
+    at TLSSocket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+22-11-2025 19:09 [ERROR]: TypeError: Cannot read properties of undefined (reading 'trim')
+    at registeration (C:\Users\gokul\Desktop\E commerce\controllers\user.js:31:15)
+    at Layer.handle [as handle_request] (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\Users\gokul\Desktop\E commerce\node_modules\express\lib\router\index.js:47:12)
+22-11-2025 19:10 [ERROR]: verification send
+22-11-2025 19:10 [ERROR]: verification send -2
+22-11-2025 19:10 [ERROR]: Error: Invalid login: 535 5.7.8 Authentication failed
+    at SMTPConnection._formatError (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:798:19)
+    at SMTPConnection._actionAUTHComplete (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:1577:34)
+    at SMTPConnection.<anonymous> (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:554:26)
+    at SMTPConnection._processResponse (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:982:20)
+    at SMTPConnection._onData (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:763:14)
+    at SMTPConnection._onSocketData (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:195:44)
+    at TLSSocket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+25-11-2025 09:06 [ERROR]: verification send
+25-11-2025 09:06 [ERROR]: verification send -2
+25-11-2025 09:06 [ERROR]: Error: Invalid login: 535 5.7.8 Authentication failed
+    at SMTPConnection._formatError (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:798:19)
+    at SMTPConnection._actionAUTHComplete (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:1577:34)
+    at SMTPConnection.<anonymous> (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:554:26)
+    at SMTPConnection._processResponse (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:982:20)
+    at SMTPConnection._onData (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:763:14)
+    at SMTPConnection._onSocketData (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:195:44)
+    at TLSSocket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+25-11-2025 09:13 [ERROR]: verification send
+25-11-2025 09:13 [ERROR]: verification send -2
+25-11-2025 09:13 [ERROR]: Error: Invalid login: 535 5.7.8 Authentication failed
+    at SMTPConnection._formatError (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:798:19)
+    at SMTPConnection._actionAUTHComplete (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:1577:34)
+    at SMTPConnection.<anonymous> (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:554:26)
+    at SMTPConnection._processResponse (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:982:20)
+    at SMTPConnection._onData (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:763:14)
+    at SMTPConnection._onSocketData (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:195:44)
+    at TLSSocket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+25-11-2025 09:41 [ERROR]: verification send
+25-11-2025 09:41 [ERROR]: verification send -2
+25-11-2025 09:41 [ERROR]: Error: Invalid login: 535 5.7.8 Authentication failed
+    at SMTPConnection._formatError (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:798:19)
+    at SMTPConnection._actionAUTHComplete (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:1577:34)
+    at SMTPConnection.<anonymous> (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:554:26)
+    at SMTPConnection._processResponse (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:982:20)
+    at SMTPConnection._onData (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:763:14)
+    at SMTPConnection._onSocketData (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:195:44)
+    at TLSSocket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+25-11-2025 09:48 [ERROR]: verification send
+25-11-2025 09:48 [ERROR]: verification send -2
+25-11-2025 09:48 [ERROR]: Error: Invalid login: 535 5.7.8 Authentication failed
+    at SMTPConnection._formatError (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:798:19)
+    at SMTPConnection._actionAUTHComplete (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:1577:34)
+    at SMTPConnection.<anonymous> (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:554:26)
+    at SMTPConnection._processResponse (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:982:20)
+    at SMTPConnection._onData (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:763:14)
+    at SMTPConnection._onSocketData (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:195:44)
+    at TLSSocket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+25-11-2025 09:55 [ERROR]: verification send
+25-11-2025 09:55 [ERROR]: verification send -2
+25-11-2025 09:55 [ERROR]: Error: Invalid login: 535 5.7.8 Authentication failed
+    at SMTPConnection._formatError (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:798:19)
+    at SMTPConnection._actionAUTHComplete (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:1577:34)
+    at SMTPConnection.<anonymous> (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:554:26)
+    at SMTPConnection._processResponse (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:982:20)
+    at SMTPConnection._onData (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:763:14)
+    at SMTPConnection._onSocketData (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:195:44)
+    at TLSSocket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+25-11-2025 19:39 [ERROR]: verification send
+25-11-2025 19:39 [ERROR]: verification send -2
+25-11-2025 19:39 [ERROR]: Error: Invalid login: 535 5.7.8 Authentication failed
+    at SMTPConnection._formatError (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:798:19)
+    at SMTPConnection._actionAUTHComplete (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:1577:34)
+    at SMTPConnection.<anonymous> (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:554:26)
+    at SMTPConnection._processResponse (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:982:20)
+    at SMTPConnection._onData (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:763:14)
+    at SMTPConnection._onSocketData (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:195:44)
+    at TLSSocket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+25-11-2025 19:40 [ERROR]: verification send
+25-11-2025 19:40 [ERROR]: verification send -2
+25-11-2025 19:40 [ERROR]: Error: Invalid login: 535 5.7.8 Authentication failed
+    at SMTPConnection._formatError (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:798:19)
+    at SMTPConnection._actionAUTHComplete (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:1577:34)
+    at SMTPConnection.<anonymous> (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:554:26)
+    at SMTPConnection._processResponse (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:982:20)
+    at SMTPConnection._onData (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:763:14)
+    at SMTPConnection._onSocketData (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:195:44)
+    at TLSSocket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+25-11-2025 20:12 [ERROR]: Error: Invalid login: 535 5.7.8 Authentication failed
+    at SMTPConnection._formatError (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:798:19)
+    at SMTPConnection._actionAUTHComplete (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:1577:34)
+    at SMTPConnection.<anonymous> (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:554:26)
+    at SMTPConnection._processResponse (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:982:20)
+    at SMTPConnection._onData (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:763:14)
+    at SMTPConnection._onSocketData (C:\Users\gokul\Desktop\E commerce\node_modules\nodemailer\lib\smtp-connection\index.js:195:44)
+    at TLSSocket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+25-11-2025 20:58 [ERROR]: verification link clicked
+25-11-2025 20:58 [ERROR]: user created and signuped

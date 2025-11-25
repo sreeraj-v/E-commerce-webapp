@@ -91,24 +91,24 @@ async function registeration(req, res) {
 
     // 7. Send Email
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: process.env.EMAIL_SENDER,
       to: email,
       subject: 'Email Verification',
       html: `<p>Welcome to Atherton shop :) ,Click <a href="${verificationLink}">here</a> to verify your email.</p>`
     };
 
-    logger.error('verification send');
+    // logger.info('verification send');
     
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         logger.error(error);
         return res.render("user/register", { errorMsg: "Error sending verification email" });
       } else {
-        logger.error('Email sent: ' + info.response);
+        logger.info('Email sent: ' + info.response);
         return res.render("user/register", { errorMsg: "Verification email sent. Please check your inbox." });
       }
     });
-    logger.error('verification send -2');
+    // logger.info('verification send -2');
 
   } catch (error) {
     logger.error(error);
@@ -181,7 +181,7 @@ async function registeration(req, res) {
 // Email verification route
 
 const verifyEmail = async  (req,res)=>{
-  logger.error('verification link clicked')
+  // logger.info('verification link clicked')
   try{
     const {token} = req.query
     const user = await User.findOne({verifyToken:token,tokenExpiry:{$gt:Date.now()}})
@@ -196,7 +196,7 @@ const verifyEmail = async  (req,res)=>{
     req.session.user = user
     req.session.loggedIn = true
     req.session.name = user.name
-    logger.error("user created and signuped");
+    // logger.info("user created and signuped");
     return res.redirect("/");
   }catch(error){
     logger.error(error)
